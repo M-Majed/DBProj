@@ -166,10 +166,11 @@ class Ui_SignupWindow(object):
 
         #* Connect the back button to the open_login_signup_window method
         self.back_btn.clicked.connect(self.open_login_signup_window)
+        self.signup_btn.clicked.connect(self.open_login_signup_window)
 
     def retranslateUi(self, SignupWindow):
         _translate = QtCore.QCoreApplication.translate
-        SignupWindow.setWindowTitle(_translate("SignupWindow", "Form"))
+        SignupWindow.setWindowTitle(_translate("SignupWindow", "Signup"))
         self.LName_lineEdit.setPlaceholderText(_translate("SignupWindow", "Last name"))
         self.Email_lineEdit.setPlaceholderText(_translate("SignupWindow", "Email"))
         self.Password_lineEdit.setPlaceholderText(_translate("SignupWindow", "Password"))
