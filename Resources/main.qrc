@@ -1,0 +1,12 @@
+<RCC>
+  <qresource prefix="Icons">
+    <file>Icons/user.png</file>
+    <file>Icons/login.png</file>
+    <file>Icons/spotify.png</file>
+    <file>Icons/signup.png</file>
+  </qresource>
+  <qresource prefix="Background">
+    <file>background/transparent.png</file>
+    <file>background/darkgreen.png</file>
+  </qresource>
+</RCC>
