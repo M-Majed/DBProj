@@ -1,11 +1,11 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import resources
-
-
+from dbfunctions import *
+from DBManagement import DBM
+from DBManagement import *
 class Ui_MusicList(object):
     def __init__(self, parent=None):  # * for window trans
         self.parent = parent
-
     def setupUi(self, MusicListWindow):
         self.MusicListWindow = MusicListWindow # * Save the MusicListWindow object
         MusicListWindow.setObjectName("MusicListWindow")
@@ -117,3 +117,5 @@ if __name__ == "__main__":
     ui.setupUi(MusicListWindow)
     MusicListWindow.show()
     sys.exit(app.exec_())
+
+   
