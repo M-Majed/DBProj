@@ -1,5 +1,7 @@
+import sqlite3
 from PyQt5 import QtCore, QtGui, QtWidgets
 import resources
+
 
 
 
@@ -38,16 +40,16 @@ class Ui_MusicListWindow(object):
 "background-color: rgb(0, 0, 0);")
         self.Account_btn.setObjectName("Account_btn")
         self.verticalLayout.addWidget(self.Account_btn)
-        self.Logout_btn = QtWidgets.QPushButton(MusicListWindow)
+        self.Back_btn = QtWidgets.QPushButton(MusicListWindow)
         font = QtGui.QFont()
         font.setPointSize(9)
         font.setBold(True)
         font.setWeight(75)
-        self.Logout_btn.setFont(font)
-        self.Logout_btn.setStyleSheet("color: rgb(255, 255, 255);\n"
+        self.Back_btn.setFont(font)
+        self.Back_btn.setStyleSheet("color: rgb(255, 255, 255);\n"
 "background-color: rgb(0, 0, 0);")
-        self.Logout_btn.setObjectName("Logout_btn")
-        self.verticalLayout.addWidget(self.Logout_btn)
+        self.Back_btn.setObjectName("Back_btn")
+        self.verticalLayout.addWidget(self.Back_btn)
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem)
         self.Search_btn = QtWidgets.QPushButton(MusicListWindow)
@@ -81,7 +83,29 @@ class Ui_MusicListWindow(object):
         self.Category_combobox.addItem("")
         self.verticalLayout.addWidget(self.Category_combobox)
         self.horizontalLayout_3.addLayout(self.verticalLayout)
+
+
+        #* get data from database and show it in table ***************
+        self.model = QtGui.QStandardItemModel()
         self.Music_list = QtWidgets.QTableView(MusicListWindow)
+        self.Music_list.setModel(self.model)
+        connection = sqlite3.connect('my.db')
+        cursor = connection.cursor()
+        cursor.execute("PRAGMA table_info(user)")
+        columns_info = cursor.fetchall()
+        column_names = [info[1] for info in columns_info]
+        self.model.setColumnCount(len(column_names))
+        self.model.setHorizontalHeaderLabels(column_names)
+        cursor.execute("SELECT * FROM user")
+        rows = cursor.fetchall()
+        for row in rows:
+            items = [QtGui.QStandardItem(str(field)) for field in row]
+            self.model.appendRow(items)
+        connection.close()
+
+
+
+
         font = QtGui.QFont()
         font.setPointSize(10)
         self.Music_list.setFont(font)
@@ -98,15 +122,21 @@ class Ui_MusicListWindow(object):
 
         self.retranslateUi(MusicListWindow)
         QtCore.QMetaObject.connectSlotsByName(MusicListWindow)
-        self.Logout_btn.clicked.connect(self.open_parent_window)
-    def open_parent_window(self):
+
+        self.Back_btn.clicked.connect(self.open_parent_window) # * Connect the back button to the open_parent_window method
+ 
+        
+    def open_parent_window(self): # * Method to open the parent window
         self.parent.show()
         self.MusicListWindow.close()
+
+
+
     def retranslateUi(self, MusicListWindow):
         _translate = QtCore.QCoreApplication.translate
         MusicListWindow.setWindowTitle(_translate("MusicListWindow", "MusicList"))
         self.Account_btn.setText(_translate("MusicListWindow", "Account"))
-        self.Logout_btn.setText(_translate("MusicListWindow", "Logout"))
+        self.Back_btn.setText(_translate("MusicListWindow", "Back"))
         self.Search_btn.setText(_translate("MusicListWindow", "Search"))
         self.Category_combobox.setCurrentText(_translate("MusicListWindow", "Musics"))
         self.Category_combobox.setItemText(0, _translate("MusicListWindow", "Musics"))
@@ -116,4 +146,3 @@ class Ui_MusicListWindow(object):
         self.Category_combobox.setItemText(4, _translate("MusicListWindow", "PlayLists"))
         self.Category_combobox.setItemText(5, _translate("MusicListWindow", "Artists"))
         self.Category_combobox.setItemText(6, _translate("MusicListWindow", "Concerts"))
-
