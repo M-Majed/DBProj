@@ -7,24 +7,38 @@ class Ui_LoginWindow(object):
         self.login_signup = login_signup
 
     def setupUi(self, LoginWindow):
-        self.LoginWindow = LoginWindow #* Save the LoginWindow object
+        self.LoginWindow = LoginWindow  # * Save the LoginWindow object
         LoginWindow.setObjectName("LoginWindow")
         LoginWindow.resize(600, 300)
         LoginWindow.setMinimumSize(QtCore.QSize(600, 300))
         LoginWindow.setMaximumSize(QtCore.QSize(600, 300))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/Icons/Icons/spotify.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(
+            QtGui.QPixmap(":/Icons/Icons/spotify.png"),
+            QtGui.QIcon.Normal,
+            QtGui.QIcon.Off,
+        )
         LoginWindow.setWindowIcon(icon)
-        LoginWindow.setStyleSheet("background-image: url(:/Background/background/darkgreen.png);")
+        LoginWindow.setStyleSheet(
+            "background-image: url(:/Background/background/darkgreen.png);"
+        )
         self.gridLayout = QtWidgets.QGridLayout(LoginWindow)
         self.gridLayout.setObjectName("gridLayout")
-        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem = QtWidgets.QSpacerItem(
+            40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum
+        )
         self.gridLayout.addItem(spacerItem, 1, 2, 1, 1)
-        spacerItem1 = QtWidgets.QSpacerItem(20, 50, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacerItem1 = QtWidgets.QSpacerItem(
+            20, 50, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding
+        )
         self.gridLayout.addItem(spacerItem1, 2, 1, 1, 1)
-        spacerItem2 = QtWidgets.QSpacerItem(20, 50, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        spacerItem2 = QtWidgets.QSpacerItem(
+            20, 50, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding
+        )
         self.gridLayout.addItem(spacerItem2, 0, 1, 1, 1)
-        spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem3 = QtWidgets.QSpacerItem(
+            40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum
+        )
         self.gridLayout.addItem(spacerItem3, 1, 0, 1, 1)
         self.gridLayout_2 = QtWidgets.QGridLayout()
         self.gridLayout_2.setObjectName("gridLayout_2")
@@ -34,8 +48,9 @@ class Ui_LoginWindow(object):
         font = QtGui.QFont()
         font.setPointSize(12)
         self.Username_input.setFont(font)
-        self.Username_input.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n"
-"")
+        self.Username_input.setStyleSheet(
+            "background-image: url(:/Background/background/transparent.png);\n" ""
+        )
         self.Username_input.setInputMask("")
         self.Username_input.setObjectName("Username_input")
         self.gridLayout_2.addWidget(self.Username_input, 2, 0, 1, 1)
@@ -47,9 +62,11 @@ class Ui_LoginWindow(object):
         font.setBold(True)
         font.setWeight(75)
         self.Password_label.setFont(font)
-        self.Password_label.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n"
-"color: rgb(255, 255, 255);\n"
-"background-color: rgb(22, 46, 51);")
+        self.Password_label.setStyleSheet(
+            "background-image: url(:/Background/background/transparent.png);\n"
+            "color: rgb(255, 255, 255);\n"
+            "background-color: rgb(22, 46, 51);"
+        )
         self.Password_label.setAlignment(QtCore.Qt.AlignCenter)
         self.Password_label.setObjectName("Password_label")
         self.gridLayout_2.addWidget(self.Password_label, 3, 0, 1, 1)
@@ -58,7 +75,9 @@ class Ui_LoginWindow(object):
         font = QtGui.QFont()
         font.setPointSize(12)
         self.Password_input.setFont(font)
-        self.Password_input.setStyleSheet("background-image: url(:/Background/background/transparent.png);")
+        self.Password_input.setStyleSheet(
+            "background-image: url(:/Background/background/transparent.png);"
+        )
         self.Password_input.setObjectName("Password_input")
         self.gridLayout_2.addWidget(self.Password_input, 4, 0, 1, 1)
         self.Username_label = QtWidgets.QLabel(LoginWindow)
@@ -71,15 +90,19 @@ class Ui_LoginWindow(object):
         self.Username_label.setFont(font)
         self.Username_label.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.Username_label.setAutoFillBackground(False)
-        self.Username_label.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n"
-"color: rgb(255, 255, 255);\n"
-"background-color: rgb(22, 46, 51);")
+        self.Username_label.setStyleSheet(
+            "background-image: url(:/Background/background/transparent.png);\n"
+            "color: rgb(255, 255, 255);\n"
+            "background-color: rgb(22, 46, 51);"
+        )
         self.Username_label.setAlignment(QtCore.Qt.AlignCenter)
         self.Username_label.setObjectName("Username_label")
         self.gridLayout_2.addWidget(self.Username_label, 1, 0, 1, 1)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
-        spacerItem4 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        spacerItem4 = QtWidgets.QSpacerItem(
+            40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum
+        )
         self.horizontalLayout.addItem(spacerItem4)
         self.back_Btn = QtWidgets.QPushButton(LoginWindow)
         self.back_Btn.setMinimumSize(QtCore.QSize(100, 40))
@@ -88,12 +111,15 @@ class Ui_LoginWindow(object):
         font.setBold(True)
         font.setWeight(75)
         self.back_Btn.setFont(font)
-        self.back_Btn.setStyleSheet("color: rgb(255, 255, 255);\n"
-"background-color: rgb(0, 0, 0);")
+        self.back_Btn.setStyleSheet(
+            "color: rgb(255, 255, 255);\n" "background-color: rgb(0, 0, 0);"
+        )
         self.back_Btn.setObjectName("back_Btn")
         self.horizontalLayout.addWidget(self.back_Btn)
         self.Login_Btn = QtWidgets.QPushButton(LoginWindow)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed
+        )
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.Login_Btn.sizePolicy().hasHeightForWidth())
@@ -106,8 +132,9 @@ class Ui_LoginWindow(object):
         font.setWeight(75)
         self.Login_Btn.setFont(font)
         self.Login_Btn.setAutoFillBackground(False)
-        self.Login_Btn.setStyleSheet("color: rgb(255, 255, 255);\n"
-"background-color: rgb(0, 0, 0);")
+        self.Login_Btn.setStyleSheet(
+            "color: rgb(255, 255, 255);\n" "background-color: rgb(0, 0, 0);"
+        )
         self.Login_Btn.setObjectName("Login_Btn")
         self.horizontalLayout.addWidget(self.Login_Btn)
         self.gridLayout_2.addLayout(self.horizontalLayout, 5, 0, 1, 1)
@@ -119,8 +146,10 @@ class Ui_LoginWindow(object):
         font.setBold(False)
         font.setWeight(50)
         self.Login_icon.setFont(font)
-        self.Login_icon.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n"
-"image: url(:/Icons/Icons/user.png);")
+        self.Login_icon.setStyleSheet(
+            "background-image: url(:/Background/background/transparent.png);\n"
+            "image: url(:/Icons/Icons/user.png);"
+        )
         self.Login_icon.setText("")
         self.Login_icon.setObjectName("Login_icon")
         self.gridLayout_2.addWidget(self.Login_icon, 0, 0, 1, 1)
@@ -129,22 +158,24 @@ class Ui_LoginWindow(object):
         self.retranslateUi(LoginWindow)
         QtCore.QMetaObject.connectSlotsByName(LoginWindow)
 
-
-        #* Connect the back button to the open_login_signup_window method
+        # * Connect the back button to the open_login_signup_window method
         self.back_Btn.clicked.connect(self.open_login_signup_window)
-    
 
     def retranslateUi(self, LoginWindow):
         _translate = QtCore.QCoreApplication.translate
         LoginWindow.setWindowTitle(_translate("LoginWindow", "Login"))
-        self.Username_input.setPlaceholderText(_translate("LoginWindow", "Enter your username"))
+        self.Username_input.setPlaceholderText(
+            _translate("LoginWindow", "Enter your username")
+        )
         self.Password_label.setText(_translate("LoginWindow", "Password"))
-        self.Password_input.setPlaceholderText(_translate("LoginWindow", "Enter your password"))
+        self.Password_input.setPlaceholderText(
+            _translate("LoginWindow", "Enter your password")
+        )
         self.Username_label.setText(_translate("LoginWindow", "UserName"))
         self.back_Btn.setText(_translate("LoginWindow", "Back"))
         self.Login_Btn.setText(_translate("LoginWindow", "Login"))
 
-    #* open the login_signup window
+    # * open the login_signup window
     def open_login_signup_window(self):
         self.login_signup.show()
         self.LoginWindow.close()

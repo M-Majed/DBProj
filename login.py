@@ -2,11 +2,11 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import resources
 from dbfunctions import *
 from DBManagement import DBM
-
+from MusicList import Ui_MusicListWindow
 
 class Ui_LoginWindow(object):
-    def __init__(self, login_signup=None):
-        self.login_signup = login_signup
+    def __init__(self, parent=None):  # * for window trans
+        self.parent = parent
 
     def setupUi(self, LoginWindow):
         self.LoginWindow = LoginWindow  # * Save the LoginWindow object
@@ -160,8 +160,8 @@ class Ui_LoginWindow(object):
         self.retranslateUi(LoginWindow)
         QtCore.QMetaObject.connectSlotsByName(LoginWindow)
 
-        # * Connect the back button to the open_login_signup_window method
-        self.back_Btn.clicked.connect(self.open_login_signup_window)
+        # * Connect the back button to the open_parent_window method
+        self.back_Btn.clicked.connect(self.open_parent_window)
         self.Login_Btn.clicked.connect(self.check_login2)
 
     def retranslateUi(self, LoginWindow):
@@ -178,9 +178,9 @@ class Ui_LoginWindow(object):
         self.back_Btn.setText(_translate("LoginWindow", "Back"))
         self.Login_Btn.setText(_translate("LoginWindow", "Login"))
 
-    # * open the login_signup window
-    def open_login_signup_window(self):
-        self.login_signup.show()
+    # * open the parent window
+    def open_parent_window(self):
+        self.parent.show()
         self.LoginWindow.close()
 
     def check_login2(self):
@@ -190,6 +190,22 @@ class Ui_LoginWindow(object):
         dbm.db_connect()
         if check_login(dbm, username, password):
             print("Login successful")
+            # Open MusicListWindow
+            self.MusicListWindow = QtWidgets.QMainWindow()
+            self.ui = Ui_MusicListWindow()
+            self.ui.setupUi(self.MusicListWindow)
+
+            self.window = QtWidgets.QMainWindow()
+            self.ui = Ui_LoginWindow(
+                self.LoginWindow
+            )  # * Pass the main window reference here
+            self.ui.setupUi(self.window)
+
+            self.MusicListWindow.show()
+
+            # Close LoginWindow
+            self.LoginWindow.close()
+
         else:
             print("Login failed")
             # messagebox unsuccessful registration

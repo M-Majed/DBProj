@@ -1,7 +1,9 @@
 import sqlite3
 from sqlite3 import Error
+
+
 class DBM:
-    db_path = 'my.db'
+    db_path = "my.db"
     db_conn = None
 
     def db_create_connection(self, path=db_path):
@@ -22,7 +24,7 @@ class DBM:
     def db_disconnect(self):
         if self.db_conn:
             self.db_conn.close()
-            
+
     def db_execute_query(self, query, connection):
         if not connection:
             connection = self.db_conn
@@ -37,16 +39,15 @@ class DBM:
             return True
         except Error as e:
             print(f"\nError '{e}' occurred.")
-            #suppress error
+            # suppress error
             return False
-            
 
     def db_execute_read_query(self, query, connection):
         if not connection:
             connection = self.db_conn
         if not connection:
             self.db_connect()
-            
+
         cursor = connection.cursor()
         result = None
         try:
@@ -114,9 +115,6 @@ class DBM:
 #         );
 #     ''', None
 # )
-
-
-
 
 
 # db_execute_query(
@@ -197,7 +195,7 @@ class DBM:
 # def get_personal_data(melli: str, relying: int):
 #     if not melli:
 #         return None
-    
+
 #     # Check if relying has [full] access
 #     result = db_execute_read_query(
 #         f'''
@@ -208,7 +206,7 @@ class DBM:
 #     if result:
 #         full_access = result[0][-1]
 #     print(f'{full_access=}')
-    
+
 #     # Fetching personal data from db based on access information
 #     if full_access:
 #         result = db_execute_read_query(
@@ -225,7 +223,7 @@ class DBM:
 #         )
 #         return result[0]
 #     else:
-#         print('\nPermission not found!')   
+#         print('\nPermission not found!')
 #         return None
 
 # print(get_personal_data("1279876543",2))

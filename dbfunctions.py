@@ -3,22 +3,25 @@ from DBManagement import DBM
 # dbm = DBManagement.DBM()
 # dbm.db_connect()
 
+
 # WARNING! Deletes all tables and their descriptions!
 def drop_all_tables(dbm: DBM):
-    tables = ["user", "tracks"] # example 
-    #tables = ["user"] # later: add all table names 
+    tables = ["user", "tracks"]  # example
+    # tables = ["user"] # later: add all table names
     if not dbm:
         return False
     for elem in tables:
-        dbm.db_execute_query(f'drop table if exists {elem}', None)
+        dbm.db_execute_query(f"drop table if exists {elem}", None)
     return True
+
 
 def create_db_tables(dbm: DBM):
     if not dbm:
         return False
-    
+
     # signup: fname lname email address username password
-    dbm.db_execute_query(''' 
+    dbm.db_execute_query(
+        """ 
              CREATE TABLE IF NOT EXISTS likes (
              id INTEGER PRIMARY KEY AUTOINCREMENT,
              user_id INTEGER NOT NULL,
@@ -26,9 +29,12 @@ def create_db_tables(dbm: DBM):
              FOREIGN KEY (user_id) REFERENCES user (id),
              FOREIGN KEY (track_id) REFERENCES tracks (id)
         );
-        ''', None)
+        """,
+        None,
+    )
     # signup: fname lname email address username password
-    dbm.db_execute_query(''' 
+    dbm.db_execute_query(
+        """ 
              CREATE TABLE IF NOT EXISTS tracks (
          id INTEGER PRIMARY KEY AUTOINCREMENT,
          title TEXT  NOT NULL,
@@ -40,9 +46,11 @@ def create_db_tables(dbm: DBM):
          lyric TEXT NOT NULL,
          area TEXT NOT NULL
          );
-        ''', None)
+        """,
+        None,
+    )
     dbm.db_execute_query(
-        '''
+        """
         CREATE TABLE IF NOT EXISTS user (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             fname TEXT NOT NULL,
@@ -55,10 +63,11 @@ def create_db_tables(dbm: DBM):
             singerornormal Boolean,
             wallet INTEGER
         );
-        ''', None
+        """,
+        None,
     )
     dbm.db_execute_query(
-        '''
+        """
        CREATE TABLE IF NOT EXISTS tracks (
              id INTEGER PRIMARY KEY AUTOINCREMENT,
              title TEXT  NOT NULL,
@@ -71,11 +80,11 @@ def create_db_tables(dbm: DBM):
              area TEXT NOT NULL,
              date Date NOT NULL,
          );
-        ''', None
-        
+        """,
+        None,
     )
     dbm.db_execute_query(
-        '''
+        """
           CREATE TABLE IF NOT EXISTS concert (
              id INTEGER PRIMARY KEY AUTOINCREMENT,
              name TEXT NOT NULL,
@@ -84,11 +93,11 @@ def create_db_tables(dbm: DBM):
              date DATE NOT NULL,
              ticket_price INTEGER NOT NULL
          );
-        ''', None
-        
+        """,
+        None,
     )
     dbm.db_execute_query(
-        '''
+        """
            CREATE TABLE IF NOT EXISTS likes (
              id INTEGER PRIMARY KEY AUTOINCREMENT,
              user_id INTEGER NOT NULL,
@@ -96,11 +105,11 @@ def create_db_tables(dbm: DBM):
              FOREIGN KEY (user_id) REFERENCES user (id),
              FOREIGN KEY (track_id) REFERENCES tracks (id)
          );
-        ''', None
-        
+        """,
+        None,
     )
     dbm.db_execute_query(
-        '''
+        """
             CREATE TABLE IF NOT EXISTS comment (
              id INTEGER PRIMARY KEY AUTOINCREMENT,
              track_id INTEGER NOT NULL,
@@ -109,11 +118,11 @@ def create_db_tables(dbm: DBM):
              FOREIGN KEY (track_id) REFERENCES tracks (id),
              FOREIGN KEY (user_id) REFERENCES user (id)
          );
-        ''', None
-        
+        """,
+        None,
     )
     dbm.db_execute_query(
-        '''
+        """
            CREATE TABLE IF NOT EXISTS ticket (
              id INTEGER PRIMARY KEY AUTOINCREMENT,
              user_id INTEGER NOT NULL,
@@ -121,22 +130,22 @@ def create_db_tables(dbm: DBM):
              FOREIGN KEY (user_id) REFERENCES user (id),
              FOREIGN KEY (concert_id) REFERENCES concert (id)
          );
-        ''', None
-        
+        """,
+        None,
     )
     dbm.db_execute_query(
-        '''
+        """
            CREATE TABLE IF NOT EXISTS playlist (
              id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL,
              user_id INTEGER NOT NULL,
              FOREIGN KEY (user_id) REFERENCES user (id)
          );
-        ''', None
-        
+        """,
+        None,
     )
     dbm.db_execute_query(
-        '''
+        """
           CREATE TABLE IF NOT EXISTS followorfollowing (
              id INTEGER PRIMARY KEY AUTOINCREMENT,
              follower_id INTEGER NOT NULL,
@@ -144,11 +153,11 @@ def create_db_tables(dbm: DBM):
              FOREIGN KEY (follower_id) REFERENCES user (id),
              FOREIGN KEY (following_id) REFERENCES user (id)
          );
-        ''', None
-        
+        """,
+        None,
     )
     dbm.db_execute_query(
-        '''
+        """
           CREATE TABLE IF NOT EXISTS friend (
              id INTEGER PRIMARY KEY AUTOINCREMENT,
              user_id INTEGER NOT NULL,
@@ -156,44 +165,60 @@ def create_db_tables(dbm: DBM):
              FOREIGN KEY (user_id) REFERENCES user (id),
              FOREIGN KEY (friend_id) REFERENCES user (id)
          );
-        ''', None
-        
+        """,
+        None,
     )
 
     return True
 
+
 def check_login(dbm: DBM, username: str, password: str):
-    if not dbm or not username or username=="" or not password or password=="":
+    if not dbm or not username or username == "" or not password or password == "":
         return False
     result = dbm.db_execute_read_query(
-        f'''
+        f"""
         SELECT COUNT(*) FROM user
         WHERE username = "{username}" AND password = "{password}"
-        ''' , None
+        """,
+        None,
     )
-    print(f'{result=}\t{result[0][0]}')
+    print(f"{result=}\t{result[0][0]}")
     countFromDB = result[0][0]
     if countFromDB != 1:
         return False
     return True
 
-def insert_one_user(dbm:DBM, fname,lname,email,address,username,password):
+
+def insert_one_user(dbm: DBM, fname, lname, email, address, username, password):
     if not dbm:
         return False
-    if not fname or not lname or not email or not address or not username or not password or fname=="" or lname=="" or email=="" or address=="" or username=="" or password=="":
+    if (
+        not fname
+        or not lname
+        or not email
+        or not address
+        or not username
+        or not password
+        or fname == ""
+        or lname == ""
+        or email == ""
+        or address == ""
+        or username == ""
+        or password == ""
+    ):
         return False
     try:
         return dbm.db_execute_query(
-            f'''
+            f"""
             INSERT INTO
                 user (fname,lname,email,address,username,password)
                 VALUES
                 ("{fname}","{lname}","{email}","{address}","{username}","{password}");
-            ''', None
+            """,
+            None,
         )
     except Exception as e:
         return False
-
 
 
 # def get_current(melli: str):
@@ -213,19 +238,11 @@ def insert_one_user(dbm:DBM, fname,lname,email,address,username,password):
 # dbm.db_disconnect()
 
 
-
-
-
-
-
-
-
-
-#  
-#      
-#       
-#        
-#         
-#        
-#         
-#         
+#
+#
+#
+#
+#
+#
+#
+#
