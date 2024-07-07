@@ -10,6 +10,8 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 import resources
+from dbfunctions import *
+from DBManagement import DBM
 
 
 class Ui_SignupWindow(object):
@@ -166,20 +168,69 @@ class Ui_SignupWindow(object):
 
         #* Connect the back button to the open_login_signup_window method
         self.back_btn.clicked.connect(self.open_login_signup_window)
-        self.signup_btn.clicked.connect(self.open_login_signup_window)
+
+        #* Connect signup btn to registration functions
+        self.signup_btn.clicked.connect(self.register_user)
 
     def retranslateUi(self, SignupWindow):
         _translate = QtCore.QCoreApplication.translate
         SignupWindow.setWindowTitle(_translate("SignupWindow", "Signup"))
+        self.back_btn.setText(_translate("SignupWindow", "Back"))
+        self.Name_lineEdit.setPlaceholderText(_translate("SignupWindow", "Name"))
         self.LName_lineEdit.setPlaceholderText(_translate("SignupWindow", "Last name"))
         self.Email_lineEdit.setPlaceholderText(_translate("SignupWindow", "Email"))
-        self.Password_lineEdit.setPlaceholderText(_translate("SignupWindow", "Password"))
-        self.Name_lineEdit.setPlaceholderText(_translate("SignupWindow", "Name"))
         self.Address_label.setText(_translate("SignupWindow", "Address"))
-        self.back_btn.setText(_translate("SignupWindow", "Back"))
-        self.signup_btn.setText(_translate("SignupWindow", "Sign Up"))
         self.Username_lineEdit.setPlaceholderText(_translate("SignupWindow", "Username"))
+        self.Password_lineEdit.setPlaceholderText(_translate("SignupWindow", "Password"))
+        self.signup_btn.setText(_translate("SignupWindow", "Sign Up"))
+
+        # self.LName_lineEdit.text
+        # self.LName_lineEdit.setText("")
+        # self.Address_lineEdit.text
+        # self.signup_btn.clicked.connect()
     #* open the login_signup window
     def open_login_signup_window(self):
         self.login_signup.show()
         self.SignupWindow.close()
+
+    def register_user(self):
+        dbm = DBM()
+        dbm.db_connect()
+        resultBool = insert_one_user(
+            dbm,
+            self.Name_lineEdit.text(),
+            self.LName_lineEdit.text(),
+            self.Email_lineEdit.text(),
+            self.Address_lineEdit.toPlainText(),
+            self.Username_lineEdit.text(),
+            self.Password_lineEdit.text()
+        ) 
+        dbm.db_disconnect()
+        if resultBool:
+
+            print("User registered successfully")
+             #* clear all fields
+            self.Name_lineEdit.clear()
+            self.LName_lineEdit.clear()
+            self.Email_lineEdit.clear()
+            self.Address_lineEdit.clear()
+            self.Username_lineEdit.clear()
+            self.Password_lineEdit.clear()
+            #messagebox successful registration
+            msg = QtWidgets.QMessageBox()
+            msg.setIcon(QtWidgets.QMessageBox.Information)
+            msg.setText("User registered successfully")
+            msg.setWindowTitle("Success")
+            msg.exec_()
+
+            #* open the login_signup window
+            self.open_login_signup_window()
+        else:
+            print("User registration failed")
+            #messagebox unsuccessful registration
+            msg = QtWidgets.QMessageBox()
+            msg.setIcon(QtWidgets.QMessageBox.Critical)
+            msg.setText("User registration failed")
+            msg.setWindowTitle("Error")
+            msg.exec_()
+           

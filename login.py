@@ -1,6 +1,6 @@
+
 from PyQt5 import QtCore, QtGui, QtWidgets
 import resources
-
 
 class Ui_LoginWindow(object):
     def __init__(self, login_signup=None):
@@ -148,3 +148,6 @@ class Ui_LoginWindow(object):
     def open_login_signup_window(self):
         self.login_signup.show()
         self.LoginWindow.close()
+        
+       
+     
