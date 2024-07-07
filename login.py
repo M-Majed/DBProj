@@ -134,7 +134,7 @@ class Ui_LoginWindow(object):
 
         #* Connect the back button to the open_login_signup_window method
         self.back_Btn.clicked.connect(self.open_login_signup_window)
-        
+        self.Login_Btn.clicked.connect(self.check_login2)
     
 
     def retranslateUi(self, LoginWindow):
@@ -153,4 +153,21 @@ class Ui_LoginWindow(object):
         self.LoginWindow.close()
         
        
-     
+    def check_login2(self):
+        username = self.Username_input.text()
+        password = self.Password_input.text()
+        dbm = DBM()
+        dbm.db_connect()
+        if check_login(dbm, username, password):
+            print("Login successful")
+        else:
+                print("Login failed")
+                #messagebox unsuccessful registration
+                msg = QtWidgets.QMessageBox()
+                msg.setIcon(QtWidgets.QMessageBox.Critical)
+                msg.setText("Login failed")
+                msg.setInformativeText('Invalid username or password')
+                msg.setWindowTitle("Error")
+                msg.exec_()
+                                                                                        
+        dbm.db_disconnect()

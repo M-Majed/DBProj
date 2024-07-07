@@ -7,13 +7,13 @@ dbm.db_connect()
 #print(check_login(dbm, "negin", "1234"))
 
 create_db_tables(dbm)
-# dbm.db_execute_query(
-#     f'''
-#     INSERT INTO
-#         user (fname,lname,email,address,username,password)
-#         VALUES
-#         ("negin","dashti","negin@gmail.com","Around YAZD Province","negin","1234");
-#     ''', None
-# )
+dbm.db_execute_query(
+    '''
+    INSERT INTO
+        tracks (id, title, artist, album,  duration, genre, ages, lyric, area)
+        VALUES
+            (1, 'Track Title', 'Artist Name', 'Album Name', '00:03:30', 'Genre', 'Ages', 'Lyrics', 'Area');
+    ''', None
+)
 
 dbm.db_disconnect()
