@@ -1,6 +1,8 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 import resources
+from dbfunctions import *
+from DBManagement import DBM
 
 class Ui_LoginWindow(object):
     def __init__(self, login_signup=None):
@@ -132,6 +134,7 @@ class Ui_LoginWindow(object):
 
         #* Connect the back button to the open_login_signup_window method
         self.back_Btn.clicked.connect(self.open_login_signup_window)
+        
     
 
     def retranslateUi(self, LoginWindow):
