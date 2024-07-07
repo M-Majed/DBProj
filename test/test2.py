@@ -10,9 +10,9 @@ create_db_tables(dbm)
 dbm.db_execute_query(
     '''
     INSERT INTO
-        tracks (id, title, artist, album,  duration, genre, ages, lyric, area)
+        tracks (id, title, artist, album,  duration, genre, ages, lyric, area,date)
         VALUES
-            (1, 'Track Title', 'Artist Name', 'Album Name', '00:03:30', 'Genre', 'Ages', 'Lyrics', 'Area');
+            (1, 'Track Title', 'Artist Name', 'Album Name', '00:03:30', 'Genre', 'Ages', 'Lyrics', 'Area' , '2021-06-01');
     ''', None
 )
 

@@ -219,6 +219,17 @@ def insert_one_user(dbm: DBM, fname, lname, email, address, username, password):
         )
     except Exception as e:
         return False
+    
+def show_tracks(dbm: DBM):
+    if not dbm:
+        return None
+    result = dbm.db_execute_read_query(
+        """
+        SELECT * FROM tracks;
+        """,
+        None,
+    )
+    return result
 
 
 # def get_current(melli: str):
