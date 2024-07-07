@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MusicListWindow</class>
+ <widget class="QMainWindow" name="MusicListWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>802</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Musics List</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="Resources/main.qrc">
+    <normaloff>:/Icons/Icons/spotify.png</normaloff>:/Icons/Icons/spotify.png</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">color: rgb(0, 0, 0);</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="styleSheet">
+    <string notr="true">background-image: url(:/Background/background/darkgreen.png);
+color: rgb(255, 255, 255);</string>
+   </property>
+   <layout class="QGridLayout" name="gridLayout_2">
+    <item row="1" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QLineEdit" name="comment_lineEdit">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>11</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-image: url(:/Background/background/transparent.png);
+color: rgb(0, 0, 0);</string>
+        </property>
+        <property name="placeholderText">
+         <string>Write your comment</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="Comment_btn">
+        <property name="minimumSize">
+         <size>
+          <width>80</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>11</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: rgb(255, 255, 255);
+background-color: rgb(0, 0, 0);</string>
+        </property>
+        <property name="text">
+         <string>Post comment</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="Like_checkBox">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>40</height>
+         </size>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>11</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">color: rgb(255, 255, 255);
+background-image: url(:/Background/background/transparent.png);</string>
+        </property>
+        <property name="text">
+         <string>Like</string>
+        </property>
+        <property name="tristate">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="0" column="0">
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="1">
+       <widget class="QTableView" name="Music_list">
+        <property name="font">
+         <font>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-image: url(:/Background/background/transparent.png);
+background-color: rgb(255, 255, 255);
+color: rgb(0, 0, 0);</string>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::StyledPanel</enum>
+        </property>
+        <property name="editTriggers">
+         <set>QAbstractItemView::NoEditTriggers</set>
+        </property>
+        <property name="dragDropOverwriteMode">
+         <bool>false</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>802</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuAccount">
+    <property name="title">
+     <string>Account</string>
+    </property>
+    <addaction name="actionDetails"/>
+    <addaction name="actionLogout"/>
+   </widget>
+   <widget class="QMenu" name="menuLists">
+    <property name="title">
+     <string>Lists</string>
+    </property>
+    <addaction name="actionMusics"/>
+    <addaction name="actionAlbums"/>
+    <addaction name="actionFollowings"/>
+    <addaction name="actionsuggestions"/>
+    <addaction name="actionPlayLists"/>
+    <addaction name="actionArtists"/>
+    <addaction name="actionConcerts"/>
+   </widget>
+   <widget class="QMenu" name="menusearch">
+    <property name="title">
+     <string>search</string>
+    </property>
+    <addaction name="actionSearch"/>
+   </widget>
+   <addaction name="menuAccount"/>
+   <addaction name="menuLists"/>
+   <addaction name="menusearch"/>
+  </widget>
+  <action name="actionDetails">
+   <property name="text">
+    <string>Details</string>
+   </property>
+  </action>
+  <action name="actionLogout">
+   <property name="text">
+    <string>Logout</string>
+   </property>
+  </action>
+  <action name="actionMusics">
+   <property name="text">
+    <string>Musics</string>
+   </property>
+  </action>
+  <action name="actionAlbums">
+   <property name="text">
+    <string>Albums</string>
+   </property>
+  </action>
+  <action name="actionFollowings">
+   <property name="text">
+    <string>Followings</string>
+   </property>
+  </action>
+  <action name="actionsuggestions">
+   <property name="text">
+    <string>Suggestions</string>
+   </property>
+  </action>
+  <action name="actionPlayLists">
+   <property name="text">
+    <string>PlayLists</string>
+   </property>
+  </action>
+  <action name="actionArtists">
+   <property name="text">
+    <string>Artists</string>
+   </property>
+  </action>
+  <action name="actionConcerts">
+   <property name="text">
+    <string>Concerts</string>
+   </property>
+  </action>
+  <action name="actionSearch">
+   <property name="text">
+    <string>Search</string>
+   </property>
+  </action>
+ </widget>
+ <resources>
+  <include location="Resources/main.qrc"/>
+ </resources>
+ <connections/>
+</ui>
