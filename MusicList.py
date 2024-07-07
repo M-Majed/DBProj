@@ -2,10 +2,10 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import resources
 
 
-class Ui_MusicList(object):
+
+class Ui_MusicListWindow(object):
     def __init__(self, parent=None):  # * for window trans
         self.parent = parent
-
     def setupUi(self, MusicListWindow):
         self.MusicListWindow = MusicListWindow # * Save the MusicListWindow object
         MusicListWindow.setObjectName("MusicListWindow")
@@ -50,6 +50,16 @@ class Ui_MusicList(object):
         self.verticalLayout.addWidget(self.Logout_btn)
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout.addItem(spacerItem)
+        self.Search_btn = QtWidgets.QPushButton(MusicListWindow)
+        font = QtGui.QFont()
+        font.setPointSize(9)
+        font.setBold(True)
+        font.setWeight(75)
+        self.Search_btn.setFont(font)
+        self.Search_btn.setStyleSheet("color: rgb(255, 255, 255);\n"
+"background-color: rgb(0, 0, 0);")
+        self.Search_btn.setObjectName("Search_btn")
+        self.verticalLayout.addWidget(self.Search_btn)
         self.Category_combobox = QtWidgets.QComboBox(MusicListWindow)
         font = QtGui.QFont()
         font.setPointSize(10)
@@ -88,17 +98,16 @@ class Ui_MusicList(object):
 
         self.retranslateUi(MusicListWindow)
         QtCore.QMetaObject.connectSlotsByName(MusicListWindow)
-
         self.Logout_btn.clicked.connect(self.open_parent_window)
     def open_parent_window(self):
         self.parent.show()
         self.MusicListWindow.close()
-
     def retranslateUi(self, MusicListWindow):
         _translate = QtCore.QCoreApplication.translate
-        MusicListWindow.setWindowTitle(_translate("MusicListWindow", "MusicListWindow"))
+        MusicListWindow.setWindowTitle(_translate("MusicListWindow", "MusicList"))
         self.Account_btn.setText(_translate("MusicListWindow", "Account"))
         self.Logout_btn.setText(_translate("MusicListWindow", "Logout"))
+        self.Search_btn.setText(_translate("MusicListWindow", "Search"))
         self.Category_combobox.setCurrentText(_translate("MusicListWindow", "Musics"))
         self.Category_combobox.setItemText(0, _translate("MusicListWindow", "Musics"))
         self.Category_combobox.setItemText(1, _translate("MusicListWindow", "Albums"))
@@ -108,12 +117,3 @@ class Ui_MusicList(object):
         self.Category_combobox.setItemText(5, _translate("MusicListWindow", "Artists"))
         self.Category_combobox.setItemText(6, _translate("MusicListWindow", "Concerts"))
 
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    MusicListWindow = QtWidgets.QWidget()
-    ui = Ui_MusicList()
-    ui.setupUi(MusicListWindow)
-    MusicListWindow.show()
-    sys.exit(app.exec_())

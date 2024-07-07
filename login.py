@@ -2,7 +2,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import resources
 from dbfunctions import *
 from DBManagement import DBM
-from MusicList import Ui_MusicList
+from MusicList import Ui_MusicListWindow
 
 class Ui_LoginWindow(object):
     def __init__(self, parent=None):  # * for window trans
@@ -192,7 +192,7 @@ class Ui_LoginWindow(object):
             print("Login successful")
             # Open MusicListWindow
             self.window = QtWidgets.QWidget()
-            self.ui = Ui_MusicList(
+            self.ui = Ui_MusicListWindow(
             self.LoginWindow
             )  # * Pass the main window reference here
             self.ui.setupUi(self.window)
