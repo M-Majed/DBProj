@@ -2,7 +2,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import resources
 import Variable
 from dbfunctions import *
-
+from DBManagement import DBM
 
 class Ui_MusicWindow(object):
     def __init__(self, parent=None, appstate=None):  # * for window trans
@@ -142,8 +142,9 @@ class Ui_MusicWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MusicWindow.setWindowTitle(_translate("MusicWindow", "Form"))
         self.Title_lbl.setText(_translate("MusicWindow", "Title:xxxx"))
-        self.Artist_lbl.setText(_translate("MusicWindow", "Artist:xxxx"))
-        self.Artist_lbl.setText(_translate("MusicWindow", "Artist:ssssss"))
+        self.Title_lbl.setText(_translate("MusicWindow", "Title:zzzz")) 
+        self.Artist_lbl.setText(_translate("MusicWindow", "Artist:{MusicList.row[2]}"))
+        # self.Artist_lbl.setText(_translate("MusicWindow", "Artist:ssssss"))
         self.Genre_lbl.setText(_translate("MusicWindow", "Genre:xxxx"))
         self.Area_lbl.setText(_translate("MusicWindow", "Area:xxxx"))
         self.Age_lbl.setText(_translate("MusicWindow", "Age:xxxxx"))
