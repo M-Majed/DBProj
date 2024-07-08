@@ -1,9 +1,11 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import resources
 
+
 class Ui_AccountWindow(object):
-    def __init__(self, parent=None):  # * for window trans
+    def __init__(self, parent=None , appstate=None):
         self.parent = parent
+        self.appstate = appstate
     def setupUi(self, AccountWindow):
         self.AccountWindow = AccountWindow
         AccountWindow.setObjectName("AccountWindow")
@@ -125,6 +127,19 @@ class Ui_AccountWindow(object):
 "background-color: rgb(0, 0, 0);")
         self.follower_btn.setObjectName("follower_btn")
         self.gridLayout_2.addWidget(self.follower_btn, 7, 1, 1, 1)
+        self.verticalLayout = QtWidgets.QVBoxLayout()
+        self.verticalLayout.setObjectName("verticalLayout")
+        spacerItem4 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout.addItem(spacerItem4)
+        self.Subscription_checkBox = QtWidgets.QCheckBox(AccountWindow)
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.Subscription_checkBox.setFont(font)
+        self.Subscription_checkBox.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n"
+"color: rgb(255, 255, 255);")
+        self.Subscription_checkBox.setObjectName("Subscription_checkBox")
+        self.verticalLayout.addWidget(self.Subscription_checkBox)
+        self.gridLayout_2.addLayout(self.verticalLayout, 1, 3, 1, 1)
 
         self.retranslateUi(AccountWindow)
         QtCore.QMetaObject.connectSlotsByName(AccountWindow)
@@ -148,3 +163,4 @@ class Ui_AccountWindow(object):
         self.Friends_btn.setText(_translate("AccountWindow", "Friends"))
         self.following_btn.setText(_translate("AccountWindow", "Following"))
         self.follower_btn.setText(_translate("AccountWindow", "Follower"))
+        self.Subscription_checkBox.setText(_translate("AccountWindow", "subscription"))

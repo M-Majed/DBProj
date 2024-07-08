@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>FollowWindow</class>
- <widget class="QWidget" name="FollowWindow">
+ <class>TicketsWindow</class>
+ <widget class="QWidget" name="TicketsWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
     <width>500</width>
-    <height>360</height>
+    <height>600</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>500</width>
-    <height>360</height>
+    <height>600</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>500</width>
-    <height>360</height>
+    <height>600</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -34,7 +34,67 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QListView" name="Follow_listView">
+    <widget class="QLabel" name="TicketsList_label">
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-image: url(:/Background/background/transparent.png);
+color: rgb(255, 255, 255);</string>
+     </property>
+     <property name="text">
+      <string>Tickets list</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QListView" name="Tickets_listView">
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-image: url(:/Background/background/transparent.png);
+background-color: rgb(255, 255, 255);</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="Expired_lbl">
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-image: url(:/Background/background/transparent.png);
+color: rgb(255, 255, 255);</string>
+     </property>
+     <property name="text">
+      <string>Expired tickets</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QListView" name="Expired_listView">
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
      <property name="styleSheet">
       <string notr="true">background-image: url(:/Background/background/transparent.png);
 background-color: rgb(255, 255, 255);</string>
