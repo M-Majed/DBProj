@@ -7,7 +7,9 @@ from Signup import Ui_SignupWindow
 
 
 class Ui_LoginSignupWindow(object):
+    appstate = None
     def setupUi(self, LoginSignupWindow):
+        self.appstate = {}
         LoginSignupWindow.setObjectName("LoginSignupWindow")
         LoginSignupWindow.resize(600, 300)
         sizePolicy = QtWidgets.QSizePolicy(
@@ -128,7 +130,8 @@ class Ui_LoginSignupWindow(object):
     def open_login_window(self):
         self.window = QtWidgets.QWidget()
         self.ui = Ui_LoginWindow(
-            self.LoginSignupWindow
+            self.LoginSignupWindow,
+            self.appstate
         )  # * Pass the main window reference here
         self.ui.setupUi(self.window)
         self.window.show()
@@ -137,15 +140,17 @@ class Ui_LoginSignupWindow(object):
     # * open the signup window
     def open_signup_window(self):
         self.window = QtWidgets.QWidget()
-        self.ui = Ui_SignupWindow(self.LoginSignupWindow)
+        self.ui = Ui_SignupWindow(self.LoginSignupWindow, self.appstate)
         self.ui.setupUi(self.window)
         self.window.show()
         self.LoginSignupWindow.close()
 
-
+# global mystate
 if __name__ == "__main__":
     import sys
-
+    # global mystate
+    # mystate = {}
+    # mystate['test01'] = "yo"
     app = QtWidgets.QApplication(sys.argv)
     LoginSignupWindow = QtWidgets.QMainWindow()
     ui = Ui_LoginSignupWindow()

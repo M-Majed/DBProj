@@ -68,6 +68,18 @@ def create_db_tables(dbm: DBM):
     )
     dbm.db_execute_query(
         """
+             
+            CREATE TABLE IF NOT EXISTS suggestion (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                track_id INTEGER NOT NULL,
+                FOREIGN KEY (user_id) REFERENCES user (id),
+                FOREIGN KEY (track_id) REFERENCES tracks (id)
+            );  """,
+        None,
+    )
+    dbm.db_execute_query(
+        """
        CREATE TABLE IF NOT EXISTS tracks (
              id INTEGER PRIMARY KEY AUTOINCREMENT,
              title TEXT  NOT NULL,
@@ -144,6 +156,7 @@ def create_db_tables(dbm: DBM):
         """,
         None,
     )
+    
     dbm.db_execute_query(
         """
           CREATE TABLE IF NOT EXISTS followorfollowing (
@@ -174,15 +187,16 @@ def create_db_tables(dbm: DBM):
 
 def check_login(dbm: DBM, username: str, password: str):
     if not dbm or not username or username == "" or not password or password == "":
-        return False
+        return False, False
     result = dbm.db_execute_read_query(
         f"""
-        SELECT COUNT(*) FROM user
+        SELECT Count(*) FROM user
         WHERE username = "{username}" AND password = "{password}"
         """,
         None,
     )
     print(f"{result=}\t{result[0][0]}")
+    # countFromDB = len(result)
     countFromDB = result[0][0]
     if countFromDB != 1:
         return False
@@ -219,7 +233,33 @@ def insert_one_user(dbm: DBM, fname, lname, email, address, username, password):
         )
     except Exception as e:
         return False
-    
+
+def get_one_user(dbm: DBM, username: str):
+    if not dbm or not username or username == "":
+        return None
+    result = dbm.db_execute_read_query(
+        f"""
+        SELECT * FROM user WHERE username = "{username}";
+        """,
+        None,
+    )
+    return result
+
+def is_subscribed(dbm: DBM, username: str):
+    if not dbm or not username or username == "":
+        return None
+    result = dbm.db_execute_read_query(
+        f"""
+        SELECT subscription FROM user WHERE username = "{username}";
+        """,
+        None,
+    )
+    # print(f"{result=}\t{result[0][0]}")
+    if result[0][0]:
+        return True if result[0][0] == 1 else False
+    else:
+        return None
+
 def show_tracks(dbm: DBM):
     if not dbm:
         return None

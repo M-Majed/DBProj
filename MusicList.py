@@ -1,13 +1,17 @@
 import sqlite3
 from PyQt5 import QtCore, QtGui, QtWidgets
 import resources
-
-
+from dbfunctions import *
+from DBManagement import DBM
+from datatype import *
 
 
 class Ui_MusicListWindow(object):
-    def __init__(self, parent=None):  # * for window trans
+    def __init__(self, parent=None
+                #  , default_category_index = 0
+                 ):  # * for window trans
         self.parent = parent
+        # self.default_category_index = default_category_index
     def setupUi(self, MusicListWindow):
         self.MusicListWindow = MusicListWindow # * Save the MusicListWindow object
         MusicListWindow.setObjectName("MusicListWindow")
@@ -96,12 +100,8 @@ class Ui_MusicListWindow(object):
         column_names = [info[1] for info in columns_info]
         self.model.setColumnCount(len(column_names))
         self.model.setHorizontalHeaderLabels(column_names)
-        cursor.execute("SELECT * FROM user")
-        rows = cursor.fetchall()
-        for row in rows:
-            items = [QtGui.QStandardItem(str(field)) for field in row]
-            self.model.appendRow(items)
-        connection.close()
+        self.Category_combobox.currentIndexChanged.connect(self.category_changed)
+
 
 
 
@@ -125,6 +125,8 @@ class Ui_MusicListWindow(object):
 
         self.Back_btn.clicked.connect(self.open_parent_window) # * Connect the back button to the open_parent_window method
  
+        # self.Category_combobox.currentIndexChanged.emit()
+        self.category_changed(0)
         
     def open_parent_window(self): # * Method to open the parent window
         self.parent.show()
@@ -138,11 +140,99 @@ class Ui_MusicListWindow(object):
         self.Account_btn.setText(_translate("MusicListWindow", "Account"))
         self.Back_btn.setText(_translate("MusicListWindow", "Back"))
         self.Search_btn.setText(_translate("MusicListWindow", "Search"))
-        self.Category_combobox.setCurrentText(_translate("MusicListWindow", "Musics"))
-        self.Category_combobox.setItemText(0, _translate("MusicListWindow", "Musics"))
+        self.Category_combobox.setCurrentText(_translate("MusicListWindow", "Tracks"))
+        # self.Category_combobox.setCurrentIndex(self.default_category_index)
+        self.Category_combobox.setItemText(0, _translate("MusicListWindow", "Tracks"))
         self.Category_combobox.setItemText(1, _translate("MusicListWindow", "Albums"))
         self.Category_combobox.setItemText(2, _translate("MusicListWindow", "Followings"))
         self.Category_combobox.setItemText(3, _translate("MusicListWindow", "Suggestions"))
         self.Category_combobox.setItemText(4, _translate("MusicListWindow", "PlayLists"))
         self.Category_combobox.setItemText(5, _translate("MusicListWindow", "Artists"))
         self.Category_combobox.setItemText(6, _translate("MusicListWindow", "Concerts"))
+
+    def item_clicked(self, index):
+        cat = self.Category_combobox.currentIndex()
+        item = self.model.itemFromIndex(index)
+        
+        # # change bg color
+        # item.setBackground(QtGui.QColor(255, 0, 0))
+        
+        # get row data  
+        row = [self.model.item(index.row(), col).text() for col in range(self.model.columnCount())]
+        # RETURN TEMPLATE FOR "Tracks" ==>>> row=['2', 'Track Title', 'Artist Name', 'Album Name', '00:03:30', 'Genre', 'Ages', 'Lyrics', 'Area', '2021-06-01']
+        # LATER : self open folan track UI using data e baalaa
+        if cat == 0: # Category = "Tracks"
+            pass
+        elif cat == 1: # Category = "Albums"
+            pass
+        elif cat == 2: # Category = "Followings"
+            pass
+        elif cat == 3: # Category = "Suggestions"
+            pass
+        elif cat == 4: # Category = "PlayLists"
+            pass
+        elif cat == 5: # Category = "Artists"
+            pass
+        elif cat == 6: # Category = "Concerts"
+            pass
+
+    def category_changed(self, index):
+        self.model.clear()
+        print(f'{index=}\t{self.Category_combobox.currentIndex()=}\t{self.Category_combobox.currentText()=}')
+        dbm = DBM()
+        dbm.db_connect()
+        rows = None
+        # Later: rewrite selects
+        if index == 0: # Tracks
+            rows = dbm.db_execute_read_query(
+                f'''
+                SELECT * FROM tracks
+                ''', None
+            )
+        elif index == 1: # Albums
+            rows = dbm.db_execute_read_query(
+                f'''
+                SELECT album FROM tracks
+                ''', None
+            )
+        elif index == 2: # Followings
+            rows = dbm.db_execute_read_query(
+                f'''
+                SELECT * FROM followings
+                ''', None
+            )
+        elif index == 3: # Suggestions
+            rows = dbm.db_execute_read_query(
+                f'''
+                SELECT * FROM suggestions
+                ''', None
+            )
+        elif index == 4: # PlayLists
+            rows = dbm.db_execute_read_query(
+                f'''
+                SELECT * FROM playlists
+                ''', None
+            )
+        elif index == 5: # Artists
+            rows = dbm.db_execute_read_query(
+                f'''
+                SELECT artists FROM tracks#
+                ''', None
+            )
+        elif index == 6: # Concerts
+            rows = dbm.db_execute_read_query(
+                f'''
+                SELECT * FROM concerts
+                ''', None
+            )
+            
+            
+        for row in rows:
+            items = [QtGui.QStandardItem(str(field)) for field in row]
+            for elem in items:
+                elem.setEditable(False)
+            self.Music_list.clicked.connect(self.item_clicked)
+                                            
+            self.model.appendRow(items)
+            
+        dbm.db_disconnect()

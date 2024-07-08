@@ -15,8 +15,9 @@ from DBManagement import DBM
 
 
 class Ui_SignupWindow(object):
-    def __init__(self, login_signup=None): #* use login_signup as parent
+    def __init__(self, login_signup=None, appstate=None): #* use login_signup as parent
         self.login_signup = login_signup
+        self.appstate = appstate
 
     def setupUi(self, SignupWindow):
         self.SignupWindow = SignupWindow #* Save the LoginWindow object

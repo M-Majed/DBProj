@@ -5,8 +5,9 @@ from DBManagement import DBM
 from MusicList import Ui_MusicListWindow
 
 class Ui_LoginWindow(object):
-    def __init__(self, parent=None):  # * for window trans
+    def __init__(self, parent=None, appstate=None):  # * for window trans
         self.parent = parent
+        self.appstate = appstate
 
     def setupUi(self, LoginWindow):
         self.LoginWindow = LoginWindow  # * Save the LoginWindow object
@@ -198,6 +199,19 @@ class Ui_LoginWindow(object):
             self.ui.setupUi(self.window)
             self.window.show()
             self.LoginWindow.close()
+            self.appstate["username"] = username
+            # check if user has subscription
+            # current_user_row = get_one_user(dbm, username)
+            # print(f"{current_user_row=}")
+            sub = is_subscribed(dbm, username)
+            if sub:
+                self.appstate["subscribed"] = sub
+                # self.appstate["subscribed"] = True if current_user_row[0][7] == 1 else False
+            else:
+                self.appstate["subscribed"] = False # Default behaviour: ISN't SUBSCRIBED
+            print(f"{self.appstate=}")
+                
+                
 
         else:
             print("Login failed")
