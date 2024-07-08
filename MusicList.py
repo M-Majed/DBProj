@@ -149,11 +149,11 @@ class Ui_MusicListWindow(object):
         self.Category_combobox.setItemText(4, _translate("MusicListWindow", "PlayLists"))
         self.Category_combobox.setItemText(5, _translate("MusicListWindow", "Artists"))
         self.Category_combobox.setItemText(6, _translate("MusicListWindow", "Concerts"))
-
+    
     def item_clicked(self, index):
         cat = self.Category_combobox.currentIndex()
         item = self.model.itemFromIndex(index)
-        
+    
         # # change bg color
         # item.setBackground(QtGui.QColor(255, 0, 0))
         
@@ -162,8 +162,10 @@ class Ui_MusicListWindow(object):
         # RETURN TEMPLATE FOR "Tracks" ==>>> row=['2', 'Track Title', 'Artist Name', 'Album Name', '00:03:30', 'Genre', 'Ages', 'Lyrics', 'Area', '2021-06-01']
         # LATER : self open folan track UI using data e baalaa
         if cat == 0: # Category = "Tracks"
+            track=Track(row[1], row[2], row[4])
             pass
         elif cat == 1: # Category = "Albums"
+            track=Track(row[1], row[2], row[3])
             pass
         elif cat == 2: # Category = "Followings"
             pass
