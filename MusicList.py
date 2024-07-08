@@ -175,6 +175,7 @@ class Ui_MusicListWindow(object):
         
         # get row data  
         row = [self.model.item(index.row(), col).text() for col in range(self.model.columnCount())]
+        print(f'{row=}')
         # RETURN TEMPLATE FOR "Tracks" ==>>> row=['2', 'Track Title', 'Artist Name', 'Album Name', '00:03:30', 'Genre', 'Ages', 'Lyrics', 'Area', '2021-06-01']
         # LATER : self open folan track UI using data e baalaa
         if cat == 0: # Category = "Tracks"
