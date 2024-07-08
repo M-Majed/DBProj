@@ -202,14 +202,16 @@ def check_login(dbm: DBM, username: str, password: str):
         return False
     return True
 
-def check_attribute(dbm: DBM, artist: str):
-    artist = dbm.db_execute_read_query(
+def check_attribute(dbm: DBM):
+    result = dbm.db_execute_read_query(
         f"""
-        SELECT artist FROM tracks
+        SELECT * FROM tracks
         limit 1 offset {Variable.selected_index};
         """,
         None,
     )
+    Variable.music_detail_title=result[0][1]
+
 
 def insert_one_user(dbm: DBM, fname, lname, email, address, username, password):
     if not dbm:

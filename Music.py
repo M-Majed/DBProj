@@ -139,11 +139,14 @@ class Ui_MusicWindow(object):
         self.MusicWindow.close()
 
     def retranslateUi(self, MusicWindow):
+        dbm = DBM()
+        dbm.db_connect()
+        check_attribute(dbm)
+        
         _translate = QtCore.QCoreApplication.translate
         MusicWindow.setWindowTitle(_translate("MusicWindow", "Form"))
-        self.Title_lbl.setText(_translate("MusicWindow", "Title:xxxx"))
-        self.Title_lbl.setText(_translate("MusicWindow", "Title:zzzz")) 
-        self.Artist_lbl.setText(_translate("MusicWindow", "Artist:{MusicList.row[2]}"))
+        self.Title_lbl.setText(_translate("MusicWindow", f"Title:{Variable.music_detail_title}"))
+        self.Artist_lbl.setText(_translate("MusicWindow", "Artist:"))
         # self.Artist_lbl.setText(_translate("MusicWindow", "Artist:ssssss"))
         self.Genre_lbl.setText(_translate("MusicWindow", "Genre:xxxx"))
         self.Area_lbl.setText(_translate("MusicWindow", "Area:xxxx"))
