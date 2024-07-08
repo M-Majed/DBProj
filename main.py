@@ -2,7 +2,6 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import resources
 import sys
 from PyQt5.uic import loadUi
-from PyQt5.QtWidgets import QDialog, QApplication, QMainWindow
 from login_signup import Ui_LoginSignupWindow
 
 if __name__ == "__main__":
