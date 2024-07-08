@@ -4,13 +4,15 @@ import resources
 from dbfunctions import *
 from DBManagement import DBM
 from datatype import *
+from Music import Ui_MusicWindow
 
 
 class Ui_MusicListWindow(object):
-    def __init__(self, parent=None
+    def __init__(self, parent=None , appstate=None
                 #  , default_category_index = 0
                  ):  # * for window trans
         self.parent = parent
+        self.appstate = appstate
         # self.default_category_index = default_category_index
     def setupUi(self, MusicListWindow):
         self.MusicListWindow = MusicListWindow # * Save the MusicListWindow object
@@ -124,9 +126,20 @@ class Ui_MusicListWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MusicListWindow)
 
         self.Back_btn.clicked.connect(self.open_parent_window) # * Connect the back button to the open_parent_window method
+        self.Music_list.clicked.connect(self.item_clicked2)
  
         # self.Category_combobox.currentIndexChanged.emit()
         self.category_changed(0)
+    def item_clicked2(self, index):
+        self.window = QtWidgets.QWidget()
+        self.ui = Ui_MusicWindow(
+            self.MusicListWindow,
+            self.appstate
+        )  # * Pass the main window reference here
+        self.ui.setupUi(self.window)
+        self.window.show()
+        self.MusicListWindow.close()
+
         
     def open_parent_window(self): # * Method to open the parent window
         self.parent.show()

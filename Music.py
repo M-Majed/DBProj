@@ -2,8 +2,9 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import resources
 
 class Ui_MusicWindow(object):
-    def __init__(self, parent=None):  # * for window trans
+    def __init__(self, parent=None, appstate=None):  # * for window trans
         self.parent = parent
+        self.appstate = appstate
     def setupUi(self, MusicWindow):
         self.MusicWindow = MusicWindow
         MusicWindow.setObjectName("MusicWindow")
