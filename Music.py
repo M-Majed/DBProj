@@ -1,10 +1,14 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import resources
+import Variable
+from dbfunctions import *
+
 
 class Ui_MusicWindow(object):
     def __init__(self, parent=None, appstate=None):  # * for window trans
         self.parent = parent
         self.appstate = appstate
+
     def setupUi(self, MusicWindow):
         self.MusicWindow = MusicWindow
         MusicWindow.setObjectName("MusicWindow")
@@ -139,6 +143,7 @@ class Ui_MusicWindow(object):
         MusicWindow.setWindowTitle(_translate("MusicWindow", "Form"))
         self.Title_lbl.setText(_translate("MusicWindow", "Title:xxxx"))
         self.Artist_lbl.setText(_translate("MusicWindow", "Artist:xxxx"))
+        self.Artist_lbl.setText(_translate("MusicWindow", "Artist:ssssss"))
         self.Genre_lbl.setText(_translate("MusicWindow", "Genre:xxxx"))
         self.Area_lbl.setText(_translate("MusicWindow", "Area:xxxx"))
         self.Age_lbl.setText(_translate("MusicWindow", "Age:xxxxx"))

@@ -5,7 +5,7 @@ from dbfunctions import *
 from DBManagement import DBM
 from datatype import *
 from Music import Ui_MusicWindow
-
+import Variable
 
 class Ui_MusicListWindow(object):
     def __init__(self, parent=None , appstate=None
@@ -131,14 +131,17 @@ class Ui_MusicListWindow(object):
         # self.Category_combobox.currentIndexChanged.emit()
         self.category_changed(0)
     def item_clicked2(self, index):
-        self.window = QtWidgets.QWidget()
-        self.ui = Ui_MusicWindow(
-            self.MusicListWindow,
-            self.appstate
-        )  # * Pass the main window reference here
-        self.ui.setupUi(self.window)
-        self.window.show()
-        self.MusicListWindow.close()
+        cat = self.Category_combobox.currentIndex()
+        if cat==0:
+            Variable.selected_index = index.row()
+            self.window = QtWidgets.QWidget()
+            self.ui = Ui_MusicWindow(
+                self.MusicListWindow,
+                self.appstate
+            )  # * Pass the main window reference here
+            self.ui.setupUi(self.window)
+            self.window.show()
+            self.MusicListWindow.close()
 
         
     def open_parent_window(self): # * Method to open the parent window
@@ -175,10 +178,8 @@ class Ui_MusicListWindow(object):
         # RETURN TEMPLATE FOR "Tracks" ==>>> row=['2', 'Track Title', 'Artist Name', 'Album Name', '00:03:30', 'Genre', 'Ages', 'Lyrics', 'Area', '2021-06-01']
         # LATER : self open folan track UI using data e baalaa
         if cat == 0: # Category = "Tracks"
-            track=Track(row[1], row[2], row[4])
             pass
         elif cat == 1: # Category = "Albums"
-            track=Track(row[1], row[2], row[3])
             pass
         elif cat == 2: # Category = "Followings"
             pass
