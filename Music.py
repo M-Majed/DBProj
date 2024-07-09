@@ -5,6 +5,7 @@ from dbfunctions import *
 from DBManagement import DBM
 from time import sleep
 from threading import Timer
+from Comments import Ui_CommentsWindow
 
 class Ui_MusicWindow(object):
     def __init__(self, parent=None, appstate=None, music_row=None):  # * for window trans
@@ -137,6 +138,8 @@ class Ui_MusicWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MusicWindow)
         self.sendComment_btn.clicked.connect(self.send_comment)
         self.Return_btn.clicked.connect(self.open_parent_window)
+        self.comments_btn.clicked.connect(self.open_comments_window)
+
         
         if self.appstate is not None and self.appstate["subscribed"] is not None:
                 self.like_checkBox.setCheckable(self.appstate["subscribed"])
@@ -154,6 +157,15 @@ class Ui_MusicWindow(object):
             self.like_checkBox.setChecked(False)
         dbm.db_disconnect()
         
+    def open_comments_window(self):
+        self.window = QtWidgets.QWidget()
+        self.ui = Ui_CommentsWindow(
+            self.MusicWindow,
+            self.appstate
+        )  # * Pass the main window reference here
+        self.ui.setupUi(self.window)
+        self.window.show()
+        self.MusicWindow.close()    
     def open_parent_window(self):
         self.parent.show()
         self.MusicWindow.close()

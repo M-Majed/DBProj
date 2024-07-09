@@ -1,2 +1,2 @@
-selected_index=None
-music_detail_title=None
+username=None
+password=None

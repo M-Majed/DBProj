@@ -186,6 +186,7 @@ class Ui_LoginWindow(object):
 
     def check_login2(self):
         username = self.Username_input.text()
+        Variable.username = username
         password = self.Password_input.text()
         dbm = DBM()
         dbm.db_connect()

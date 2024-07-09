@@ -2,7 +2,13 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import resources
 
 class Ui_CommentsWindow(object):
+    def __init__(self, parent=None, appstate=None, music_row=None):  # * for window trans
+        self.parent = parent
+        self.appstate = appstate
+        # RETURN TEMPLATE FOR "Tracks" ==>>> row=['2', 'Track Title', 'Artist Name', 'Album Name', '00:03:30', 'Genre', 'Ages', 'Lyrics', 'Area', '2021-06-01']
+        self.music_row = music_row
     def setupUi(self, CommentsWindow):
+        self.CommentsWindow = CommentsWindow
         CommentsWindow.setObjectName("CommentsWindow")
         CommentsWindow.resize(500, 400)
         CommentsWindow.setMinimumSize(QtCore.QSize(500, 400))
@@ -50,6 +56,10 @@ class Ui_CommentsWindow(object):
 
         self.retranslateUi(CommentsWindow)
         QtCore.QMetaObject.connectSlotsByName(CommentsWindow)
+        self.back_btn.clicked.connect(self.open_parent_window)
+    def open_parent_window(self):
+        self.parent.show()
+        self.CommentsWindow.close()
 
     def retranslateUi(self, CommentsWindow):
         _translate = QtCore.QCoreApplication.translate

@@ -5,6 +5,8 @@ from DBManagement import DBM
 from People import Ui_PeopleWindow
 from Ticket import Ui_TicketsWindow
 from ArtistMusic_Concert import Ui_ArtistMusic_ConcertWindow
+import Variable
+
 
 class Ui_AccountWindow(object):
     def __init__(self, parent=None , appstate=None):
@@ -155,6 +157,7 @@ class Ui_AccountWindow(object):
         self.tickets_btn.clicked.connect(self.open_tickets_window)
         self.MusicList_btn.clicked.connect(self.open_musicList_window)
         self.concertList_btn.clicked.connect(self.open_concertList_window)
+        self.Subscription_checkBox.clicked.connect(self.changeSubscription)
 
 
     def open_parent_window(self):
@@ -199,13 +202,24 @@ class Ui_AccountWindow(object):
         self.AccountWindow.close()
 
 
+    def changeSubscription(self):
+        dbm = DBM()
+        dbm.db_connect()
+        if(self.Subscription_checkBox.isChecked()):
+            update_user_subscription(dbm, Variable.username, 1)
+        else:
+            update_user_subscription(dbm, Variable.username, 0)
+        dbm.db_disconnect()
+
     def retranslateUi(self, AccountWindow):
+        dbm = DBM()
+        dbm.db_connect()
         _translate = QtCore.QCoreApplication.translate
         AccountWindow.setWindowTitle(_translate("AccountWindow", "Account"))
         self.concertList_btn.setText(_translate("AccountWindow", "Concert List"))
         self.MusicList_btn.setText(_translate("AccountWindow", "Musics List"))
         self.return_btn.setText(_translate("AccountWindow", "Return"))
-        self.balance_lbl.setText(_translate("AccountWindow", "Balance:9999999"))
+        self.balance_lbl.setText(_translate("AccountWindow", f"balance:{get_one_user(dbm, Variable.username)[0][9]}"))
         self.deposit_btn.setText(_translate("AccountWindow", "Deposit"))
         self.deposit_lineEdit.setPlaceholderText(_translate("AccountWindow", "Enter desired amount"))
         self.tickets_btn.setText(_translate("AccountWindow", "Tickets"))
@@ -213,4 +227,12 @@ class Ui_AccountWindow(object):
         self.Friends_btn.setText(_translate("AccountWindow", "Friends"))
         self.following_btn.setText(_translate("AccountWindow", "Following"))
         self.follower_btn.setText(_translate("AccountWindow", "Follower"))
+        if(get_one_user(dbm, Variable.username)[0][7] == 1):
+            self.Subscription_checkBox.setChecked(True)
+        else:
+            self.Subscription_checkBox.setChecked(False)
+        if(get_one_user(dbm, Variable.username)[0][8] == 1):
+            self.artist_checkBox.setChecked(True)
+        else:
+            self.artist_checkBox.setChecked(False)
         self.Subscription_checkBox.setText(_translate("AccountWindow", "subscription"))
