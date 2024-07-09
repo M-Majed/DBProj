@@ -1,8 +1,14 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import resources
+from dbfunctions import *
+from DBManagement import DBM
 
 class Ui_ArtistMusic_ConcertWindow(object):
+    def __init__(self, parent=None , appstate=None):
+        self.parent = parent
+        self.appstate = appstate
     def setupUi(self, ArtistMusic_ConcertWindow):
+        self.ArtistMusic_ConcertWindow = ArtistMusic_ConcertWindow
         ArtistMusic_ConcertWindow.setObjectName("ArtistMusic_ConcertWindow")
         ArtistMusic_ConcertWindow.resize(559, 480)
         icon = QtGui.QIcon()
@@ -56,6 +62,12 @@ class Ui_ArtistMusic_ConcertWindow(object):
 
         self.retranslateUi(ArtistMusic_ConcertWindow)
         QtCore.QMetaObject.connectSlotsByName(ArtistMusic_ConcertWindow)
+        self.Back_btn.clicked.connect(self.open_parent_window) # * Connect the back button to the open_parent_window method
+
+
+    def open_parent_window(self): # * Method to open the parent window
+        self.parent.show()
+        self.ArtistMusic_ConcertWindow.close()
 
     def retranslateUi(self, ArtistMusic_ConcertWindow):
         _translate = QtCore.QCoreApplication.translate

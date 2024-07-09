@@ -2,7 +2,11 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import resources
 
 class Ui_TicketsWindow(object):
+    def __init__(self, parent=None , appstate=None):
+        self.parent = parent
+        self.appstate = appstate
     def setupUi(self, TicketsWindow):
+        self.TicketsWindow = TicketsWindow
         TicketsWindow.setObjectName("TicketsWindow")
         TicketsWindow.resize(500, 600)
         TicketsWindow.setMinimumSize(QtCore.QSize(500, 600))
@@ -70,9 +74,16 @@ class Ui_TicketsWindow(object):
         self.retranslateUi(TicketsWindow)
         QtCore.QMetaObject.connectSlotsByName(TicketsWindow)
 
+        self.back_btn.clicked.connect(self.open_parent_window) # * Connect the back button to the open_parent_window method
+
+
+    def open_parent_window(self): # * Method to open the parent window
+        self.parent.show()
+        self.TicketsWindow.close()
+
     def retranslateUi(self, TicketsWindow):
         _translate = QtCore.QCoreApplication.translate
-        TicketsWindow.setWindowTitle(_translate("TicketsWindow", "Follow"))
+        TicketsWindow.setWindowTitle(_translate("TicketsWindow", "Tickets"))
         self.TicketsList_label.setText(_translate("TicketsWindow", "Tickets list"))
         self.Expired_lbl.setText(_translate("TicketsWindow", "Expired tickets"))
         self.back_btn.setText(_translate("TicketsWindow", "Back"))
