@@ -373,7 +373,22 @@ def get_friendIds(dbm: DBM,  userId=None):
         None,
     )
     return [row[0] for row in result]
-
+def follow(dbm: DBM, userId=None, friendId=None):
+    if not dbm or not userId or userId == "" or not friendId or friendId == "":
+        return False
+    try:
+        return dbm.db_execute_query(
+            f"""
+            INSERT INTO
+                followorfollowing (follower_id,following_id)
+                VALUES
+                ("{userId}","{friendId}");
+            """,
+            None,
+        )
+    except Exception as e:
+        return False
+    
 def get_comments(dbm: DBM, userId=None, friendIds=None, trackId=None):
     if not dbm or not userId or userId == "" or not friendIds or not trackId or trackId == "":
         return None

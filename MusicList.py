@@ -175,13 +175,13 @@ class Ui_MusicListWindow(object):
         
         # get row data  
         row = [self.model.item(index.row(), col).text() for col in range(self.model.columnCount())]
-
+ # RETURN TEMPLATE FOR "Tracks" ==>>> row=['2', 'Track Title', 'Artist Name', 'Album Name', '00:03:30', 'Genre', 'Ages', 'Lyrics', 'Area', '2021-06-01']
+            
         print(f'{row=}')
         # LATER : self open folan track UI using data e baalaa
         if cat == 0: # Category = "Tracks"
-            # RETURN TEMPLATE FOR "Tracks" ==>>> row=['2', 'Track Title', 'Artist Name', 'Album Name', '00:03:30', 'Genre', 'Ages', 'Lyrics', 'Area', '2021-06-01']
-            self.window = QtWidgets.QWidget()
-            self.ui = Ui_MusicWindow(
+           self.window = QtWidgets.QWidget()
+           self.ui = Ui_MusicWindow(
                 self.MusicListWindow,
                 self.appstate,
                 row
@@ -190,12 +190,29 @@ class Ui_MusicListWindow(object):
             self.window.show()
             self.MusicListWindow.close()
         elif cat == 1: # Category = "Albums"
-            pass
+            album_name =row[0][3] # Album Name
+            # Retrieve the tracks for the selected album from the database
+            dbm= DBM()
+            dbm.db_connect()
+            tracks = dbm.db_execute_read_query(
+                f'''
+                SELECT track FROM tracks WHERE album = '{album_name}'
+                ''', None
+            )
+            # Clear the model and set the column headers
+            self.model.clear()
+            self.model.setHorizontalHeaderLabels([ 'album'])
+            # Add the tracks to the model
+            for track in tracks:
+                track_data = [str(item) for item in track]
+                self.model.appendRow([QtGui.QStandardItem(data) for data in track_data])
+                dbm.db_disconnect()
         elif cat == 2: # Category = "Followings"
             pass
         elif cat == 3: # Category = "Suggestions"
             pass
         elif cat == 4: # Category = "PlayLists"
+            
             pass
         elif cat == 5: # Category = "Artists"
             pass
