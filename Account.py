@@ -1,6 +1,10 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import resources
-
+from dbfunctions import *
+from DBManagement import DBM
+from People import Ui_PeopleWindow
+from Ticket import Ui_TicketsWindow
+from ArtistMusic_Concert import Ui_ArtistMusic_ConcertWindow
 
 class Ui_AccountWindow(object):
     def __init__(self, parent=None , appstate=None):
@@ -145,9 +149,55 @@ class Ui_AccountWindow(object):
         QtCore.QMetaObject.connectSlotsByName(AccountWindow)
 
         self.return_btn.clicked.connect(self.open_parent_window)
+        self.follower_btn.clicked.connect(self.open_people_window)
+        self.following_btn.clicked.connect(self.open_people_window)
+        self.Friends_btn.clicked.connect(self.open_people_window)
+        self.tickets_btn.clicked.connect(self.open_tickets_window)
+        self.MusicList_btn.clicked.connect(self.open_musicList_window)
+        self.concertList_btn.clicked.connect(self.open_concertList_window)
+
+
     def open_parent_window(self):
         self.parent.show()
         self.AccountWindow.close()
+
+    def open_people_window(self):
+        self.window = QtWidgets.QWidget()
+        self.ui = Ui_PeopleWindow(
+            self.AccountWindow,
+            self.appstate
+        )
+        self.ui.setupUi(self.window)
+        self.window.show()
+        self.AccountWindow.close()
+    def open_concertList_window(self):
+        self.window = QtWidgets.QWidget()
+        self.ui = Ui_ArtistMusic_ConcertWindow(
+            self.AccountWindow,
+            self.appstate
+        )
+        self.ui.setupUi(self.window)
+        self.window.show()
+        self.AccountWindow.close()
+    def open_musicList_window(self):
+        self.window = QtWidgets.QWidget()
+        self.ui = Ui_ArtistMusic_ConcertWindow(
+            self.AccountWindow,
+            self.appstate
+        )
+        self.ui.setupUi(self.window)
+        self.window.show()
+        self.AccountWindow.close()
+    def open_tickets_window(self):
+        self.window = QtWidgets.QWidget()
+        self.ui = Ui_TicketsWindow(
+            self.AccountWindow,
+            self.appstate
+        )
+        self.ui.setupUi(self.window)
+        self.window.show()
+        self.AccountWindow.close()
+
 
     def retranslateUi(self, AccountWindow):
         _translate = QtCore.QCoreApplication.translate
