@@ -126,22 +126,22 @@ class Ui_MusicListWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MusicListWindow)
 
         self.Back_btn.clicked.connect(self.open_parent_window) # * Connect the back button to the open_parent_window method
-        self.Music_list.clicked.connect(self.item_clicked2)
+        self.Music_list.clicked.connect(self.item_clicked)
  
         # self.Category_combobox.currentIndexChanged.emit()
         self.category_changed(0)
-    def item_clicked2(self, index):
-        cat = self.Category_combobox.currentIndex()
-        if cat==0:
-            Variable.selected_index = index.row()
-            self.window = QtWidgets.QWidget()
-            self.ui = Ui_MusicWindow(
-                self.MusicListWindow,
-                self.appstate
-            )  # * Pass the main window reference here
-            self.ui.setupUi(self.window)
-            self.window.show()
-            self.MusicListWindow.close()
+    # def item_clicked2(self, index):
+    #     cat = self.Category_combobox.currentIndex()
+    #     if cat==0:
+    #         Variable.selected_index = index.row()
+    #         self.window = QtWidgets.QWidget()
+    #         self.ui = Ui_MusicWindow(
+    #             self.MusicListWindow,
+    #             self.appstate,
+    #         )  # * Pass the main window reference here
+    #         self.ui.setupUi(self.window)
+    #         self.window.show()
+    #         self.MusicListWindow.close()
 
         
     def open_parent_window(self): # * Method to open the parent window
@@ -175,11 +175,20 @@ class Ui_MusicListWindow(object):
         
         # get row data  
         row = [self.model.item(index.row(), col).text() for col in range(self.model.columnCount())]
+
         print(f'{row=}')
-        # RETURN TEMPLATE FOR "Tracks" ==>>> row=['2', 'Track Title', 'Artist Name', 'Album Name', '00:03:30', 'Genre', 'Ages', 'Lyrics', 'Area', '2021-06-01']
         # LATER : self open folan track UI using data e baalaa
         if cat == 0: # Category = "Tracks"
-            pass
+            # RETURN TEMPLATE FOR "Tracks" ==>>> row=['2', 'Track Title', 'Artist Name', 'Album Name', '00:03:30', 'Genre', 'Ages', 'Lyrics', 'Area', '2021-06-01']
+            self.window = QtWidgets.QWidget()
+            self.ui = Ui_MusicWindow(
+                self.MusicListWindow,
+                self.appstate,
+                row
+            )  # * Pass the main window reference here
+            self.ui.setupUi(self.window)
+            self.window.show()
+            self.MusicListWindow.close()
         elif cat == 1: # Category = "Albums"
             pass
         elif cat == 2: # Category = "Followings"
@@ -239,17 +248,18 @@ class Ui_MusicListWindow(object):
         elif index == 6: # Concerts
             rows = dbm.db_execute_read_query(
                 f'''
-                SELECT * FROM concerts
+                SELECT * FROM concert
                 ''', None
             )
             
-            
-        for row in rows:
-            items = [QtGui.QStandardItem(str(field)) for field in row]
-            for elem in items:
-                elem.setEditable(False)
-            self.Music_list.clicked.connect(self.item_clicked)
-                                            
-            self.model.appendRow(items)
-            
+        if rows:  
+            for row in rows:
+                items = [QtGui.QStandardItem(str(field)) for field in row]
+                for elem in items:
+                    elem.setEditable(False)
+                self.Music_list.clicked.connect(self.item_clicked)
+                                                
+                self.model.appendRow(items)
+        else:
+            print(f'No row fetched.')
         dbm.db_disconnect()

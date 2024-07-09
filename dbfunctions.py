@@ -35,7 +35,7 @@ def create_db_tables(dbm: DBM):
     # signup: fname lname email address username password
     dbm.db_execute_query(
         """ 
-             CREATE TABLE IF NOT EXISTS tracks (
+        CREATE TABLE IF NOT EXISTS tracks (
          id INTEGER PRIMARY KEY AUTOINCREMENT,
          title TEXT  NOT NULL,
          artist TEXT NOT NULL,
@@ -57,7 +57,7 @@ def create_db_tables(dbm: DBM):
             lname TEXT NOT NULL,
             email TEXT NOT NULL,
             address TEXT NOT NULL,
-            username TEXT NOT NULL,
+            username TEXT NOT NULL unique,
             password TEXT NOT NULL,
             subscription Boolean,
             singerornormal Boolean,
@@ -202,15 +202,15 @@ def check_login(dbm: DBM, username: str, password: str):
         return False
     return True
 
-def check_attribute(dbm: DBM):
-    result = dbm.db_execute_read_query(
-        f"""
-        SELECT * FROM tracks
-        limit 1 offset {Variable.selected_index};
-        """,
-        None,
-    )
-    Variable.music_detail_title=result[0][1]
+# def check_attribute(dbm: DBM):
+#     result = dbm.db_execute_read_query(
+#         f"""
+#         SELECT * FROM tracks
+#         limit 1 offset {Variable.selected_index};
+#         """,
+#         None,
+#     )
+#     Variable.music_detail_title=result[0][1]
 
 
 def insert_one_user(dbm: DBM, fname, lname, email, address, username, password):
@@ -281,7 +281,115 @@ def show_tracks(dbm: DBM):
     )
     return result
 
+def get_track_comments(dbm: DBM, trackId=None):
+    if not dbm or not trackId or trackId == "":
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT * FROM comment WHERE track_id = "{trackId}";
+        ''',
+        None,
+    )
+    return result
 
+def set_like_for_track(dbm: DBM, userId=None, trackId=None):
+    if not dbm or not userId or userId == "" or not trackId or trackId == "":
+        return False
+    like_count = get_like_for_track(dbm, userId, trackId)
+    if like_count is not None and like_count > 0:
+        return True
+    try:
+        return dbm.db_execute_query(
+            f"""
+            INSERT INTO
+                likes (user_id,track_id)
+                VALUES
+                ("{userId}","{trackId}");
+            """,
+            None,
+        )
+    except Exception as e:
+        return False
+
+def clear_like_for_track(dbm: DBM, userId=None, trackId=None):
+    if not dbm or not userId or userId == "" or not trackId or trackId == "":
+        return False
+    try:
+        return dbm.db_execute_query(
+            f"""
+            DELETE FROM likes
+            WHERE user_id = "{userId}" AND track_id = "{trackId}";
+            """,
+            None,
+        )
+    except Exception as e:
+        return False
+
+def get_like_for_track(dbm: DBM, userId=None, trackId=None):
+    if not dbm or not userId or userId == "" or not trackId or trackId == "":
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT Count(*) FROM likes WHERE user_id = "{userId}" AND track_id = "{trackId}";
+        ''',
+        None,
+    )
+    return result[0][0] if result else None
+ 
+
+def get_userid_by_username(dbm: DBM, username=None):
+    if not dbm or not username or username == "":
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT id FROM user WHERE username = "{username}";
+        ''',
+        None,
+    )
+    return result[0][0] if result else None
+def post_comment(dbm: DBM, userId=None, trackId=None, commentText=None):
+    if not dbm or not userId or userId == "" or not trackId or trackId == "" or not commentText or commentText == "":
+        return False
+    try:
+        return dbm.db_execute_query(
+            f"""
+            INSERT INTO
+                comment (track_id,user_id,comment_text)
+                VALUES
+                ("{trackId}","{userId}","{commentText}");
+            """,
+            None,
+        )
+    except Exception as e:
+        return False
+
+def get_friendIds(dbm: DBM,  userId=None):
+    if not dbm or not userId or userId == "":
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT friend_id FROM friend WHERE user_id = "{userId}";
+        ''',
+        None,
+    )
+    return [row[0] for row in result]
+
+def get_comments(dbm: DBM, userId=None, friendIds=None, trackId=None):
+    if not dbm or not userId or userId == "" or not friendIds or not trackId or trackId == "":
+        return None
+    friendIds.append(userId)
+    friendIds = tuple(friendIds)
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT * FROM comment WHERE user_id IN {friendIds} AND track_id = "{trackId}" order by id asc;
+        ''',
+        None,
+    )
+    return result
+    
+        
+        
+    
 # def get_current(melli: str):
 #     if not melli:
 #         return None
@@ -297,3 +405,4 @@ def show_tracks(dbm: DBM):
 
 
 # dbm.db_disconnect()
+

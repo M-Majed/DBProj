@@ -194,12 +194,15 @@ class Ui_LoginWindow(object):
             # Open MusicListWindow
             self.window = QtWidgets.QWidget()
             self.ui = Ui_MusicListWindow(
-            self.LoginWindow
+            self.LoginWindow,
+            self.appstate
             )  # * Pass the main window reference here
             self.ui.setupUi(self.window)
             self.window.show()
             self.LoginWindow.close()
             self.appstate["username"] = username
+            uid = get_userid_by_username(dbm, username)
+            self.appstate["userid"] = uid # uid || None
             # check if user has subscription
             # current_user_row = get_one_user(dbm, username)
             # print(f"{current_user_row=}")

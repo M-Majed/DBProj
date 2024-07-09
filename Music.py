@@ -3,12 +3,15 @@ import resources
 import Variable
 from dbfunctions import *
 from DBManagement import DBM
+from time import sleep
+from threading import Timer
 
 class Ui_MusicWindow(object):
-    def __init__(self, parent=None, appstate=None):  # * for window trans
+    def __init__(self, parent=None, appstate=None, music_row=None):  # * for window trans
         self.parent = parent
         self.appstate = appstate
-
+        # RETURN TEMPLATE FOR "Tracks" ==>>> row=['2', 'Track Title', 'Artist Name', 'Album Name', '00:03:30', 'Genre', 'Ages', 'Lyrics', 'Area', '2021-06-01']
+        self.music_row = music_row
     def setupUi(self, MusicWindow):
         self.MusicWindow = MusicWindow
         MusicWindow.setObjectName("MusicWindow")
@@ -132,28 +135,83 @@ class Ui_MusicWindow(object):
 
         self.retranslateUi(MusicWindow)
         QtCore.QMetaObject.connectSlotsByName(MusicWindow)
-
+        self.sendComment_btn.clicked.connect(self.send_comment)
         self.Return_btn.clicked.connect(self.open_parent_window)
+        
+        if self.appstate is not None and self.appstate["subscribed"] is not None:
+                self.like_checkBox.setCheckable(self.appstate["subscribed"])
+        else:
+                self.like_checkBox.setCheckable(False)
+        self.like_checkBox.stateChanged.connect(self.like_changed)
+        # get current like state for userid and trackid
+        dbm = DBM()
+        dbm.db_connect()
+        print(f'--->>>>> {self.appstate=}\n\t{self.music_row=}')
+        already_liked = get_like_for_track(dbm, self.appstate["userid"], self.music_row[0])
+        if already_liked:
+            self.like_checkBox.setChecked(True)
+        else:
+            self.like_checkBox.setChecked(False)
+        dbm.db_disconnect()
+        
     def open_parent_window(self):
         self.parent.show()
         self.MusicWindow.close()
+    def like_changed(self):
+        dbm = DBM()
+        dbm.db_connect()
+        if self.like_checkBox.isChecked():
+                set_like_for_track(dbm, self.appstate["userid"], self.music_row[0])
+        else:
+                clear_like_for_track(dbm, self.appstate["userid"], self.music_row[0])
+        dbm.db_disconnect()
+    def get_all_comments(self):
+        dbm = DBM()
+        dbm.db_connect()
+        friendIds = get_friendIds(dbm, self.appstate["userid"])
+        if not friendIds:
+                friendIds = []
+        result = get_comments(dbm, self.music_row[0], friendIds, self.music_row[0])
+        if not result:
+            return
+        # Later: add ui for comments. first comment is result[0]. and its first columns is result[0][0]. ...
 
+        dbm.db_disconnect()
+    def send_comment(self):
+        comment = self.comment_lineEdit.text()
+        if not self.appstate["subscribed"] or comment or comment == "":
+            return
+        dbm = DBM()
+        dbm.db_connect()
+        post_comment(dbm, self.appstate["userid"], self.music_row[0], comment)
+        dbm.db_disconnect()
+        self.comment_lineEdit.setText("SENT!")
+        sleep(1)
+        self.comment_lineEdit.setText("")
+        # Change bg color of send btn to mild green
+        self.sendComment_btn.setStyleSheet("background-color: rgb(144, 238, 144);")
+        t = Timer(1.0, self.clear_sendComment_btn_Background)
+        t.start()
+    def clear_sendComment_btn_Background(self):
+        # Change bg color to original color
+        self.sendComment_btn.setStyleSheet("color: rgb(255, 255, 255);\n")
     def retranslateUi(self, MusicWindow):
         dbm = DBM()
         dbm.db_connect()
-        check_attribute(dbm)
-        
+        # check_attribute(dbm)
+        # RETURN TEMPLATE FOR "Tracks" ==>>> row=['2', 'Track Title', 'Artist Name', 'Album Name', '00:03:30', 'Genre', 'Ages', 'Lyrics', 'Area', '2021-06-01']
         _translate = QtCore.QCoreApplication.translate
         MusicWindow.setWindowTitle(_translate("MusicWindow", "Form"))
-        self.Title_lbl.setText(_translate("MusicWindow", f"Title:{Variable.music_detail_title}"))
-        self.Artist_lbl.setText(_translate("MusicWindow", "Artist:"))
-        # self.Artist_lbl.setText(_translate("MusicWindow", "Artist:ssssss"))
-        self.Genre_lbl.setText(_translate("MusicWindow", "Genre:xxxx"))
-        self.Area_lbl.setText(_translate("MusicWindow", "Area:xxxx"))
-        self.Age_lbl.setText(_translate("MusicWindow", "Age:xxxxx"))
-        self.Text_lbl.setText(_translate("MusicWindow", "Text:"))
-        self.like_checkBox.setText(_translate("MusicWindow", "Like"))
-        self.comments_btn.setText(_translate("MusicWindow", "Comments"))
-        self.sendComment_btn.setText(_translate("MusicWindow", "Comment"))
-        self.Return_btn.setText(_translate("MusicWindow", "Return"))
-        self.Playlist_comboBox.setItemText(0, _translate("MusicWindow", "Add to Playlist"))
+        self.Title_lbl.setText(_translate("MusicWindow", f"Title: {self.music_row[1]}"))
+        self.Artist_lbl.setText(_translate("MusicWindow", f"Artist: {self.music_row[2]}"))
+        self.Genre_lbl.setText(_translate("MusicWindow", f"Genre: {self.music_row[5]}"))
+        self.Area_lbl.setText(_translate("MusicWindow", f"Area: {self.music_row[8]}"))
+        self.Age_lbl.setText(_translate("MusicWindow", f"Age: {self.music_row[6]}"))
+        # self.Text_lbl.setText(_translate("MusicWindow", f"Lyrics: {self.music_row[7]}"))
+        self.Text_lbl.setText(_translate("MusicWindow", f"Lyrics"))
+        self.Text_browser.setText(self.music_row[7])
+        self.like_checkBox.setText(_translate("MusicWindow", f"Like"))
+        self.comments_btn.setText(_translate("MusicWindow", f"Comments")) # Later
+        self.sendComment_btn.setText(_translate("MusicWindow", f"Comment"))
+        self.Return_btn.setText(_translate("MusicWindow", f"Return"))
+        self.Playlist_comboBox.setItemText(0, _translate("MusicWindow", f"Add to Playlist")) # Later
