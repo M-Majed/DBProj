@@ -6,7 +6,6 @@ from DBManagement import DBM
 from datatype import *
 from Music import Ui_MusicWindow
 import Variable
-from Account import Ui_AccountWindow
 
 class Ui_MusicListWindow(object):
     def __init__(self, parent=None , appstate=None
@@ -128,7 +127,6 @@ class Ui_MusicListWindow(object):
 
         self.Back_btn.clicked.connect(self.open_parent_window) # * Connect the back button to the open_parent_window method
         self.Music_list.clicked.connect(self.item_clicked)
-        self.Account_btn.clicked.connect(self.open_account_window)
  
         # self.Category_combobox.currentIndexChanged.emit()
         self.category_changed(0)
@@ -148,16 +146,6 @@ class Ui_MusicListWindow(object):
         
     def open_parent_window(self): # * Method to open the parent window
         self.parent.show()
-        self.MusicListWindow.close()
-
-    def open_account_window(self): # * Method to open the account window
-        self.window = QtWidgets.QWidget()
-        self.ui = Ui_AccountWindow(
-            self.MusicListWindow,
-            self.appstate
-        )  # * Pass the main window reference here
-        self.ui.setupUi(self.window)
-        self.window.show()
         self.MusicListWindow.close()
 
 
@@ -187,13 +175,13 @@ class Ui_MusicListWindow(object):
         
         # get row data  
         row = [self.model.item(index.row(), col).text() for col in range(self.model.columnCount())]
- # RETURN TEMPLATE FOR "Tracks" ==>>> row=['2', 'Track Title', 'Artist Name', 'Album Name', '00:03:30', 'Genre', 'Ages', 'Lyrics', 'Area', '2021-06-01']
-            
+
         print(f'{row=}')
         # LATER : self open folan track UI using data e baalaa
         if cat == 0: # Category = "Tracks"
-           self.window = QtWidgets.QWidget()
-           self.ui = Ui_MusicWindow(
+            # RETURN TEMPLATE FOR "Tracks" ==>>> row=['2', 'Track Title', 'Artist Name', 'Album Name', '00:03:30', 'Genre', 'Ages', 'Lyrics', 'Area', '2021-06-01']
+            self.window = QtWidgets.QWidget()
+            self.ui = Ui_MusicWindow(
                 self.MusicListWindow,
                 self.appstate,
                 row
@@ -202,8 +190,7 @@ class Ui_MusicListWindow(object):
             self.window.show()
             self.MusicListWindow.close()
         elif cat == 1: # Category = "Albums"
-            album_name =row[0][3] # Album Name
-            # Retrieve the tracks for the selected album from the database
+            album_name =row[3] 
             dbm= DBM()
             dbm.db_connect()
             tracks = dbm.db_execute_read_query(
@@ -211,14 +198,13 @@ class Ui_MusicListWindow(object):
                 SELECT track FROM tracks WHERE album = '{album_name}'
                 ''', None
             )
-            # Clear the model and set the column headers
             self.model.clear()
             self.model.setHorizontalHeaderLabels([ 'album'])
-            # Add the tracks to the model
+            
             for track in tracks:
                 track_data = [str(item) for item in track]
                 self.model.appendRow([QtGui.QStandardItem(data) for data in track_data])
-                dbm.db_disconnect()
+            dbm.db_disconnect()
         elif cat == 2: # Category = "Followings"
             pass
         elif cat == 3: # Category = "Suggestions"
