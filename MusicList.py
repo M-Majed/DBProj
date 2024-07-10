@@ -6,6 +6,7 @@ from DBManagement import DBM
 from datatype import *
 from Music import Ui_MusicWindow
 import Variable
+from Account import Ui_AccountWindow
 
 class Ui_MusicListWindow(object):
     def __init__(self, parent=None , appstate=None
@@ -127,7 +128,7 @@ class Ui_MusicListWindow(object):
 
         self.Back_btn.clicked.connect(self.open_parent_window) # * Connect the back button to the open_parent_window method
         self.Music_list.clicked.connect(self.item_clicked)
- 
+        self.Account_btn.clicked.connect(self.open_account_window) # * Connect the account button to the open_parent_window method
         # self.Category_combobox.currentIndexChanged.emit()
         self.category_changed(0)
     # def item_clicked2(self, index):
@@ -143,7 +144,12 @@ class Ui_MusicListWindow(object):
     #         self.window.show()
     #         self.MusicListWindow.close()
 
-        
+    def open_account_window(self): # * Method to open the account window
+        self.window = QtWidgets.QWidget()
+        self.ui = Ui_AccountWindow(self.MusicListWindow, self.appstate)
+        self.ui.setupUi(self.window)
+        self.window.show()
+        self.MusicListWindow.close()
     def open_parent_window(self): # * Method to open the parent window
         self.parent.show()
         self.MusicListWindow.close()
