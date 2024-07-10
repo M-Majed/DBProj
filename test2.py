@@ -7,18 +7,18 @@ dbm.db_connect()
 #print(check_login(dbm, "negin", "1234"))
 
 # create_db_tables(dbm)
-# dbm.db_execute_query(
-#     '''
-#     INSERT INTO
-#         concert (id, name, artist, venue, date, ticket_price)
-#         VALUES
-#         (1, "concert1", "artist1", "venue1", "2021-12-12", 100),
-#         (2, "concert2", "artist2", "venue2", "2021-12-13", 200),
-#         (3, "concert3", "artist3", "venue3", "2021-12-14", 300),
-#         (4, "concert4", "artist4", "venue4", "2021-12-15", 400),
-#         (5, "concert5", "artist5", "venue5", "2021-12-16", 500);
-#     ''', None
-#     )
+dbm.db_execute_query(
+    '''
+    INSERT INTO tracks (id, title, artist, album, duration, genre, ages, lyric, area, date)
+    VALUES
+        (3, "treck1", "artist1", "album1", "00:01:40", "Rock", "18+", "Lyrics 1", "USA", "2021-12-12"),
+        (4, "treck2", "artist2", "album2", "00:02:30", "Pop", "21+", "Lyrics 2", "UK", "2021-12-13"),
+        (5, "treck3", "artist3", "album1", "00:03:20", "Hip Hop", "18+", "Lyrics 3", "USA", "2021-12-14"),
+        (6, "treck4", "artist4", "album3", "00:04:10", "R&B", "21+", "Lyrics 4", "UK", "2021-12-15"),
+        (7, "treck5", "artist5", "album3", "00:05:00", "Electronic", "18+", "Lyrics 5", "USA", "2021-12-16");
+   
+    ''', None
+)
 # dbm.db_execute_query(
 #     '''
 #     ALTER TABLE user

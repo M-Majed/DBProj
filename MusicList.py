@@ -189,22 +189,27 @@ class Ui_MusicListWindow(object):
             self.ui.setupUi(self.window)
             self.window.show()
             self.MusicListWindow.close()
-        elif cat == 1: # Category = "Albums"
-            album_name =row[3] 
-            dbm= DBM()
+        elif cat == 1:  # Category = "Albums"
+            album_name = str(row[0])
+            self.appstate=None
+            
+            dbm = DBM()
             dbm.db_connect()
             tracks = dbm.db_execute_read_query(
                 f'''
-                SELECT track FROM tracks WHERE album = '{album_name}'
+                SELECT distinct title FROM tracks WHERE album = '{album_name}'
                 ''', None
             )
-            self.model.clear()
-            self.model.setHorizontalHeaderLabels([ 'album'])
-            
-            for track in tracks:
-                track_data = [str(item) for item in track]
-                self.model.appendRow([QtGui.QStandardItem(data) for data in track_data])
-            dbm.db_disconnect()
+            if tracks is None:
+                # Handle the error appropriately
+                print(f"Error: No tracks found for album '{album_name}'")
+            else:
+                self.model.setHorizontalHeaderLabels(['album'])
+                
+                for track in tracks:
+                    track_data = [str(item) for item in track]
+                    self.model.appendRow([QtGui.QStandardItem(data) for data in track_data])
+                dbm.db_disconnect()
         elif cat == 2: # Category = "Followings"
             pass
         elif cat == 3: # Category = "Suggestions"
