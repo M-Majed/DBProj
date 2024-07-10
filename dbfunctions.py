@@ -401,6 +401,15 @@ def get_comments(dbm: DBM, userId=None, friendIds=None, trackId=None):
         None,
     )
     return result
+
+def update_user_subscription(dbm: DBM, username=None, subscription=None):
+    dbm.db_execute_query(
+        f"""
+        UPDATE user
+        SET subscription = {subscription}
+        WHERE username = "{username}";
+        """,
+        None,)
     
         
         
