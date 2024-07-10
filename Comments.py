@@ -2,7 +2,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import resources
 
 class Ui_CommentsWindow(object):
-    def __init__(self, parent=None, appstate=None, music_row=None):  # * for window trans
+    def __init__(self, parent=None, appstate=None, music_row=None):
         self.parent = parent
         self.appstate = appstate
         # RETURN TEMPLATE FOR "Tracks" ==>>> row=['2', 'Track Title', 'Artist Name', 'Album Name', '00:03:30', 'Genre', 'Ages', 'Lyrics', 'Area', '2021-06-01']
@@ -25,8 +25,7 @@ class Ui_CommentsWindow(object):
         font.setBold(True)
         font.setWeight(75)
         self.Comments_label.setFont(font)
-        self.Comments_label.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n"
-"color: rgb(255, 255, 255);")
+        self.Comments_label.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n""color: rgb(255, 255, 255);")
         self.Comments_label.setAlignment(QtCore.Qt.AlignCenter)
         self.Comments_label.setObjectName("Comments_label")
         self.verticalLayout.addWidget(self.Comments_label)
@@ -34,8 +33,7 @@ class Ui_CommentsWindow(object):
         font = QtGui.QFont()
         font.setPointSize(10)
         self.Comments_listView.setFont(font)
-        self.Comments_listView.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n"
-"background-color: rgb(255, 255, 255);")
+        self.Comments_listView.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n""background-color: rgb(255, 255, 255);")
         self.Comments_listView.setObjectName("Comments_listView")
         self.verticalLayout.addWidget(self.Comments_listView)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
@@ -46,23 +44,24 @@ class Ui_CommentsWindow(object):
         font.setBold(True)
         font.setWeight(75)
         self.back_btn.setFont(font)
-        self.back_btn.setStyleSheet("color: rgb(255, 255, 255);\n"
-"background-color: rgb(0, 0, 0);")
+        self.back_btn.setStyleSheet("color: rgb(255, 255, 255);\n""background-color: rgb(0, 0, 0);")
         self.back_btn.setObjectName("back_btn")
         self.horizontalLayout.addWidget(self.back_btn)
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
         self.verticalLayout.addLayout(self.horizontalLayout)
-
         self.retranslateUi(CommentsWindow)
         QtCore.QMetaObject.connectSlotsByName(CommentsWindow)
+
+        #$ My Part --------------------------------------------
         self.back_btn.clicked.connect(self.open_parent_window)
-    def open_parent_window(self):
-        self.parent.show()
-        self.CommentsWindow.close()
 
     def retranslateUi(self, CommentsWindow):
         _translate = QtCore.QCoreApplication.translate
         CommentsWindow.setWindowTitle(_translate("CommentsWindow", "Comments"))
         self.Comments_label.setText(_translate("CommentsWindow", "Comments"))
         self.back_btn.setText(_translate("CommentsWindow", "Back"))
+        
+    def open_parent_window(self):
+        self.parent.show()
+        self.CommentsWindow.close()

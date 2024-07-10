@@ -411,7 +411,34 @@ def update_user_subscription(dbm: DBM, username=None, subscription=None):
         """,
         None,)
     
+def update_user_artist(dbm: DBM, username=None, artist=None):
+    dbm.db_execute_query(
+        f"""
+        UPDATE user
+        SET singerornormal = {artist}
+        WHERE username = "{username}";
+        """,
+        None,)
+    
+def update_user_balance(dbm: DBM, username=None, balance=None):
+    dbm.db_execute_query(
+        f"""
+        UPDATE user
+        SET wallet = {balance}
+        WHERE username = "{username}";
+        """,
+        None,)
         
+def get_friends(dbm: DBM, userId=None):
+    if not dbm or not userId or userId == "":
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT friend_id FROM friend WHERE user_id = "{userId}";
+        ''',
+        None,
+    )
+    return [row[0] for row in result]
         
     
 # def get_current(melli: str):
