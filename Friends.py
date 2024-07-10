@@ -121,8 +121,17 @@ class Ui_FriendsWindow(object):
         QtCore.QMetaObject.connectSlotsByName(FriendsWindow)
 
         #$ My Part --------------------------------------------
+        dbm = DBM()
+        dbm.db_connect()
+        friends_id = get_friends(dbm, self.appstate["userid"])
+        friends_list = QtCore.QStringListModel()
+        friends_list.setStringList([str(id) for id in friends_id])
+        self.Friends_listView.setModel(friends_list)
+
         self.back_btn.clicked.connect(self.open_parent_window)
-        # self.Sendreq_btn.clicked.connect(self.send_request) #! laterrrrrr
+        self.Friends_listView.doubleClicked.connect(self.delete_friendFromlist)
+
+
 
     def retranslateUi(self, FriendsWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -139,24 +148,17 @@ class Ui_FriendsWindow(object):
         self.parent.show()
         self.FriendsWindow.close()
 
-        #! laterrrrrrrrrr
-#     def send_request(self):
-#         conn = sqlite3.connect('my.db')
-#         cursor = conn.cursor()
-#         cursor.execute("SELECT * FROM friend")
-#         data = cursor.fetchall()
-#         friends = [row[1] for row in data]
-#         if self.Sendreq_lineEdit.text() not in friends:
-#             cursor.execute(f"INSERT INTO friend (id, user_id, friend_id) VALUES ({1}, {1}, {self.Sendreq_lineEdit.text()})")
-#             conn.commit()
-#             conn.close()
-#             model = QtGui.QStandardItemModel()
-#             for friend in friends:
-#                 item = QtGui.QStandardItem(friend)
-#                 model.appendRow(item)
-#             self.Friends_listView.setModel
-#         else:
-#                 print("Friend already exists")
+    def delete_friendFromlist(self, index):
+        dbm = DBM()
+        dbm.db_connect()
+        friend_name = index.data()
+        friend_id=get_userid_by_username(dbm,friend_name)
+        delete_friend(dbm, self.appstate["userid"], friend_id)
+        friends_id = get_friends(dbm, self.appstate["userid"])
+        friends_list = QtCore.QStringListModel()
+        friends_list.setStringList([str(id) for id in friends_id])
+        self.Friends_listView.setModel(friends_list)
+
 
 
 
