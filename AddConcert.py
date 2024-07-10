@@ -20,27 +20,21 @@ class Ui_AddConcertWindow(object):
         font = QtGui.QFont()
         font.setPointSize(11)
         self.Title_lineEdit.setFont(font)
-        self.Title_lineEdit.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);")
+        self.Title_lineEdit.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n""background-color: rgb(255, 255, 255);\n""color: rgb(0, 0, 0);")
         self.Title_lineEdit.setObjectName("Title_lineEdit")
         self.verticalLayout.addWidget(self.Title_lineEdit)
         self.Venue_lineEdit = QtWidgets.QLineEdit(AddConcertWindow)
         font = QtGui.QFont()
         font.setPointSize(11)
         self.Venue_lineEdit.setFont(font)
-        self.Venue_lineEdit.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);")
+        self.Venue_lineEdit.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n""background-color: rgb(255, 255, 255);\n""color: rgb(0, 0, 0);")
         self.Venue_lineEdit.setObjectName("Venue_lineEdit")
         self.verticalLayout.addWidget(self.Venue_lineEdit)
         self.Price_lineEdit = QtWidgets.QLineEdit(AddConcertWindow)
         font = QtGui.QFont()
         font.setPointSize(11)
         self.Price_lineEdit.setFont(font)
-        self.Price_lineEdit.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n"
-"background-color: rgb(255, 255, 255);\n"
-"color: rgb(0, 0, 0);")
+        self.Price_lineEdit.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n""background-color: rgb(255, 255, 255);\n""color: rgb(0, 0, 0);")
         self.Price_lineEdit.setObjectName("Price_lineEdit")
         self.verticalLayout.addWidget(self.Price_lineEdit)
         self.dateEdit = QtWidgets.QDateEdit(AddConcertWindow)
@@ -58,8 +52,7 @@ class Ui_AddConcertWindow(object):
         font.setBold(True)
         font.setWeight(75)
         self.Back_btn.setFont(font)
-        self.Back_btn.setStyleSheet("color: rgb(255, 255, 255);\n"
-"background-color: rgb(0, 0, 0);")
+        self.Back_btn.setStyleSheet("color: rgb(255, 255, 255);\n""background-color: rgb(0, 0, 0);")
         self.Back_btn.setObjectName("Back_btn")
         self.horizontalLayout_2.addWidget(self.Back_btn)
         self.Add_btn = QtWidgets.QPushButton(AddConcertWindow)
@@ -68,14 +61,14 @@ class Ui_AddConcertWindow(object):
         font.setBold(True)
         font.setWeight(75)
         self.Add_btn.setFont(font)
-        self.Add_btn.setStyleSheet("color: rgb(255, 255, 255);\n"
-"background-color: rgb(0, 0, 0);")
+        self.Add_btn.setStyleSheet("color: rgb(255, 255, 255);\n""background-color: rgb(0, 0, 0);")
         self.Add_btn.setObjectName("Add_btn")
         self.horizontalLayout_2.addWidget(self.Add_btn)
         self.verticalLayout_2.addLayout(self.horizontalLayout_2)
-
         self.retranslateUi(AddConcertWindow)
         QtCore.QMetaObject.connectSlotsByName(AddConcertWindow)
+
+        
 
     def retranslateUi(self, AddConcertWindow):
         _translate = QtCore.QCoreApplication.translate

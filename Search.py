@@ -26,8 +26,7 @@ class Ui_SearchWindow(object):
         font.setBold(True)
         font.setWeight(75)
         self.Title_lbl.setFont(font)
-        self.Title_lbl.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n"
-"color: rgb(255, 255, 255);")
+        self.Title_lbl.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n""color: rgb(255, 255, 255);")
         self.Title_lbl.setObjectName("Title_lbl")
         self.horizontalLayout.addWidget(self.Title_lbl)
         self.title_lineEdit = QtWidgets.QLineEdit(SearchWindow)
@@ -37,8 +36,7 @@ class Ui_SearchWindow(object):
         font.setBold(False)
         font.setWeight(50)
         self.title_lineEdit.setFont(font)
-        self.title_lineEdit.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n"
-"")
+        self.title_lineEdit.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n""")
         self.title_lineEdit.setObjectName("title_lineEdit")
         self.horizontalLayout.addWidget(self.title_lineEdit)
         self.gridLayout.addLayout(self.horizontalLayout, 0, 0, 1, 1)
@@ -50,8 +48,7 @@ class Ui_SearchWindow(object):
         font.setBold(True)
         font.setWeight(75)
         self.Genre_lbl.setFont(font)
-        self.Genre_lbl.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n"
-"color: rgb(255, 255, 255);")
+        self.Genre_lbl.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n""color: rgb(255, 255, 255);")
         self.Genre_lbl.setObjectName("Genre_lbl")
         self.horizontalLayout_5.addWidget(self.Genre_lbl)
         self.Genre_lineEdit = QtWidgets.QLineEdit(SearchWindow)
@@ -61,8 +58,7 @@ class Ui_SearchWindow(object):
         font.setBold(False)
         font.setWeight(50)
         self.Genre_lineEdit.setFont(font)
-        self.Genre_lineEdit.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n"
-"")
+        self.Genre_lineEdit.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n""")
         self.Genre_lineEdit.setObjectName("Genre_lineEdit")
         self.horizontalLayout_5.addWidget(self.Genre_lineEdit)
         self.gridLayout.addLayout(self.horizontalLayout_5, 2, 0, 1, 1)
@@ -74,8 +70,7 @@ class Ui_SearchWindow(object):
         font.setBold(True)
         font.setWeight(75)
         self.Artist_lbl.setFont(font)
-        self.Artist_lbl.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n"
-"color: rgb(255, 255, 255);")
+        self.Artist_lbl.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n""color: rgb(255, 255, 255);")
         self.Artist_lbl.setObjectName("Artist_lbl")
         self.horizontalLayout_2.addWidget(self.Artist_lbl)
         self.Artist_lineEdit = QtWidgets.QLineEdit(SearchWindow)
@@ -86,8 +81,7 @@ class Ui_SearchWindow(object):
         font.setBold(False)
         font.setWeight(50)
         self.Artist_lineEdit.setFont(font)
-        self.Artist_lineEdit.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n"
-"")
+        self.Artist_lineEdit.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n""")
         self.Artist_lineEdit.setObjectName("Artist_lineEdit")
         self.horizontalLayout_2.addWidget(self.Artist_lineEdit)
         self.gridLayout.addLayout(self.horizontalLayout_2, 1, 0, 1, 1)
@@ -99,8 +93,7 @@ class Ui_SearchWindow(object):
         font.setBold(True)
         font.setWeight(75)
         self.Age_lbl.setFont(font)
-        self.Age_lbl.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n"
-"color: rgb(255, 255, 255);")
+        self.Age_lbl.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n""color: rgb(255, 255, 255);")
         self.Age_lbl.setObjectName("Age_lbl")
         self.horizontalLayout_3.addWidget(self.Age_lbl)
         self.Genre_lineEdit_2 = QtWidgets.QLineEdit(SearchWindow)
@@ -111,8 +104,7 @@ class Ui_SearchWindow(object):
         font.setBold(False)
         font.setWeight(50)
         self.Genre_lineEdit_2.setFont(font)
-        self.Genre_lineEdit_2.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n"
-"")
+        self.Genre_lineEdit_2.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n""")
         self.Genre_lineEdit_2.setObjectName("Genre_lineEdit_2")
         self.horizontalLayout_3.addWidget(self.Genre_lineEdit_2)
         self.gridLayout.addLayout(self.horizontalLayout_3, 3, 0, 1, 1)
@@ -124,8 +116,7 @@ class Ui_SearchWindow(object):
         font.setBold(True)
         font.setWeight(75)
         self.Area_lbl.setFont(font)
-        self.Area_lbl.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n"
-"color: rgb(255, 255, 255);")
+        self.Area_lbl.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n""color: rgb(255, 255, 255);")
         self.Area_lbl.setObjectName("Area_lbl")
         self.horizontalLayout_4.addWidget(self.Area_lbl)
         self.Area_lineEdit = QtWidgets.QLineEdit(SearchWindow)
@@ -135,25 +126,21 @@ class Ui_SearchWindow(object):
         font.setBold(False)
         font.setWeight(50)
         self.Area_lineEdit.setFont(font)
-        self.Area_lineEdit.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n"
-"")
+        self.Area_lineEdit.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n""")
         self.Area_lineEdit.setObjectName("Area_lineEdit")
         self.horizontalLayout_4.addWidget(self.Area_lineEdit)
         self.gridLayout.addLayout(self.horizontalLayout_4, 4, 0, 1, 1)
         self.horizontalLayout_6 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_6.setObjectName("horizontalLayout_6")
         self.pushButton_2 = QtWidgets.QPushButton(SearchWindow)
-        self.pushButton_2.setStyleSheet("color: rgb(255, 255, 255);\n"
-"background-color: rgb(0, 0, 0);")
+        self.pushButton_2.setStyleSheet("color: rgb(255, 255, 255);\n""background-color: rgb(0, 0, 0);")
         self.pushButton_2.setObjectName("pushButton_2")
         self.horizontalLayout_6.addWidget(self.pushButton_2)
         self.pushButton = QtWidgets.QPushButton(SearchWindow)
-        self.pushButton.setStyleSheet("color: rgb(255, 255, 255);\n"
-"background-color: rgb(0, 0, 0);")
+        self.pushButton.setStyleSheet("color: rgb(255, 255, 255);\n""background-color: rgb(0, 0, 0);")
         self.pushButton.setObjectName("pushButton")
         self.horizontalLayout_6.addWidget(self.pushButton)
         self.gridLayout.addLayout(self.horizontalLayout_6, 5, 0, 1, 1)
-
         self.retranslateUi(SearchWindow)
         QtCore.QMetaObject.connectSlotsByName(SearchWindow)
 

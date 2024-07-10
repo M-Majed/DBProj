@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>PeopleWindow</class>
- <widget class="QWidget" name="PeopleWindow">
+ <class>FollowWindow</class>
+ <widget class="QWidget" name="FollowWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -57,7 +57,7 @@ background-color: rgb(0, 0, 0);</string>
     </layout>
    </item>
    <item>
-    <widget class="QLabel" name="peopleList_label">
+    <widget class="QLabel" name="Following_label">
      <property name="font">
       <font>
        <pointsize>14</pointsize>
@@ -70,7 +70,7 @@ background-color: rgb(0, 0, 0);</string>
 color: rgb(255, 255, 255);</string>
      </property>
      <property name="text">
-      <string>People List</string>
+      <string>Following</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -78,7 +78,7 @@ color: rgb(255, 255, 255);</string>
     </widget>
    </item>
    <item>
-    <widget class="QListView" name="People_listView">
+    <widget class="QListView" name="Following_listView">
      <property name="styleSheet">
       <string notr="true">background-image: url(:/Background/background/transparent.png);
 background-color: rgb(255, 255, 255);</string>
@@ -86,7 +86,7 @@ background-color: rgb(255, 255, 255);</string>
     </widget>
    </item>
    <item>
-    <widget class="QLabel" name="Report_lbl">
+    <widget class="QLabel" name="Follower_lbl">
      <property name="font">
       <font>
        <pointsize>14</pointsize>
@@ -99,7 +99,7 @@ background-color: rgb(255, 255, 255);</string>
 color: rgb(255, 255, 255);</string>
      </property>
      <property name="text">
-      <string>Report</string>
+      <string>Follower</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -107,7 +107,7 @@ color: rgb(255, 255, 255);</string>
     </widget>
    </item>
    <item>
-    <widget class="QListView" name="report_listView">
+    <widget class="QListView" name="Follower_listView">
      <property name="styleSheet">
       <string notr="true">background-image: url(:/Background/background/transparent.png);
 background-color: rgb(255, 255, 255);</string>
