@@ -1,8 +1,18 @@
+import sqlite3
 from PyQt5 import QtCore, QtGui, QtWidgets
 import resources
+from dbfunctions import *
+from DBManagement import DBM
+from datatype import *
+
 
 class Ui_SearchWindow(object):
+    def __init__(self, parent=None , appstate=None):
+        self.parent = parent
+        self.appstate = appstate
+
     def setupUi(self, SearchWindow):
+        self.SearchWindow = SearchWindow
         SearchWindow.setObjectName("SearchWindow")
         SearchWindow.resize(342, 352)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -132,17 +142,21 @@ class Ui_SearchWindow(object):
         self.gridLayout.addLayout(self.horizontalLayout_4, 4, 0, 1, 1)
         self.horizontalLayout_6 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_6.setObjectName("horizontalLayout_6")
-        self.pushButton_2 = QtWidgets.QPushButton(SearchWindow)
-        self.pushButton_2.setStyleSheet("color: rgb(255, 255, 255);\n""background-color: rgb(0, 0, 0);")
-        self.pushButton_2.setObjectName("pushButton_2")
-        self.horizontalLayout_6.addWidget(self.pushButton_2)
-        self.pushButton = QtWidgets.QPushButton(SearchWindow)
-        self.pushButton.setStyleSheet("color: rgb(255, 255, 255);\n""background-color: rgb(0, 0, 0);")
-        self.pushButton.setObjectName("pushButton")
-        self.horizontalLayout_6.addWidget(self.pushButton)
+        self.back_btn = QtWidgets.QPushButton(SearchWindow)
+        self.back_btn.setStyleSheet("color: rgb(255, 255, 255);\n""background-color: rgb(0, 0, 0);")
+        self.back_btn.setObjectName("back_btn")
+        self.horizontalLayout_6.addWidget(self.back_btn)
+        self.search_btn = QtWidgets.QPushButton(SearchWindow)
+        self.search_btn.setStyleSheet("color: rgb(255, 255, 255);\n""background-color: rgb(0, 0, 0);")
+        self.search_btn.setObjectName("search_btn")
+        self.horizontalLayout_6.addWidget(self.search_btn)
         self.gridLayout.addLayout(self.horizontalLayout_6, 5, 0, 1, 1)
         self.retranslateUi(SearchWindow)
         QtCore.QMetaObject.connectSlotsByName(SearchWindow)
+
+        #$ My Part --------------------------------------------
+        self.back_btn.clicked.connect(self.open_parent_window)
+
 
     def retranslateUi(self, SearchWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -152,5 +166,9 @@ class Ui_SearchWindow(object):
         self.Artist_lbl.setText(_translate("SearchWindow", "Artist"))
         self.Age_lbl.setText(_translate("SearchWindow", "Age"))
         self.Area_lbl.setText(_translate("SearchWindow", "Area"))
-        self.pushButton_2.setText(_translate("SearchWindow", "Back"))
-        self.pushButton.setText(_translate("SearchWindow", "Search"))
+        self.back_btn.setText(_translate("SearchWindow", "Back"))
+        self.search_btn.setText(_translate("SearchWindow", "Search"))
+
+    def open_parent_window(self):
+        self.parent.show()
+        self.search_btn.close()

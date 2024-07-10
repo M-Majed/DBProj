@@ -6,6 +6,7 @@ from DBManagement import DBM
 from datatype import *
 from Music import Ui_MusicWindow
 from Account import Ui_AccountWindow
+from Search import Ui_SearchWindow
 
 class Ui_MusicListWindow(object):
     def __init__(self, parent=None , appstate=None):
@@ -113,6 +114,7 @@ class Ui_MusicListWindow(object):
         self.Back_btn.clicked.connect(self.open_parent_window)
         self.Music_list.clicked.connect(self.item_clicked)
         self.Account_btn.clicked.connect(self.open_account_window)
+        self.Search_btn.clicked.connect(self.open_search_window)
         self.category_changed(0)
 
     def retranslateUi(self, MusicListWindow):
@@ -139,7 +141,12 @@ class Ui_MusicListWindow(object):
     def open_parent_window(self):
         self.parent.show()
         self.MusicListWindow.close()
-
+    def open_search_window(self):
+        self.window = QtWidgets.QWidget()
+        self.ui = Ui_SearchWindow(self.MusicListWindow, self.appstate)
+        self.ui.setupUi(self.window)
+        self.window.show()
+        self.MusicListWindow.close()
 
     def item_clicked(self, index):
         cat = self.Category_combobox.currentIndex()
@@ -149,11 +156,7 @@ class Ui_MusicListWindow(object):
         if cat == 0: # Category = "Tracks"
             # RETURN TEMPLATE FOR "Tracks" ==>>> row=['2', 'Track Title', 'Artist Name', 'Album Name', '00:03:30', 'Genre', 'Ages', 'Lyrics', 'Area', '2021-06-01']
             self.window = QtWidgets.QWidget()
-            self.ui = Ui_MusicWindow(
-                self.MusicListWindow,
-                self.appstate,
-                row
-            )  # * Pass the main window reference here
+            self.ui = Ui_MusicWindow(self.MusicListWindow,self.appstate,row)
             self.ui.setupUi(self.window)
             self.window.show()
             self.MusicListWindow.close()

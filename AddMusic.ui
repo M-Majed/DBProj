@@ -157,6 +157,22 @@ color: rgb(0, 0, 0);</string>
     </widget>
    </item>
    <item>
+    <widget class="QCheckBox" name="PlayListPermisiion_checkBox">
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-image: url(:/Background/background/transparent.png);
+color: rgb(255, 255, 255);</string>
+     </property>
+     <property name="text">
+      <string>Add to playlist permission</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
       <widget class="QPushButton" name="Back_btn">
