@@ -183,6 +183,25 @@ class Ui_MusicListWindow(object):
             
             pass
         elif cat == 3: # Category = "Suggestions"
+            #suggest that genre likes user likes the tracks
+            dbm = DBM()
+            dbm.db_connect()
+            rows = dbm.db_execute_read_query(
+                f'''
+                SELECT genre FROM user.likes WHERE user_id = {self.appstate.user_id} && likes = 1 && likes.user_id = user.id
+                ''', None
+            )
+            if rows is None:
+                print(f"Error: No genre found for user '{self.appstate.user_id}'")
+            else:
+                self.model.setHorizontalHeaderLabels(['genre'])
+                for genre in rows:
+                    genre_data = [str(item) for item in genre]
+                    self.model.appendRow([QtGui.QStandardItem(data) for data in genre_data])
+                dbm.db_disconnect()
+                
+            
+            
             pass
         elif cat == 4: # Category = "PlayLists"
             
@@ -217,9 +236,13 @@ class Ui_MusicListWindow(object):
                 ''', None
             )
         elif index == 3: # Suggestions
+            dbm=  DBM()
+            dbm.db_connect()
+            
             rows = dbm.db_execute_read_query(
+               
                 f'''
-                SELECT * FROM suggestions
+                SELECT * FROM user,likes WHERE  likes = 1 and user.id = likes.user_id 
                 ''', None
             )
         elif index == 4: # PlayLists

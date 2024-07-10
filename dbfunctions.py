@@ -417,7 +417,15 @@ def update_user_balance(dbm: DBM, id=None, balance=None):
         WHERE id = "{id}";
         """,
         None,)
-        
+
+# def sugest(dbm: DBM, userId=None, trackId=None):
+#     dbm.db_execute_query(
+#         f"""
+#         select title from tracks where id = "{trackId}" and genre in (select genre from tracks where id = "{trackId}") and ages in (select ages from tracks where id = "{trackId}");
+#         """,
+#         None,
+#     )
+    
 def get_friends(dbm: DBM, userId=None):
     if not dbm or not userId or userId == "":
         return None
@@ -429,7 +437,18 @@ def get_friends(dbm: DBM, userId=None):
     )
     return [row[0] for row in result]
         
-    
+# def suggest(dbm: DBM, userId=None, trackId=None):
+#     if not dbm or not userId or userId == "" or not trackId or trackId == "":
+#         return False
+#     try:
+#         return dbm.db_execute_query(
+#             f"""
+#             select * from  where user_id = "{userId}" and track_id = "{trackId}";
+#             """,
+#             None,
+#         )
+#     except Exception as e:
+#         return False
 # def get_current(melli: str):
 #     if not melli:
 #         return None
