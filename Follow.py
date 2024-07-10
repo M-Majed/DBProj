@@ -1,4 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+from DBManagement import DBM
+from dbfunctions import *
 import resources
 
 
@@ -6,7 +8,6 @@ class Ui_FollowWindow(object):
     def __init__(self, parent=None , appstate=None):
         self.parent = parent
         self.appstate = appstate
-
     def setupUi(self, FollowWindow):
         self.FollowWindow = FollowWindow
         FollowWindow.setObjectName("FollowWindow")
@@ -76,6 +77,25 @@ class Ui_FollowWindow(object):
         QtCore.QMetaObject.connectSlotsByName(FollowWindow)
 
         #$ My Part --------------------------------------------
+        dbm = DBM()
+        dbm.db_connect()
+        followers = get_followers(dbm, self.appstate["userid"]) 
+        model = QtGui.QStandardItemModel()
+        for follower in followers:
+            item = QtGui.QStandardItem(follower)
+            model.appendRow(item)
+        self.Follower_listView.setModel(model)
+
+        followings = get_followings(dbm, self.appstate["userid"])
+        model = QtGui.QStandardItemModel()
+        for following in followings:
+            item = QtGui.QStandardItem(following)
+            model.appendRow(item)
+        self.Following_listView.setModel(model)
+
+        
+
+        self.Sendreq_btn.clicked.connect(lambda: add_follower(dbm, get_userid_by_username(dbm, self.Sendreq_lineEdit.text()), self.appstate["userid"]))
         self.back_btn.clicked.connect(self.open_parent_window)
     
     def retranslateUi(self, FollowWindow):

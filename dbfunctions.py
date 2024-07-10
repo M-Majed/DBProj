@@ -352,16 +352,7 @@ def post_comment(dbm: DBM, userId=None, trackId=None, commentText=None):
     except Exception as e:
         return False
 
-def get_friendIds(dbm: DBM,  userId=None):
-    if not dbm or not userId or userId == "":
-        return None
-    result = dbm.db_execute_read_query(
-        f'''
-        SELECT friend_id FROM friend WHERE user_id = "{userId}";
-        ''',
-        None,
-    )
-    return [row[0] for row in result]
+
 def follow(dbm: DBM, userId=None, friendId=None):
     if not dbm or not userId or userId == "" or not friendId or friendId == "":
         return False
@@ -423,13 +414,75 @@ def get_friends(dbm: DBM, userId=None):
         return None
     result = dbm.db_execute_read_query(
         f'''
-        SELECT friend_id FROM friend WHERE user_id = "{userId}";
+        select username from user
+        where id in (SELECT friend_id FROM friend WHERE user_id = "{userId}");
         ''',
         None,
     )
+    if result is None:
+        return None
     return [row[0] for row in result]
-        
     
+def delete_friend(dbm: DBM, userId=None, friendId=None):
+    if not dbm or not userId or userId == "" or not friendId or friendId == "":
+        return False
+    try:
+        return dbm.db_execute_query(
+            f"""
+            DELETE FROM friend
+            WHERE user_id = "{userId}" AND friend_id = "{friendId}";
+            """,
+            None,
+        )
+    except Exception as e:
+        return False
+    
+def get_followers(dbm: DBM, userId=None):
+    if not dbm or not userId or userId == "":
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        select username from user
+        where id in (SELECT follower_id FROM followorfollowing WHERE following_id = "{userId}");
+        ''',
+        None,
+    )
+    if result is None:
+        return None
+    return [row[0] for row in result]
+
+def get_followings(dbm: DBM, userId=None):
+    if not dbm or not userId or userId == "":
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        select username from user
+        where id in (SELECT following_id FROM followorfollowing WHERE follower_id = "{userId}");
+        ''',
+        None,
+    )
+    if result is None:
+        return None
+    return [row[0] for row in result]
+
+def add_follower(dbm: DBM, userId=None, followerId=None):
+    if not dbm or not userId or userId == "" or not followerId or followerId == "":
+        return False
+    try:
+        return dbm.db_execute_query(
+            f"""
+            INSERT INTO
+                followorfollowing (follower_id,following_id)
+                VALUES
+                ("{followerId}","{userId}");
+            """,
+            None,
+        )
+    except Exception as e:
+        return False
+    
+    
+
 # def get_current(melli: str):
 #     if not melli:
 #         return None
