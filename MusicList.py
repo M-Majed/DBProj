@@ -195,6 +195,7 @@ class Ui_MusicListWindow(object):
             self.ui.setupUi(self.window)
             self.window.show()
             self.MusicListWindow.close()
+            
         elif cat == 1:  # Category = "Albums"
             album_name = str(row[0])
             self.appstate=None
@@ -217,6 +218,7 @@ class Ui_MusicListWindow(object):
                     self.model.appendRow([QtGui.QStandardItem(data) for data in track_data])
                 dbm.db_disconnect()
         elif cat == 2: # Category = "Followings"
+            
             pass
         elif cat == 3: # Category = "Suggestions"
             pass
