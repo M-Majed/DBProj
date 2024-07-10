@@ -464,6 +464,18 @@ def get_followings(dbm: DBM, userId=None):
     if result is None:
         return None
     return [row[0] for row in result]
+# define function to search for a track by title and artist and genre and ages and area 
+
+def search_track(dbm: DBM, title=None, artist=None, genre=None, ages=None, area=None):
+    if not dbm or not title or title == "" or not artist or artist == "" or not genre or genre == "" or not ages or ages == "" or not area or area == "":
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT * FROM tracks WHERE title = "{title}" OR artist = "{artist}" OR genre = "{genre}" OR ages = "{ages}" OR area = "{area}";
+        ''',
+        None,
+    )
+    return result
 
 def add_follower(dbm: DBM, userId=None, followerId=None):
     if not dbm or not userId or userId == "" or not followerId or followerId == "":

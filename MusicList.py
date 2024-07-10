@@ -180,19 +180,33 @@ class Ui_MusicListWindow(object):
                 dbm.db_disconnect()
             # self.model.clear()
         elif cat == 2: # Category = "Followings"
+            qq = self.appstate.get("userid")
+            if qq is None:
+                print("Error: User ID not found in appstate.")
+                return None
             
-            pass
+            result = dbm.db_execute_read_query(
+                f'''
+                select username from user
+                where id in (SELECT following_id FROM followorfollowing WHERE follower_id = {qq});
+                ''',
+                None,
+            )
+            if result is None:
+                return None
+            return [row[0] for row in result]
         elif cat == 3: # Category = "Suggestions"
             #suggest that genre likes user likes the tracks
             dbm = DBM()
             dbm.db_connect()
+            qq=self.appstate["userid"]
             rows = dbm.db_execute_read_query(
                 f'''
-                SELECT genre FROM user.likes WHERE user_id = {self.appstate.user_id} && likes = 1 && likes.user_id = user.id
+                SELECT genre FROM tracks,likes WHERE user_id = {qq} &&  likes.user_id = tracks.id
                 ''', None
             )
             if rows is None:
-                print(f"Error: No genre found for user '{self.appstate.user_id}'")
+                print(f"Error: No genre found for user '{qq}'")
             else:
                 self.model.setHorizontalHeaderLabels(['genre'])
                 for genre in rows:
@@ -230,19 +244,25 @@ class Ui_MusicListWindow(object):
                 ''', None
             )
         elif index == 2: # Followings
+            qq = self.appstate.get("userid")
+            if qq is None:
+                print("Error: User ID not found in appstate.")
+                dbm.db_disconnect()
+                return
+            
             rows = dbm.db_execute_read_query(
                 f'''
-                SELECT * FROM followings
+                SELECT username FROM user
+                WHERE id IN (SELECT following_id FROM followorfollowing WHERE follower_id = {qq});
                 ''', None
             )
         elif index == 3: # Suggestions
             dbm=  DBM()
             dbm.db_connect()
-            
+            qq=self.appstate["userid"]
             rows = dbm.db_execute_read_query(
-               
                 f'''
-                SELECT * FROM user,likes WHERE  likes = 1 and user.id = likes.user_id 
+                SELECT genre FROM tracks,likes WHERE user_id = {qq} and  likes.user_id = tracks.id
                 ''', None
             )
         elif index == 4: # PlayLists
