@@ -4,7 +4,6 @@ from dbfunctions import *
 from DBManagement import DBM
 from Ticket import Ui_TicketsWindow
 from ArtistMusic_Concert import Ui_ArtistMusic_ConcertWindow
-import Variable
 from Follow import Ui_FollowWindow
 from Friends import Ui_FriendsWindow
 
@@ -159,15 +158,17 @@ class Ui_AccountWindow(object):
         self.Friends_btn.setText(_translate("AccountWindow", "Friends"))
         self.follow_btn.setText(_translate("AccountWindow", "follow"))
         self.Subscription_checkBox.setText(_translate("AccountWindow", "subscription"))
+
         #$ My Part --------------------------------------------
         dbm = DBM()
         dbm.db_connect()
-        self.balance_lbl.setText(_translate("AccountWindow", f"balance:{get_one_user(dbm, Variable.username)[0][9]}"))
-        if(get_one_user(dbm, Variable.username)[0][7] == 1):
+        uid=self.appstate["userid"]
+        self.balance_lbl.setText(_translate("AccountWindow", f"balance:{get_one_user(dbm,uid)[0][9]}"))
+        if(get_one_user(dbm,uid)[0][7] == 1):
             self.Subscription_checkBox.setChecked(True)
         else:
             self.Subscription_checkBox.setChecked(False)
-        if(get_one_user(dbm, Variable.username)[0][8] == 1):
+        if(get_one_user(dbm,uid)[0][8] == 1):
             self.artist_checkBox.setChecked(True)
         else:
             self.artist_checkBox.setChecked(False)
@@ -215,32 +216,37 @@ class Ui_AccountWindow(object):
     def changeSubscription(self):
         dbm = DBM()
         dbm.db_connect()
+        uid=self.appstate["userid"]
         if(self.Subscription_checkBox.isChecked()):
-            update_user_subscription(dbm, Variable.username, 1)
+            update_user_subscription(dbm, uid, 1)
+            self.appstate["subscribed"] = 1
         else:
-            update_user_subscription(dbm, Variable.username, 0)
+            update_user_subscription(dbm, uid, 0)
+            self.appstate["subscribed"] = 0
         dbm.db_disconnect()
 
     def add_balance(self):
         dbm = DBM()
         dbm.db_connect()
-        balance = get_one_user(dbm, Variable.username)[0][9]
+        uid=self.appstate["userid"]
+        balance = get_one_user(dbm, uid)[0][9]
         if balance == None:
             balance = 0
         balance += int(self.deposit_lineEdit.text())
-        update_user_balance(dbm, Variable.username, balance)
-        self.balance_lbl.setText(f"balance:{get_one_user(dbm, Variable.username)[0][9]}")
+        update_user_balance(dbm, uid, balance)
+        self.balance_lbl.setText(f"balance:{get_one_user(dbm, uid)[0][9]}")
         dbm.db_disconnect()
 
     def changeartist_status(self):
         dbm = DBM()
         dbm.db_connect()
+        uid=self.appstate["userid"]
         if(self.artist_checkBox.isChecked()):
-            update_user_artist(dbm, Variable.username, 1)
+            update_user_artist(dbm, uid, 1)
             self.MusicList_btn.show()
             self.concertList_btn.show()
         else:
-            update_user_artist(dbm, Variable.username, 0)
+            update_user_artist(dbm, uid, 0)
             self.MusicList_btn.hide()
             self.concertList_btn.hide()
         dbm.db_disconnect()
