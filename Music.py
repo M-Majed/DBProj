@@ -141,6 +141,7 @@ class Ui_MusicWindow(object):
         self.sendComment_btn.setText(_translate("MusicWindow", f"Comment"))
         self.Return_btn.setText(_translate("MusicWindow", f"Return"))
         self.Playlist_comboBox.setItemText(0, _translate("MusicWindow", f"Add to Playlist")) 
+
         #$ My Part --------------------------------------------
         self.Title_lbl.setText(_translate("MusicWindow", f"Title: {self.music_row[1]}"))
         self.Artist_lbl.setText(_translate("MusicWindow", f"Artist: {self.music_row[2]}"))
@@ -173,6 +174,7 @@ class Ui_MusicWindow(object):
                 self.like_checkBox.setCheckable(True)
         else:
                 self.like_checkBox.setCheckable(False)
+
     def check_likeState(self):
         dbm = DBM()
         dbm.db_connect()
@@ -184,7 +186,6 @@ class Ui_MusicWindow(object):
             self.like_checkBox.setChecked(False)
         dbm.db_disconnect()
         
-  
     def like_changed(self):
         dbm = DBM()
         dbm.db_connect()
@@ -193,15 +194,3 @@ class Ui_MusicWindow(object):
         else:
                 clear_like_for_track(dbm, self.appstate["userid"], self.music_row[0])
         dbm.db_disconnect()
-
-#     def get_all_comments(self):
-#         dbm = DBM()
-#         dbm.db_connect()
-#         friendIds = get_friendIds(dbm, self.appstate["userid"])
-#         if not friendIds:
-#                 friendIds = []
-#         result = get_comments(dbm, self.music_row[0], friendIds, self.music_row[0])
-#         if not result:
-#             return
-#         # Later: add ui for comments. first comment is result[0]. and its first columns is result[0][0]. ...
-#         dbm.db_disconnect()

@@ -5,6 +5,7 @@ class Ui_TicketsWindow(object):
     def __init__(self, parent=None , appstate=None):
         self.parent = parent
         self.appstate = appstate
+
     def setupUi(self, TicketsWindow):
         self.TicketsWindow = TicketsWindow
         TicketsWindow.setObjectName("TicketsWindow")
@@ -23,8 +24,7 @@ class Ui_TicketsWindow(object):
         font.setBold(True)
         font.setWeight(75)
         self.TicketsList_label.setFont(font)
-        self.TicketsList_label.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n"
-"color: rgb(255, 255, 255);")
+        self.TicketsList_label.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n""color: rgb(255, 255, 255);")
         self.TicketsList_label.setAlignment(QtCore.Qt.AlignCenter)
         self.TicketsList_label.setObjectName("TicketsList_label")
         self.verticalLayout.addWidget(self.TicketsList_label)
@@ -32,8 +32,7 @@ class Ui_TicketsWindow(object):
         font = QtGui.QFont()
         font.setPointSize(10)
         self.Tickets_listView.setFont(font)
-        self.Tickets_listView.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n"
-"background-color: rgb(255, 255, 255);")
+        self.Tickets_listView.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n""background-color: rgb(255, 255, 255);")
         self.Tickets_listView.setObjectName("Tickets_listView")
         self.verticalLayout.addWidget(self.Tickets_listView)
         self.Expired_lbl = QtWidgets.QLabel(TicketsWindow)
@@ -42,8 +41,7 @@ class Ui_TicketsWindow(object):
         font.setBold(True)
         font.setWeight(75)
         self.Expired_lbl.setFont(font)
-        self.Expired_lbl.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n"
-"color: rgb(255, 255, 255);")
+        self.Expired_lbl.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n""color: rgb(255, 255, 255);")
         self.Expired_lbl.setAlignment(QtCore.Qt.AlignCenter)
         self.Expired_lbl.setObjectName("Expired_lbl")
         self.verticalLayout.addWidget(self.Expired_lbl)
@@ -51,8 +49,7 @@ class Ui_TicketsWindow(object):
         font = QtGui.QFont()
         font.setPointSize(10)
         self.Expired_listView.setFont(font)
-        self.Expired_listView.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n"
-"background-color: rgb(255, 255, 255);")
+        self.Expired_listView.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n""background-color: rgb(255, 255, 255);")
         self.Expired_listView.setObjectName("Expired_listView")
         self.verticalLayout.addWidget(self.Expired_listView)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
@@ -63,23 +60,17 @@ class Ui_TicketsWindow(object):
         font.setBold(True)
         font.setWeight(75)
         self.back_btn.setFont(font)
-        self.back_btn.setStyleSheet("color: rgb(255, 255, 255);\n"
-"background-color: rgb(0, 0, 0);")
+        self.back_btn.setStyleSheet("color: rgb(255, 255, 255);\n""background-color: rgb(0, 0, 0);")
         self.back_btn.setObjectName("back_btn")
         self.horizontalLayout.addWidget(self.back_btn)
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
         self.verticalLayout.addLayout(self.horizontalLayout)
-
         self.retranslateUi(TicketsWindow)
         QtCore.QMetaObject.connectSlotsByName(TicketsWindow)
 
-        self.back_btn.clicked.connect(self.open_parent_window) # * Connect the back button to the open_parent_window method
-
-
-    def open_parent_window(self): # * Method to open the parent window
-        self.parent.show()
-        self.TicketsWindow.close()
+        #$ My Part --------------------------------------------
+        self.back_btn.clicked.connect(self.open_parent_window)
 
     def retranslateUi(self, TicketsWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -87,3 +78,9 @@ class Ui_TicketsWindow(object):
         self.TicketsList_label.setText(_translate("TicketsWindow", "Tickets list"))
         self.Expired_lbl.setText(_translate("TicketsWindow", "Expired tickets"))
         self.back_btn.setText(_translate("TicketsWindow", "Back"))
+        
+    def open_parent_window(self):
+        self.parent.show()
+        self.TicketsWindow.close()
+
+
