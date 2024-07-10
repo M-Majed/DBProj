@@ -171,4 +171,4 @@ class Ui_SearchWindow(object):
 
     def open_parent_window(self):
         self.parent.show()
-        self.search_btn.close()
+        self.SearchWindow.close()
