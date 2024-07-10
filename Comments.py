@@ -65,3 +65,15 @@ class Ui_CommentsWindow(object):
     def open_parent_window(self):
         self.parent.show()
         self.CommentsWindow.close()
+
+    def get_all_comments(self):
+        dbm = DBM()
+        dbm.db_connect()
+        friendIds = get_friendIds(dbm, self.appstate["userid"])
+        if not friendIds:
+            friendIds = []
+        result = get_comments(dbm, self.music_row[0], friendIds, self.music_row[0])
+        if not result:
+            return
+        # Later: add ui for comments. first comment is result[0]. and its first columns is result[0][0]. ...
+        dbm.db_disconnect()

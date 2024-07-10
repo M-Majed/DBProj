@@ -1,6 +1,5 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import resources
-import Variable
 from dbfunctions import *
 from DBManagement import DBM
 from time import sleep
@@ -170,7 +169,7 @@ class Ui_MusicWindow(object):
         self.comment_lineEdit.setText("")
 
     def check_subscription(self):
-        if self.appstate["subscribed"] is True:
+        if self.appstate["subscribed"] is 1:
                 self.like_checkBox.setCheckable(True)
         else:
                 self.like_checkBox.setCheckable(False)

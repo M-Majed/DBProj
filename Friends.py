@@ -2,7 +2,6 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from DBManagement import DBM
 from dbfunctions import *
 import sqlite3
-import Variable
 
 class Ui_FriendsWindow(object):
     def __init__(self, parent=None , appstate=None):

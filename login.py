@@ -143,7 +143,6 @@ class Ui_LoginWindow(object):
 
     def check_login(self):
         username = self.Username_input.text()
-        Variable.username = username
         password = self.Password_input.text()
         dbm = DBM()
         dbm.db_connect()
@@ -153,7 +152,7 @@ class Ui_LoginWindow(object):
             self.appstate["username"] = username
             uid = get_userid_by_username(dbm, username)
             self.appstate["userid"] = uid # uid || None
-            sub = is_subscribed(dbm, username)
+            sub = is_subscribed(dbm, uid)
             if sub:
                 self.appstate["subscribed"] = sub
             else:

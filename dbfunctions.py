@@ -1,5 +1,4 @@
 from DBManagement import DBM
-import Variable
 # dbm = DBManagement.DBM()
 # dbm.db_connect()
 
@@ -202,17 +201,6 @@ def check_login(dbm: DBM, username: str, password: str):
         return False
     return True
 
-# def check_attribute(dbm: DBM):
-#     result = dbm.db_execute_read_query(
-#         f"""
-#         SELECT * FROM tracks
-#         limit 1 offset {Variable.selected_index};
-#         """,
-#         None,
-#     )
-#     Variable.music_detail_title=result[0][1]
-
-
 def insert_one_user(dbm: DBM, fname, lname, email, address, username, password):
     if not dbm:
         return False
@@ -244,23 +232,23 @@ def insert_one_user(dbm: DBM, fname, lname, email, address, username, password):
     except Exception as e:
         return False
 
-def get_one_user(dbm: DBM, username: str):
-    if not dbm or not username or username == "":
+def get_one_user(dbm: DBM, id: str):
+    if not dbm or not id or id == "":
         return None
     result = dbm.db_execute_read_query(
         f"""
-        SELECT * FROM user WHERE username = "{username}";
+        SELECT * FROM user WHERE id = "{id}";
         """,
         None,
     )
     return result
 
-def is_subscribed(dbm: DBM, username: str):
-    if not dbm or not username or username == "":
+def is_subscribed(dbm: DBM, id: str):
+    if not dbm or not id or id == "":
         return None
     result = dbm.db_execute_read_query(
         f"""
-        SELECT subscription FROM user WHERE username = "{username}";
+        SELECT subscription FROM user WHERE id = "{id}";
         """,
         None,
     )
@@ -347,6 +335,7 @@ def get_userid_by_username(dbm: DBM, username=None):
         None,
     )
     return result[0][0] if result else None
+
 def post_comment(dbm: DBM, userId=None, trackId=None, commentText=None):
     if not dbm or not userId or userId == "" or not trackId or trackId == "" or not commentText or commentText == "":
         return False
@@ -402,30 +391,30 @@ def get_comments(dbm: DBM, userId=None, friendIds=None, trackId=None):
     )
     return result
 
-def update_user_subscription(dbm: DBM, username=None, subscription=None):
+def update_user_subscription(dbm: DBM, id=None, subscription=None):
     dbm.db_execute_query(
         f"""
         UPDATE user
         SET subscription = {subscription}
-        WHERE username = "{username}";
+        WHERE id = "{id}";
         """,
         None,)
     
-def update_user_artist(dbm: DBM, username=None, artist=None):
+def update_user_artist(dbm: DBM, id=None, artist=None):
     dbm.db_execute_query(
         f"""
         UPDATE user
         SET singerornormal = {artist}
-        WHERE username = "{username}";
+        WHERE id = "{id}";
         """,
         None,)
     
-def update_user_balance(dbm: DBM, username=None, balance=None):
+def update_user_balance(dbm: DBM, id=None, balance=None):
     dbm.db_execute_query(
         f"""
         UPDATE user
         SET wallet = {balance}
-        WHERE username = "{username}";
+        WHERE id = "{id}";
         """,
         None,)
         
