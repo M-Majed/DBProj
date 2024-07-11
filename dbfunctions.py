@@ -89,8 +89,7 @@ def create_db_tables(dbm: DBM):
              genre TEXT NOT NULL,
              ages TEXT NOT NULL,
              lyric TEXT NOT NULL,
-             area TEXT NOT NULL,
-             
+             area TEXT NOT NULL
          );
         """,
         None,
@@ -151,7 +150,7 @@ def create_db_tables(dbm: DBM):
         """
            CREATE TABLE IF NOT EXISTS playlist (
              id INTEGER PRIMARY KEY AUTOINCREMENT,
-             title TEXT NOT NULL,
+             name TEXT NOT NULL,
              user_id INTEGER NOT NULL,
              FOREIGN KEY (user_id) REFERENCES user (id)
          );
@@ -163,9 +162,10 @@ def create_db_tables(dbm: DBM):
         """
              CREATE TABLE IF NOT EXISTS playlist_music (
              id INTEGER PRIMARY KEY AUTOINCREMENT,
+             playlist_id INTEGER NOT NULL,
              FOREIGN KEY (playlist_id) REFERENCES playlist (id),
-             music_id INTEGER NOT NULL,
-             FOREIGN KEY (music_id) REFERENCES tracks (id),
+             track_id INTEGER NOT NULL,
+             FOREIGN KEY (track_id) REFERENCES tracks (id),
             
              
          );

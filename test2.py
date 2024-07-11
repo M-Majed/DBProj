@@ -7,21 +7,45 @@ dbm.db_connect()
 #print(check_login(dbm, "negin", "1234"))
 
 # create_db_tables(dbm)
-dbm.db_execute_query(
-    '''
-    INSERT INTO tracks (id, title, artist, album, duration, genre, ages, lyric, area, date)
-    VALUES
-        
-        (8, "treck4", "artist4", "album3", "00:04:10", "Pop", "21+", "Lyrics 4", "UK", "2021-12-15");
-   
-    ''', None
-)
 # dbm.db_execute_query(
 #     '''
-#     ALTER TABLE user
-#     RENAME TO user_legacy;
+#     INSERT INTO tracks (id, title, artist, album, duration, genre, ages, lyric, area)
+#     VALUES
+        
+#                        (10, "treck4", "artist4", "album3", "00:04:10", "Pop", "21+", "Lyrics 4", "UK");
+   
 #     ''', None
+# )
+# dbm.db_execute_query(
+#     '''
+    
+#     INSERT INTO tracks (id, title, artist, album, duration, genre, ages, lyric, area)
+#     VALUES
+        
+#                        (10, "treck4", "artist4", "album3", "00:04:10", "Pop", "21+", "Lyrics 4", "UK");
+   
+#     ''', None
+# )
+# dbm.db_execute_query(
+#         """
+#              CREATE TABLE IF NOT EXISTS playlist_music (
+#         id INTEGER PRIMARY KEY AUTOINCREMENT,
+#         playlist_id INTEGER NOT NULL,
+#         track_id TEXT NOT NULL,
+#         FOREIGN KEY (playlist_id) REFERENCES playlist (id),
+#         FOREIGN KEY (track_id) REFERENCES tracks (id)
+#     );
+#         """,
+#         None,
 #     )
+
+dbm.db_execute_query(
+    '''
+    INSERT INTO playlist_music (id, playlist_id, track_id)
+    VALUES (1, 1, 10);
+    ''',
+    None
+)
 
 # dbm.db_execute_query(
 #         """
