@@ -153,7 +153,7 @@ class Ui_LoginWindow(object):
             uid = get_userid_by_username(dbm, username)
             self.appstate["userid"] = uid # uid || None
             sub = is_subscribed(dbm, uid)
-            if sub:
+            if sub is not None:
                 self.appstate["subscribed"] = sub
             else:
                 self.appstate["subscribed"] = False

@@ -173,6 +173,7 @@ class Ui_MusicListWindow(object):
             if tracks is None:
                 print(f"Error: No tracks found for album '{album_name}'")
             else:
+                self.model.clear()
                 self.model.setHorizontalHeaderLabels(['album'])
                 for track in tracks:
                     track_data = [str(item) for item in track]

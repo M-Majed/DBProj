@@ -134,15 +134,15 @@ class Ui_AccountWindow(object):
         QtCore.QMetaObject.connectSlotsByName(AccountWindow)
 
         #$ My Part --------------------------------------------
-        self.changeartist_status()
+        self.artist_change_handler()
         self.return_btn.clicked.connect(self.open_parent_window)
         self.follow_btn.clicked.connect(self.open_follow_window)
         self.Friends_btn.clicked.connect(self.open_friends_window)
         self.tickets_btn.clicked.connect(self.open_tickets_window)
         # self.Subscription_checkBox.clicked.connect(self.changeSubscription)
-        self.Subscription_checkBox.stateChanged.connect(self.changeSubscription)
+        self.Subscription_checkBox.stateChanged.connect(self.subscription_change_handler)
         self.deposit_btn.clicked.connect(self.add_balance)
-        self.artist_checkBox.clicked.connect(self.changeartist_status)
+        self.artist_checkBox.clicked.connect(self.artist_change_handler)
         self.MusicList_btn.clicked.connect(self.open_musicList_window)
         self.concertList_btn.clicked.connect(self.open_concertList_window)
 
@@ -159,20 +159,34 @@ class Ui_AccountWindow(object):
         self.Friends_btn.setText(_translate("AccountWindow", "Friends"))
         self.follow_btn.setText(_translate("AccountWindow", "follow"))
         self.Subscription_checkBox.setText(_translate("AccountWindow", "subscription"))
+        self.balance_lbl.setText(_translate("AccountWindow", f"Balance: Not applicabale!"))
 
         #$ My Part --------------------------------------------
+        self.init_subscription_state()
+        self.init_artist_state()
+
+
+    def init_subscription_state(self):
         dbm = DBM()
         dbm.db_connect()
         uid=self.appstate["userid"]
-        self.balance_lbl.setText(_translate("AccountWindow", f"balance:{get_one_user(dbm,uid)[0][9]}"))
         if(get_one_user(dbm,uid)[0][7] == 1):
             self.Subscription_checkBox.setChecked(True)
+            self.balance_lbl.setText(QtCore.QCoreApplication.translate("AccountWindow", f"Balance: {get_one_user(dbm,uid)[0][9]}"))
         else:
             self.Subscription_checkBox.setChecked(False)
+        dbm.db_disconnect()      
+
+
+    def init_artist_state(self):
+        dbm = DBM()
+        dbm.db_connect()
+        uid=self.appstate["userid"]
         if(get_one_user(dbm,uid)[0][8] == 1):
             self.artist_checkBox.setChecked(True)
         else:
             self.artist_checkBox.setChecked(False)
+        dbm.db_disconnect()      
 
     def open_parent_window(self):
         self.parent.show()
@@ -225,16 +239,18 @@ class Ui_AccountWindow(object):
         self.window.show()
         self.AccountWindow.close()
 
-    def changeSubscription(self):
+    def subscription_change_handler(self):
         dbm = DBM()
         dbm.db_connect()
         uid=self.appstate["userid"]
         if(self.Subscription_checkBox.isChecked()):
             update_user_subscription(dbm, uid, 1)
-            self.appstate["subscribed"] = 1
+            self.appstate["subscribed"] = True
+            self.balance_lbl.setText(QtCore.QCoreApplication.translate("AccountWindow", f"Balance: Not applicable!"))
         else:
             update_user_subscription(dbm, uid, 0)
-            self.appstate["subscribed"] = 0
+            self.appstate["subscribed"] = False
+            self.balance_lbl.setText(QtCore.QCoreApplication.translate("AccountWindow", f"Balance: {get_one_user(dbm,uid)[0][9]}"))
         dbm.db_disconnect()
 
     def add_balance(self):
@@ -246,10 +262,10 @@ class Ui_AccountWindow(object):
             balance = 0
         balance += int(self.deposit_lineEdit.text())
         update_user_balance(dbm, uid, balance)
-        self.balance_lbl.setText(f"balance:{get_one_user(dbm, uid)[0][9]}")
+        self.balance_lbl.setText(f"Balance: {get_one_user(dbm, uid)[0][9]}")
         dbm.db_disconnect()
 
-    def changeartist_status(self):
+    def artist_change_handler(self):
         dbm = DBM()
         dbm.db_connect()
         uid=self.appstate["userid"]

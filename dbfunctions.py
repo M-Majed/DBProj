@@ -284,7 +284,7 @@ def is_subscribed(dbm: DBM, id: str):
         None,
     )
     # print(f"{result=}\t{result[0][0]}")
-    if result[0][0]:
+    if result[0][0] is not None:
         return True if result[0][0] == 1 else False
     else:
         return None

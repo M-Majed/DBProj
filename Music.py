@@ -125,10 +125,10 @@ class Ui_MusicWindow(object):
         #$ My Part --------------------------------------------
         self.Return_btn.clicked.connect(self.open_parent_window)
         self.comments_btn.clicked.connect(self.open_comments_window)
-        self.sendComment_btn.clicked.connect(self.send_comment)
-        self.like_checkBox.stateChanged.connect(self.like_changed)
-        self.check_likeState()
-        self.check_subscription()
+        self.sendComment_btn.clicked.connect(self.send_comment_handler)
+        self.like_checkBox.stateChanged.connect(self.like_change_handler)
+        self.init_like_state()
+        self.like_checkable_handler()
 
     def retranslateUi(self, MusicWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -158,7 +158,7 @@ class Ui_MusicWindow(object):
         self.window.show()
         self.MusicWindow.close()
 
-    def send_comment(self):
+    def send_comment_handler(self):
         comment = self.comment_lineEdit.text()
         if not self.appstate["subscribed"] or comment == "":
             return
@@ -168,16 +168,17 @@ class Ui_MusicWindow(object):
         dbm.db_disconnect()
         self.comment_lineEdit.setText("")
 
-    def check_subscription(self):
-        if self.appstate["subscribed"] is 1:
+    def like_checkable_handler(self):
+        # print(f'00000000000000000000000in "like_checkable_handler"\t {self.appstate["subscribed"]=}')
+        if self.appstate["subscribed"] == True:
                 self.like_checkBox.setCheckable(True)
         else:
                 self.like_checkBox.setCheckable(False)
 
-    def check_likeState(self):
+    def init_like_state(self):
         dbm = DBM()
         dbm.db_connect()
-        print(f'--->>>>> {self.appstate=}\n\t{self.music_row=}')
+        # print(f'--->>>>> {self.appstate=}\n\t{self.music_row=}')
         already_liked = get_like_for_track(dbm, self.appstate["userid"], self.music_row[0])
         if already_liked:
             self.like_checkBox.setChecked(True)
@@ -185,7 +186,7 @@ class Ui_MusicWindow(object):
             self.like_checkBox.setChecked(False)
         dbm.db_disconnect()
         
-    def like_changed(self):
+    def like_change_handler(self):
         dbm = DBM()
         dbm.db_connect()
         if self.like_checkBox.isChecked():

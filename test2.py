@@ -5,7 +5,7 @@ dbm = DBManagement.DBM()
 dbm.db_connect()
 # delete_all_db(dbm)
 #print(check_login(dbm, "negin", "1234"))
-
+dbm.db_execute_query("DROP TABLE IF EXISTS user_legacy;", None)
 # create_db_tables(dbm)
 # dbm.db_execute_query(
 #     '''
@@ -47,31 +47,17 @@ dbm.db_connect()
 #              friend_get INTEGER NOT NULL,
 #              FOREIGN KEY (freind_send) REFERENCES user (id),
 #              FOREIGN KEY (friend_get) REFERENCES user (id)
-
-dbm.db_execute_query(
-        """
-        CREATE TABLE IF NOT EXISTS message (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            sender_id INTEGER NOT NULL,
-            receiver_id INTEGER NOT NULL,
-            FOREIGN KEY (sender_id) REFERENCES user (id),
-            FOREIGN KEY (receiver_id) REFERENCES user (id)
-        );
-        """,
-        None,
-    )  
-
 #     );
 #         """,
 #         None,
 #     )
-dbm.db_execute_query(
-     '''
-     ALTER TABLE message
-     DROP COLUMN timestamp;
-     ''',
-     None
- )
+# dbm.db_execute_query(
+#      '''
+#      ALTER TABLE message
+#      DROP COLUMN timestamp;
+#      ''',
+#      None
+#  )
 # dbm.db_execute_query(
 #         """
 #         CREATE TABLE IF NOT EXISTS user (
