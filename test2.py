@@ -47,21 +47,31 @@ dbm.db_connect()
 #              friend_get INTEGER NOT NULL,
 #              FOREIGN KEY (freind_send) REFERENCES user (id),
 #              FOREIGN KEY (friend_get) REFERENCES user (id)
-             
-            
+
+dbm.db_execute_query(
+        """
+        CREATE TABLE IF NOT EXISTS message (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            sender_id INTEGER NOT NULL,
+            receiver_id INTEGER NOT NULL,
+            FOREIGN KEY (sender_id) REFERENCES user (id),
+            FOREIGN KEY (receiver_id) REFERENCES user (id)
+        );
+        """,
+        None,
+    )  
+
 #     );
 #         """,
 #         None,
 #     )
-
-# dbm.db_execute_query(
-#     '''
-#     INSERT INTO friend_request (id, freind_send, friend_get, accept_reject)
-#     VALUES (1, 1, 2, 0);
-#     ''',
-#     None
-# )
-
+dbm.db_execute_query(
+     '''
+     ALTER TABLE message
+     DROP COLUMN timestamp;
+     ''',
+     None
+ )
 # dbm.db_execute_query(
 #         """
 #         CREATE TABLE IF NOT EXISTS user (

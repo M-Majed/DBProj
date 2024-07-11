@@ -25,8 +25,6 @@ def create_db_tables(dbm: DBM):
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             sender_id INTEGER NOT NULL,
             receiver_id INTEGER NOT NULL,
-            message_text TEXT NOT NULL,
-            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
             FOREIGN KEY (sender_id) REFERENCES user (id),
             FOREIGN KEY (receiver_id) REFERENCES user (id)
         );

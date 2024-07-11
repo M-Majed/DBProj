@@ -112,7 +112,7 @@ class Ui_MusicListWindow(object):
         self.Category_combobox.currentIndexChanged.connect(self.category_changed)
 
         self.Back_btn.clicked.connect(self.open_parent_window)
-        self.Music_list.clicked.connect(self.item_clicked)
+        self.Music_list.doubleClicked.connect(self.item_clicked)
         self.Account_btn.clicked.connect(self.open_account_window)
         self.Search_btn.clicked.connect(self.open_search_window)
         self.category_changed(0)
@@ -288,7 +288,7 @@ class Ui_MusicListWindow(object):
                 items = [QtGui.QStandardItem(str(field)) for field in row]
                 for elem in items:
                     elem.setEditable(False)
-                self.Music_list.clicked.connect(self.item_clicked)
+                
                                                 
                 self.model.appendRow(items)
         else:
