@@ -26,6 +26,9 @@ dbm.db_execute_query("DROP TABLE IF EXISTS user_legacy;", None)
    
 #     ''', None
 # )
+
+
+
 # dbm.db_execute_query(
 #         """
 #              CREATE TABLE IF NOT EXISTS playlist_music (
@@ -51,13 +54,17 @@ dbm.db_execute_query("DROP TABLE IF EXISTS user_legacy;", None)
 #         """,
 #         None,
 #     )
-# dbm.db_execute_query(
-#      '''
-#      ALTER TABLE message
-#      DROP COLUMN timestamp;
-#      ''',
-#      None
-#  )
+dbm.db_execute_query(
+    '''
+    INSERT INTO albums (title, artist, track_id, artist_id)
+    VALUES
+        ("Album 1", "Artist 1", 1, 1),
+        ("Album 2", "Artist 2", 2, 2),
+        ("Album 3", "Artist 3", 3, 3);
+    ''',
+    None
+)
+
 # dbm.db_execute_query(
 #         """
 #         CREATE TABLE IF NOT EXISTS user (
@@ -104,12 +111,20 @@ dbm.db_execute_query("DROP TABLE IF EXISTS user_legacy;", None)
 #     , None
 # )
 
-dbm.db_execute_query(
-    '''
-    DELETE FROM friend_request;
-    ''',
-    None
-)
+# dbm.db_execute_query(
+#     """
+#     CREATE TABLE IF NOT EXISTS albums (
+#         id INTEGER PRIMARY KEY AUTOINCREMENT,
+#         title TEXT NOT NULL,
+#         artist TEXT NOT NULL,
+#         track_id INTEGER NOT NULL,
+#         artist_id INTEGER NOT NULL,
+#         FOREIGN KEY (track_id) REFERENCES tracks (id),
+#         FOREIGN KEY (artist_id) REFERENCES user (id)
+#     );
+#     """,
+#     None,
+# )
 dbm.db_execute_query(
     '''
     DELETE FROM friend;

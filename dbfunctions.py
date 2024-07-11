@@ -18,6 +18,23 @@ def create_db_tables(dbm: DBM):
     if not dbm:
         return False
 
+    
+    
+    dbm.db_execute_query(
+    """
+    CREATE TABLE IF NOT EXISTS albums (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        artist TEXT NOT NULL,
+        track_id INTEGER NOT NULL,
+        FOREIGN KEY (track_id) REFERENCES tracks (id)
+        artist_id INTEGER NOT NULL,
+        FOREIGN KEY (artist_id) REFERENCES user (id)
+    );
+    """,
+    None,
+    )
+    
     # signup: fname lname email address username password
     dbm.db_execute_query(
         """
@@ -32,22 +49,22 @@ def create_db_tables(dbm: DBM):
         None,
     )
    
-    # dbm.db_execute_query(
-    #     """ 
-    #     CREATE TABLE IF NOT EXISTS tracks (
-    #      id INTEGER PRIMARY KEY AUTOINCREMENT,
-    #      title TEXT  NOT NULL,
-    #      artist TEXT NOT NULL,
-    #      album TEXT NOT NULL,
-    #      duration INTEGER NOT NULL,
-    #      genre TEXT NOT NULL,
-    #      ages TEXT NOT NULL,
-    #      lyric TEXT NOT NULL,
-    #      area TEXT NOT NULL
-    #      );
-    #     """,
-    #     None,
-    # )
+   
+    dbm.db_execute_query(
+        """ 
+        CREATE TABLE IF NOT EXISTS tracks (
+         id INTEGER PRIMARY KEY AUTOINCREMENT,
+         title TEXT  NOT NULL,
+         artist TEXT NOT NULL,
+         duration INTEGER NOT NULL,
+         genre TEXT NOT NULL,
+         ages TEXT NOT NULL,
+         lyric TEXT NOT NULL,
+         area TEXT NOT NULL
+         );
+        """,
+        None,
+    )
     dbm.db_execute_query(
         """
         CREATE TABLE IF NOT EXISTS user (
@@ -96,6 +113,7 @@ def create_db_tables(dbm: DBM):
         """,
         None,
     )
+    
     dbm.db_execute_query(
         """
           CREATE TABLE IF NOT EXISTS concert (

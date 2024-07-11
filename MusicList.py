@@ -167,7 +167,7 @@ class Ui_MusicListWindow(object):
             dbm.db_connect()
             tracks = dbm.db_execute_read_query(
                 f'''
-                SELECT distinct title FROM tracks WHERE album = '{album_name}'
+                SELECT distinct title FROM albums WHERE album = '{album_name}'
                 ''', None
             )
             if tracks is None:
@@ -241,7 +241,7 @@ class Ui_MusicListWindow(object):
         elif index == 1: # Albums
             rows = dbm.db_execute_read_query(
                 f'''
-                SELECT album FROM tracks
+                SELECT album FROM albums
                 ''', None
             )
         elif index == 2: # Followings
