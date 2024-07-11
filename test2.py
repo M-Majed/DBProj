@@ -5,7 +5,7 @@ dbm = DBManagement.DBM()
 dbm.db_connect()
 # delete_all_db(dbm)
 #print(check_login(dbm, "negin", "1234"))
-dbm.db_execute_query("DROP TABLE IF EXISTS user_legacy;", None)
+# dbm.db_execute_query("DROP TABLE IF EXISTS user_legacy;", None)
 # create_db_tables(dbm)
 # dbm.db_execute_query(
 #     '''
@@ -53,17 +53,17 @@ dbm.db_execute_query("DROP TABLE IF EXISTS user_legacy;", None)
 #     );
 #         """,
 #         None,
-#     )
-dbm.db_execute_query(
-    '''
-    INSERT INTO albums (title, artist, track_id, artist_id)
-    VALUES
-        ("Album 1", "Artist 1", 1, 1),
-        ("Album 2", "Artist 2", 2, 2),
-        ("Album 3", "Artist 3", 3, 3);
-    ''',
-    None
-)
+# #     )
+# dbm.db_execute_query(
+#     '''
+#     INSERT INTO albums (title, artist, track_id, artist_id)
+#     VALUES
+#         ("Album 1", "Artist 1", 1, 1),
+#         ("Album 2", "Artist 2", 2, 2),
+#         ("Album 3", "Artist 3", 3, 3);
+#     ''',
+#     None
+# )
 
 # dbm.db_execute_query(
 #         """
@@ -125,13 +125,18 @@ dbm.db_execute_query(
 #     """,
 #     None,
 # )
+# dbm.db_execute_query(
+#     '''
+#     DELETE FROM friend;
+#     ''',
+#     None
+# )
 dbm.db_execute_query(
     '''
-    DELETE FROM friend;
+    DELETE FROM followorfollowing;
     ''',
     None
 )
-
 
 
 dbm.db_disconnect()
