@@ -18,23 +18,6 @@ def create_db_tables(dbm: DBM):
     if not dbm:
         return False
 
-    
-    
-    dbm.db_execute_query(
-    """
-    CREATE TABLE IF NOT EXISTS albums (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT NOT NULL,
-        artist TEXT NOT NULL,
-        track_id INTEGER NOT NULL,
-        FOREIGN KEY (track_id) REFERENCES tracks (id)
-        artist_id INTEGER NOT NULL,
-        FOREIGN KEY (artist_id) REFERENCES user (id)
-    );
-    """,
-    None,
-    )
-    
     # signup: fname lname email address username password
     dbm.db_execute_query(
         """
@@ -49,22 +32,22 @@ def create_db_tables(dbm: DBM):
         None,
     )
    
-   
-    dbm.db_execute_query(
-        """ 
-        CREATE TABLE IF NOT EXISTS tracks (
-         id INTEGER PRIMARY KEY AUTOINCREMENT,
-         title TEXT  NOT NULL,
-         artist TEXT NOT NULL,
-         duration INTEGER NOT NULL,
-         genre TEXT NOT NULL,
-         ages TEXT NOT NULL,
-         lyric TEXT NOT NULL,
-         area TEXT NOT NULL
-         );
-        """,
-        None,
-    )
+    # dbm.db_execute_query(
+    #     """ 
+    #     CREATE TABLE IF NOT EXISTS tracks (
+    #      id INTEGER PRIMARY KEY AUTOINCREMENT,
+    #      title TEXT  NOT NULL,
+    #      artist TEXT NOT NULL,
+    #      album TEXT NOT NULL,
+    #      duration INTEGER NOT NULL,
+    #      genre TEXT NOT NULL,
+    #      ages TEXT NOT NULL,
+    #      lyric TEXT NOT NULL,
+    #      area TEXT NOT NULL
+    #      );
+    #     """,
+    #     None,
+    # )
     dbm.db_execute_query(
         """
         CREATE TABLE IF NOT EXISTS user (
@@ -113,8 +96,6 @@ def create_db_tables(dbm: DBM):
         """,
         None,
     )
-    
-    
     dbm.db_execute_query(
         """
           CREATE TABLE IF NOT EXISTS concert (
@@ -273,9 +254,9 @@ def insert_one_user(dbm: DBM, fname, lname, email, address, username, password):
         return dbm.db_execute_query(
             f"""
             INSERT INTO
-                user (fname,lname,email,address,username,password, subscription, singerornormal)
+                user (fname,lname,email,address,username,password)
                 VALUES
-                ("{fname}","{lname}","{email}","{address}","{username}","{password}", 0, 0);
+                ("{fname}","{lname}","{email}","{address}","{username}","{password}");
             """,
             None,
         )
@@ -506,7 +487,7 @@ def search_track(dbm: DBM, title=None, artist=None, genre=None, ages=None, area=
     return result
 
 def add_follower(dbm: DBM, userId=None, followerId=None):
-    if not dbm or not userId or userId == "" or not followerId or followerId == "" or userId == followerId:
+    if not dbm or not userId or userId == "" or not followerId or followerId == "":
         return False
     try:
         return dbm.db_execute_query(
@@ -680,6 +661,7 @@ def get_rejects(dbm: DBM, userId=None):
     )
     return result
 
+
 def add_msg_toTable(dbm: DBM, senderId=None, receiverId=None, msgText=None):
     if not dbm or not senderId or senderId == "" or not receiverId or receiverId == "" or not msgText or msgText == "":
         return False
@@ -712,6 +694,8 @@ def get_messages(dbm: DBM, receiverId=None):
         None,
     )
     return result
+
+
 
 # def get_current(melli: str):
 #     if not melli:

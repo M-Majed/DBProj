@@ -150,11 +150,24 @@ class Ui_FriendsWindow(object):
         reject_list.setStringList([str(id[0]) for id in reject_id])
         self.Reject_listView.setModel(reject_list)
 
+
+        msg_data = get_messages(dbm, self.appstate["userid"])
+        msg_model = QtGui.QStandardItemModel()
+        if msg_data == None:
+            msg_data = []
+        for msg in msg_data:
+            msg_item = QtGui.QStandardItem(msg[0])
+            sender_item = QtGui.QStandardItem(msg[1])
+            msg_model.appendRow([msg_item, sender_item])
+        self.Messages_tableView.setModel(msg_model)
+
+
         self.accpet_btn.clicked.connect(self.accept_req)
         self.reject_btn.clicked.connect(self.reject_req)
         self.back_btn.clicked.connect(self.open_parent_window)
         self.Friends_listView.doubleClicked.connect(self.delete_friendFromlist)
         self.Sendreq_btn.clicked.connect(self.send_request)
+        self.SendMsg_btn.clicked.connect(self.send_msg)
 
     def retranslateUi(self, FriendsWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -223,3 +236,11 @@ class Ui_FriendsWindow(object):
         reject_list.setStringList([str(id[0]) for id in reject_id])
         self.Reject_listView.setModel(reject_list)
         
+    def send_msg(self):
+        dbm = DBM()
+        dbm.db_connect()
+        friend_name = self.Friends_listView.currentIndex().data()
+        friend_id = get_userid_by_username(dbm, friend_name)
+        msg = self.Msg_lineEdit.text()
+        add_msg_toTable(dbm, self.appstate["userid"], friend_id, msg)
+        self.Msg_lineEdit.clear()
