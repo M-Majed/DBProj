@@ -3,7 +3,12 @@ import resources
 
 
 class Ui_AddConcertWindow(object):
+    def __init__(self, parent=None , appstate=None):
+        self.parent = parent
+        self.appstate = appstate
+
     def setupUi(self, AddConcertWindow):
+        self.AddConcertWindow = AddConcertWindow
         AddConcertWindow.setObjectName("AddConcertWindow")
         AddConcertWindow.resize(400, 200)
         AddConcertWindow.setMinimumSize(QtCore.QSize(400, 200))
@@ -68,7 +73,8 @@ class Ui_AddConcertWindow(object):
         self.retranslateUi(AddConcertWindow)
         QtCore.QMetaObject.connectSlotsByName(AddConcertWindow)
 
-        
+        #$ My Part --------------------------------------------
+        self.Back_btn.clicked.connect(self.open_parent_window)
 
     def retranslateUi(self, AddConcertWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -78,3 +84,7 @@ class Ui_AddConcertWindow(object):
         self.Price_lineEdit.setPlaceholderText(_translate("AddConcertWindow", "Tiket price"))
         self.Back_btn.setText(_translate("AddConcertWindow", "Back"))
         self.Add_btn.setText(_translate("AddConcertWindow", "Add concert"))
+
+    def open_parent_window(self):
+        self.parent.show()
+        self.AddConcertWindow.close()
