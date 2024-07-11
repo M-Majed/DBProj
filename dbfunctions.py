@@ -114,6 +114,7 @@ def create_db_tables(dbm: DBM):
         None,
     )
     
+    
     dbm.db_execute_query(
         """
           CREATE TABLE IF NOT EXISTS concert (
