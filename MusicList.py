@@ -202,7 +202,7 @@ class Ui_MusicListWindow(object):
             qq=self.appstate["userid"]
             rows = dbm.db_execute_read_query(
                 f'''
-                SELECT genre FROM tracks,likes WHERE user_id = {qq} &&  likes.user_id = tracks.id
+                SELECT title FROM tracks,likes WHERE user_id = {qq} &&  likes.user_id = tracks.id
                 ''', None
             )
             if rows is None:
@@ -262,7 +262,7 @@ class Ui_MusicListWindow(object):
             qq=self.appstate["userid"]
             rows = dbm.db_execute_read_query(
                 f'''
-                SELECT genre FROM tracks,likes WHERE user_id = {qq} and  likes.user_id = tracks.id
+                SELECT title FROM tracks,likes WHERE user_id = {qq} and  likes.user_id = tracks.id
                 ''', None
             )
         elif index == 4: # PlayLists
