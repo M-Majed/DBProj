@@ -165,14 +165,11 @@ def create_db_tables(dbm: DBM):
              playlist_id INTEGER NOT NULL,
              FOREIGN KEY (playlist_id) REFERENCES playlist (id),
              track_id INTEGER NOT NULL,
-             FOREIGN KEY (track_id) REFERENCES tracks (id),
-            
-             
+             FOREIGN KEY (track_id) REFERENCES tracks (id),     
          );
         """,
         None,
     )
-
     dbm.db_execute_query(
         """
         CREATE TABLE IF NOT EXISTS friend_request (
@@ -446,34 +443,6 @@ def update_user_balance(dbm: DBM, id=None, balance=None):
         WHERE id = "{id}";
         """,
         None,)
-        
-def get_friends(dbm: DBM, userId=None):
-    if not dbm or not userId or userId == "":
-        return None
-    result = dbm.db_execute_read_query(
-        f'''
-        select username from user
-        where id in (SELECT friend_id FROM friend WHERE user_id = "{userId}");
-        ''',
-        None,
-    )
-    if result is None:
-        return None
-    return [row[0] for row in result]
-    
-def delete_friend(dbm: DBM, userId=None, friendId=None):
-    if not dbm or not userId or userId == "" or not friendId or friendId == "":
-        return False
-    try:
-        return dbm.db_execute_query(
-            f"""
-            DELETE FROM friend
-            WHERE user_id = "{userId}" AND friend_id = "{friendId}";
-            """,
-            None,
-        )
-    except Exception as e:
-        return False
     
 def get_followers(dbm: DBM, userId=None):
     if not dbm or not userId or userId == "":
@@ -542,7 +511,153 @@ def fetch_artist_tracks(dbm: DBM, artist=None):
         None,
     )
     return result
+
+def add_music(dbm: DBM, title=None, artist=None, album=None, duration=None, genre=None, ages=None, lyric=None, area=None):
+    if not dbm or not title or title == "" or not artist or artist == "" or not duration or duration == "" or not genre or genre == "" or not ages or ages == "" or not lyric or lyric == "" or not area or area == "":
+        return False
+    try:
+        return dbm.db_execute_query(
+            f"""
+            INSERT INTO
+                tracks (title,artist,album,duration,genre,ages,lyric,area)
+                VALUES
+                ("{title}","{artist}","{album}","{duration}","{genre}","{ages}","{lyric}","{area}");
+            """,
+            None,
+        )
+    except Exception as e:
+        return False
     
+
+def send_friend_request(dbm: DBM, userId=None, friendId=None):
+    if not dbm or not userId or userId == "" or not friendId or friendId == "" or userId == friendId:
+        return False
+    try:
+        if are_friends(dbm, userId, friendId):
+            return False
+        return dbm.db_execute_query(
+            f"""
+            INSERT INTO
+            friend_request (freind_send,friend_get, accept_reject)
+            SELECT * FROM (SELECT "{userId}","{friendId}", 0) AS tmp
+            WHERE NOT EXISTS (
+            SELECT freind_send,friend_get FROM friend_request 
+            WHERE freind_send = "{userId}" AND friend_get = "{friendId}"
+            );
+            """,
+            None,
+        )
+    except Exception as e:
+        return False
+
+def are_friends(dbm: DBM, userId=None, friendId=None):
+    if not dbm or not userId or userId == "" or not friendId or friendId == "":
+        return False
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT * FROM friend
+        WHERE (user_id = "{userId}" AND friend_id = "{friendId}")
+        OR (user_id = "{friendId}" AND friend_id = "{userId}");
+        ''',
+        None,
+    )
+    return len(result) > 0
+    
+def get_requests(dbm: DBM, userId=None):
+    if not dbm or not userId or userId == "":
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT u.username FROM friend_request AS fr
+        JOIN user AS u ON fr.freind_send = u.id
+        WHERE fr.friend_get = "{userId}" and fr.accept_reject = 0;
+        ''',
+        None,
+    )
+    return result
+
+def get_friends(dbm: DBM, userId=None):
+    if not dbm or not userId or userId == "":
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        select username from user
+        where id in (SELECT friend_id FROM friend WHERE user_id = "{userId}")
+        OR id in (SELECT user_id FROM friend WHERE friend_id = "{userId}");
+        ''',
+        None,
+    )
+    if result is None:
+        return None
+    return [row[0] for row in result]
+    
+def delete_friend(dbm: DBM, userId=None, friendId=None):
+    if not dbm or not userId or userId == "" or not friendId or friendId == "":
+        return False
+    try:
+        return dbm.db_execute_query(
+            f"""
+            DELETE FROM friend
+            WHERE user_id = "{userId}" AND friend_id = "{friendId}"
+            OR user_id = "{friendId}" AND friend_id = "{userId}";
+            """,
+            None,
+        )
+    except Exception as e:
+        return False
+
+
+def accept_friend_request(dbm: DBM, userId=None, friendId=None):
+    if not dbm or not userId or userId == "" or not friendId or friendId == "":
+        return False
+    try:
+        dbm.db_execute_query(
+            f"""
+            DELETE FROM friend_request
+            WHERE freind_send = "{friendId}" AND friend_get = "{userId}";
+            """,
+            None,
+        )
+        return dbm.db_execute_query(
+            f"""
+            INSERT INTO
+                friend (user_id,friend_id)
+                VALUES
+                ("{userId}","{friendId}");
+            """,
+            None,
+        )
+    except Exception as e:
+        return False
+
+def reject_friend_request(dbm: DBM, userId=None, friendId=None):
+    if not dbm or not userId or userId == "" or not friendId or friendId == "":
+        return False
+    try:
+        return dbm.db_execute_query(
+            f"""
+            UPDATE friend_request
+            SET accept_reject = 1
+            WHERE freind_send = "{friendId}" AND friend_get = "{userId}";
+            """,
+            None,
+        )
+    except Exception as e:
+        return False
+    
+
+def get_rejects(dbm: DBM, userId=None):
+    if not dbm or not userId or userId == "":
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT u.username FROM friend_request AS fr
+        JOIN user AS u ON fr.freind_send = u.id
+        WHERE fr.friend_get = "{userId}" and fr.accept_reject = 1;
+        ''',
+        None,
+    )
+    return result
 
 # def get_current(melli: str):
 #     if not melli:

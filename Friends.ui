@@ -33,8 +33,26 @@
    <string notr="true">background-image: url(:/Background/background/darkgreen.png);</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="4" column="0">
-    <widget class="QListView" name="Friends_listView">
+   <item row="2" column="1">
+    <widget class="QTableView" name="Messages_tableView">
+     <property name="styleSheet">
+      <string notr="true">background-image: url(:/Background/background/transparent.png);
+color: rgb(0, 0, 0);
+background-color: rgb(255, 255, 255);</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0">
+    <widget class="QListView" name="Requests_listView">
+     <property name="styleSheet">
+      <string notr="true">background-image: url(:/Background/background/transparent.png);
+color: rgb(0, 0, 0);
+background-color: rgb(255, 255, 255);</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QTableView" name="Report_tableView">
      <property name="styleSheet">
       <string notr="true">background-image: url(:/Background/background/transparent.png);
 color: rgb(0, 0, 0);
@@ -63,132 +81,7 @@ color: rgb(255, 255, 255);</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="0">
-    <widget class="QLabel" name="FriendsList_label">
-     <property name="font">
-      <font>
-       <pointsize>14</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-image: url(:/Background/background/transparent.png);
-color: rgb(255, 255, 255);</string>
-     </property>
-     <property name="text">
-      <string>Friends List</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="1">
-    <widget class="QTableView" name="Messages_tableView">
-     <property name="styleSheet">
-      <string notr="true">background-image: url(:/Background/background/transparent.png);
-color: rgb(0, 0, 0);
-background-color: rgb(255, 255, 255);</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="QLabel" name="Messages_lbl">
-     <property name="minimumSize">
-      <size>
-       <width>300</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>300</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>14</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-image: url(:/Background/background/transparent.png);
-color: rgb(255, 255, 255);</string>
-     </property>
-     <property name="text">
-      <string>Messages</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="1">
-    <widget class="QLabel" name="Report_lbl">
-     <property name="font">
-      <font>
-       <pointsize>14</pointsize>
-       <weight>75</weight>
-       <bold>true</bold>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">background-image: url(:/Background/background/transparent.png);
-color: rgb(255, 255, 255);</string>
-     </property>
-     <property name="text">
-      <string>Report</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="4" column="1">
-    <widget class="QTableView" name="Report_tableView">
-     <property name="styleSheet">
-      <string notr="true">background-image: url(:/Background/background/transparent.png);
-color: rgb(0, 0, 0);
-background-color: rgb(255, 255, 255);</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0">
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <widget class="QLineEdit" name="Sendreq_lineEdit">
-       <property name="styleSheet">
-        <string notr="true">background-image: url(:/Background/background/transparent.png);
-</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="Sendreq_btn">
-       <property name="styleSheet">
-        <string notr="true">color: rgb(255, 255, 255);
-background-color: rgb(0, 0, 0);</string>
-       </property>
-       <property name="text">
-        <string>Send request</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item row="2" column="0">
-    <widget class="QListView" name="Requests_listView">
-     <property name="styleSheet">
-      <string notr="true">background-image: url(:/Background/background/transparent.png);
-color: rgb(0, 0, 0);
-background-color: rgb(255, 255, 255);</string>
-     </property>
-    </widget>
-   </item>
-   <item row="9" column="0">
+   <item row="10" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
       <widget class="QPushButton" name="back_btn">
@@ -223,7 +116,70 @@ background-color: rgb(0, 0, 0);</string>
      </item>
     </layout>
    </item>
+   <item row="1" column="1">
+    <widget class="QLabel" name="Messages_lbl">
+     <property name="minimumSize">
+      <size>
+       <width>300</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>300</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-image: url(:/Background/background/transparent.png);
+color: rgb(255, 255, 255);</string>
+     </property>
+     <property name="text">
+      <string>Messages</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
    <item row="5" column="0">
+    <widget class="QListView" name="Friends_listView">
+     <property name="styleSheet">
+      <string notr="true">background-image: url(:/Background/background/transparent.png);
+color: rgb(0, 0, 0);
+background-color: rgb(255, 255, 255);</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="1">
+    <widget class="QLabel" name="Report_lbl">
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-image: url(:/Background/background/transparent.png);
+color: rgb(255, 255, 255);</string>
+     </property>
+     <property name="text">
+      <string>Report</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="6" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
       <widget class="QLineEdit" name="Msg_lineEdit">
@@ -246,6 +202,76 @@ background-color: rgb(0, 0, 0);</string>
        </property>
        <property name="text">
         <string>Send Msg</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="4" column="0">
+    <widget class="QLabel" name="FriendsList_label">
+     <property name="font">
+      <font>
+       <pointsize>14</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-image: url(:/Background/background/transparent.png);
+color: rgb(255, 255, 255);</string>
+     </property>
+     <property name="text">
+      <string>Friends List</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLineEdit" name="Sendreq_lineEdit">
+       <property name="styleSheet">
+        <string notr="true">background-image: url(:/Background/background/transparent.png);
+</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="Sendreq_btn">
+       <property name="styleSheet">
+        <string notr="true">color: rgb(255, 255, 255);
+background-color: rgb(0, 0, 0);</string>
+       </property>
+       <property name="text">
+        <string>Send request</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item row="3" column="0">
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
+      <widget class="QPushButton" name="accpet_btn">
+       <property name="styleSheet">
+        <string notr="true">color: rgb(255, 255, 255);
+background-color: rgb(0, 0, 0);</string>
+       </property>
+       <property name="text">
+        <string>Accpet Req</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="reject_btn">
+       <property name="styleSheet">
+        <string notr="true">color: rgb(255, 255, 255);
+background-color: rgb(0, 0, 0);</string>
+       </property>
+       <property name="text">
+        <string>Reject Req</string>
        </property>
       </widget>
      </item>
