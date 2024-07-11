@@ -83,13 +83,14 @@ def create_db_tables(dbm: DBM):
              id INTEGER PRIMARY KEY AUTOINCREMENT,
              title TEXT  NOT NULL,
              artist TEXT NOT NULL,
+             FOREIGN KEY (artist) REFERENCES user (id),
              album TEXT NOT NULL,
              duration INTEGER NOT NULL,
              genre TEXT NOT NULL,
              ages TEXT NOT NULL,
              lyric TEXT NOT NULL,
              area TEXT NOT NULL,
-             date Date NOT NULL,
+             
          );
         """,
         None,
@@ -100,9 +101,11 @@ def create_db_tables(dbm: DBM):
              id INTEGER PRIMARY KEY AUTOINCREMENT,
              name TEXT NOT NULL,
              artist TEXT NOT NULL,
+             FOREIGN KEY (artist) REFERENCES user (id),
              venue TEXT NOT NULL,
              date DATE NOT NULL,
-             ticket_price INTEGER NOT NULL
+             ticket_price INTEGER NOT NULL,
+             
          );
         """,
         None,
@@ -148,9 +151,23 @@ def create_db_tables(dbm: DBM):
         """
            CREATE TABLE IF NOT EXISTS playlist (
              id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
+             title TEXT NOT NULL,
              user_id INTEGER NOT NULL,
              FOREIGN KEY (user_id) REFERENCES user (id)
+         );
+        """,
+        None,
+    )
+    
+    dbm.db_execute_query(
+        """
+             CREATE TABLE IF NOT EXISTS playlist_music (
+             id INTEGER PRIMARY KEY AUTOINCREMENT,
+             FOREIGN KEY (playlist_id) REFERENCES playlist (id),
+             music_id INTEGER NOT NULL,
+             FOREIGN KEY (music_id) REFERENCES tracks (id),
+            
+             
          );
         """,
         None,
@@ -335,7 +352,13 @@ def get_userid_by_username(dbm: DBM, username=None):
         None,
     )
     return result[0][0] if result else None
-
+        
+# def get_frieendIds( dbm, self.appstate["userid"]):
+#         friendIds = []
+#         dbm.cursor.execute("SELECT friendId FROM friends WHERE userId = %s", (userid,))
+#         for row in dbm.cursor.fetchall():
+#             friendIds.append(row[0])
+#         return friendIds
 def post_comment(dbm: DBM, userId=None, trackId=None, commentText=None):
     if not dbm or not userId or userId == "" or not trackId or trackId == "" or not commentText or commentText == "":
         return False

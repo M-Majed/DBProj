@@ -1,6 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import resources
-
+from dbfunctions import *
+from DBManagement import DBM
 class Ui_CommentsWindow(object):
     def __init__(self, parent=None, appstate=None, music_row=None):
         self.parent = parent
@@ -65,7 +66,7 @@ class Ui_CommentsWindow(object):
     def open_parent_window(self):
         self.parent.show()
         self.CommentsWindow.close()
-
+        
     def get_all_comments(self):
         dbm = DBM()
         dbm.db_connect()
@@ -77,3 +78,9 @@ class Ui_CommentsWindow(object):
             return
         # Later: add ui for comments. first comment is result[0]. and its first columns is result[0][0]. ...
         dbm.db_disconnect()
+    def show(self):
+        self.get_all_comments()
+        self.CommentsWindow.show()
+        self.CommentsWindow.raise_()
+        self.CommentsWindow.activateWindow()
+        
