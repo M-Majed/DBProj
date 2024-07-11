@@ -38,11 +38,26 @@ dbm.db_connect()
 #         """,
 #         None,
 #     )
+dbm.db_execute_query(
+        """
+        CREATE TABLE IF NOT EXISTS friend_request (
+             id INTEGER PRIMARY KEY AUTOINCREMENT,
+             accept_reject Boolean,
+             freind_send INTEGER NOT NULL,
+             friend_get INTEGER NOT NULL,
+             FOREIGN KEY (freind_send) REFERENCES user (id),
+             FOREIGN KEY (friend_get) REFERENCES user (id)
+             
+            
+    );
+        """,
+        None,
+    )
 
 dbm.db_execute_query(
     '''
-    INSERT INTO playlist_music (id, playlist_id, track_id)
-    VALUES (1, 1, 10);
+    INSERT INTO friend_request (id, freind_send, friend_get, accept_reject)
+    VALUES (1, 1, 2, 0);
     ''',
     None
 )

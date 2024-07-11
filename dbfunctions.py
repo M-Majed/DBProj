@@ -172,6 +172,21 @@ def create_db_tables(dbm: DBM):
         """,
         None,
     )
+
+    dbm.db_execute_query(
+        """
+        CREATE TABLE IF NOT EXISTS friend_request (
+             id INTEGER PRIMARY KEY AUTOINCREMENT,
+             freind_send INTEGER NOT NULL,
+             friend_get INTEGER NOT NULL,
+             FOREIGN KEY (freind_send) REFERENCES user (id),
+             FOREIGN KEY (friend_get) REFERENCES user (id),
+             accept_reject Boolean
+            
+         );
+        """,
+        None,
+    )
     
     dbm.db_execute_query(
         """
