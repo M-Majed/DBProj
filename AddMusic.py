@@ -1,4 +1,5 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+from dbfunctions import *
 import resources
 
 
@@ -106,6 +107,7 @@ class Ui_AddMusicWindow(object):
 
         #$ My Part --------------------------------------------
         self.Back_btn.clicked.connect(self.open_parent_window)
+        self.Add_btn.clicked.connect(self.add_music_to_db)
 
     def retranslateUi(self, AddMusicWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -124,3 +126,23 @@ class Ui_AddMusicWindow(object):
     def open_parent_window(self):
         self.parent.show()
         self.AddMusicWindow.close()
+
+    def add_music_to_db(self):
+        title = self.Title_lineEdit.text()
+        album = self.Album_lineEdit.text()
+        if album == "":
+            album = None
+        duration = self.Duration_lineEdit.text()
+        age = self.Age_lineEdit.text()
+        genre = self.Genre_lineEdit.text()
+        area = self.Area_lineEdit.text()
+        text = self.Text_textEdit.toPlainText()
+        playlist_permission = self.PlayListPermisiion_checkBox.isChecked()
+        artist = self.appstate["userid"]
+        if title and duration and age and genre and area and text:
+            dbm = DBM()
+            dbm.db_connect()
+            add_music(dbm, title, artist, album, duration, genre, age, text, area)
+            self.open_parent_window()
+        else:
+            self.show_error_message("Please fill all fields")
