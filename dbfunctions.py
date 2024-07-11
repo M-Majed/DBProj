@@ -531,6 +531,17 @@ def add_follower(dbm: DBM, userId=None, followerId=None):
     except Exception as e:
         return False
     
+
+def fetch_artist_tracks(dbm: DBM, artist=None):
+    if not dbm or not artist or artist == "":
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT * FROM tracks WHERE artist = "{artist}";
+        ''',
+        None,
+    )
+    return result
     
 
 # def get_current(melli: str):

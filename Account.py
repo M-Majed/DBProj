@@ -139,11 +139,11 @@ class Ui_AccountWindow(object):
         self.follow_btn.clicked.connect(self.open_follow_window)
         self.Friends_btn.clicked.connect(self.open_friends_window)
         self.tickets_btn.clicked.connect(self.open_tickets_window)
-        self.MusicList_btn.clicked.connect(self.open_music_concertList_window)
-        self.concertList_btn.clicked.connect(self.open_music_concertList_window)
         self.Subscription_checkBox.clicked.connect(self.changeSubscription)
         self.deposit_btn.clicked.connect(self.add_balance)
         self.artist_checkBox.clicked.connect(self.changeartist_status)
+        self.MusicList_btn.clicked.connect(self.open_musicList_window)
+        self.concertList_btn.clicked.connect(self.open_concertList_window)
 
     def retranslateUi(self, AccountWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -203,7 +203,18 @@ class Ui_AccountWindow(object):
         self.ui.setupUi(self.window)
         self.window.show()
         self.AccountWindow.close()
-    def open_music_concertList_window(self):
+    def open_musicList_window(self):
+        self.appstate["music_or_concert"] = "music"
+        self.window = QtWidgets.QWidget()
+        self.ui = Ui_ArtistMusic_ConcertWindow(
+            self.AccountWindow,
+            self.appstate
+        )
+        self.ui.setupUi(self.window)
+        self.window.show()
+        self.AccountWindow.close()
+    def open_concertList_window(self):
+        self.appstate["music_or_concert"] = "concert"
         self.window = QtWidgets.QWidget()
         self.ui = Ui_ArtistMusic_ConcertWindow(
             self.AccountWindow,

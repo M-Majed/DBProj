@@ -2,6 +2,10 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import resources
 from dbfunctions import *
 from DBManagement import DBM
+from AddMusic import Ui_AddMusicWindow
+from AddConcert import Ui_AddConcertWindow
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QStandardItemModel, QStandardItem
 
 class Ui_ArtistMusic_ConcertWindow(object):
     def __init__(self, parent=None , appstate=None):
@@ -28,7 +32,7 @@ class Ui_ArtistMusic_ConcertWindow(object):
         self.list_lbl.setAlignment(QtCore.Qt.AlignCenter)
         self.list_lbl.setObjectName("list_lbl")
         self.gridLayout.addWidget(self.list_lbl, 1, 1, 1, 1)
-        self.list_listView = QtWidgets.QListView(ArtistMusic_ConcertWindow)
+        self.list_listView = QtWidgets.QTableView(ArtistMusic_ConcertWindow)
         self.list_listView.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n""background-color: rgb(255, 255, 255);\n""color: rgb(0, 0, 0);")
         self.list_listView.setObjectName("list_listView")
         self.gridLayout.addWidget(self.list_listView, 2, 1, 1, 1)
@@ -59,7 +63,9 @@ class Ui_ArtistMusic_ConcertWindow(object):
         QtCore.QMetaObject.connectSlotsByName(ArtistMusic_ConcertWindow)
 
         #$ My Part --------------------------------------------
+
         self.Back_btn.clicked.connect(self.open_parent_window)
+        self.Add_btn.clicked.connect(self.open_add_musicConcert_window)
 
     def retranslateUi(self, ArtistMusic_ConcertWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -71,3 +77,22 @@ class Ui_ArtistMusic_ConcertWindow(object):
     def open_parent_window(self):
         self.parent.show()
         self.ArtistMusic_ConcertWindow.close()
+    def open_add_musicConcert_window(self):
+        if self.appstate["music_or_concert"] == "music":
+            self.window = QtWidgets.QWidget()
+            self.ui = Ui_AddMusicWindow(
+            self.ArtistMusic_ConcertWindow,
+            self.appstate
+            )
+            self.ui.setupUi(self.window)
+            self.window.show()
+            self.ArtistMusic_ConcertWindow.close()
+        elif self.appstate["music_or_concert"] == "concert":
+            self.window = QtWidgets.QWidget()
+            self.ui = Ui_AddConcertWindow(
+            self.ArtistMusic_ConcertWindow,
+            self.appstate
+            )
+            self.ui.setupUi(self.window)
+            self.window.show()
+            self.ArtistMusic_ConcertWindow.close()
