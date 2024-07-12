@@ -23,7 +23,8 @@ class Ui_AccountWindow(object):
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/Icons/Icons/spotify.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         AccountWindow.setWindowIcon(icon)
-        AccountWindow.setStyleSheet("background-image: url(:/Background/background/darkgreen.png);\n""")
+        AccountWindow.setStyleSheet("background-image: url(:/Background/background/darkgreen.png);\n"
+"")
         self.gridLayout_2 = QtWidgets.QGridLayout(AccountWindow)
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.concertList_btn = QtWidgets.QPushButton(AccountWindow)
@@ -136,6 +137,14 @@ class Ui_AccountWindow(object):
         self.Subscription_checkBox.setObjectName("Subscription_checkBox")
         self.verticalLayout.addWidget(self.Subscription_checkBox)
         self.gridLayout_2.addLayout(self.verticalLayout, 1, 3, 1, 1)
+        self.albums_btn = QtWidgets.QPushButton(AccountWindow)
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.albums_btn.setFont(font)
+        self.albums_btn.setStyleSheet("color: rgb(255, 255, 255);\n""background-color: rgb(0, 0, 0);")
+        self.albums_btn.setObjectName("albums_btn")
+        self.gridLayout_2.addWidget(self.albums_btn, 8, 1, 1, 1)
+
         self.retranslateUi(AccountWindow)
         QtCore.QMetaObject.connectSlotsByName(AccountWindow)
 
@@ -146,7 +155,6 @@ class Ui_AccountWindow(object):
         self.Friends_btn.clicked.connect(self.open_friends_window)
         self.tickets_btn.clicked.connect(self.open_tickets_window)
         self.playlist_btn.clicked.connect(self.open_playlist_window)
-        # self.Subscription_checkBox.clicked.connect(self.changeSubscription)
         self.Subscription_checkBox.stateChanged.connect(self.subscription_change_handler)
         self.deposit_btn.clicked.connect(self.add_balance)
         self.artist_checkBox.clicked.connect(self.artist_change_handler)
@@ -168,6 +176,8 @@ class Ui_AccountWindow(object):
         self.Subscription_checkBox.setText(_translate("AccountWindow", "subscription"))
         self.balance_lbl.setText(_translate("AccountWindow", f"Balance: Not applicabale!"))
         self.playlist_btn.setText(_translate("AccountWindow", "playlists"))
+        self.albums_btn.setText(_translate("AccountWindow", "Albums"))
+
 
         #$ My Part --------------------------------------------
         self.init_subscription_state()
