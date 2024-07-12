@@ -612,9 +612,9 @@ def get_requests(dbm: DBM, userId=None):
         return None
     result = dbm.db_execute_read_query(
         f'''
-        SELECT u.username FROM friend_request AS fr
-        JOIN user AS u ON fr.freind_send = u.id
-        WHERE fr.friend_get = "{userId}" and fr.accept_reject = 0;
+        SELECT user.username FROM friend_request
+        JOIN user ON friend_request.freind_send = user.id
+        WHERE friend_request.friend_get = "{userId}" and friend_request.accept_reject = 0;
         ''',
         None,
     )
@@ -727,10 +727,10 @@ def get_messages(dbm: DBM, receiverId=None):
         return None
     result = dbm.db_execute_read_query(
         f'''
-        SELECT m.message_text, u.username
-        FROM message AS m
-        JOIN user AS u ON m.sender_id = u.id
-        WHERE m.receiver_id = "{receiverId}";
+        SELECT message.message_text, user.username
+        FROM message
+        JOIN user ON message.sender_id = user.id
+        WHERE message.receiver_id = "{receiverId}";
         ''',
         None,
     )
@@ -925,8 +925,8 @@ def get_user_tickets(dbm: DBM, user_id):
         return None
     result = dbm.db_execute_read_query(
         f'''
-        SELECT c.name FROM ticket t, concert c
-        WHERE t.concert_id=c.id and user_id = "{user_id}" and expired = 0;
+        SELECT concert.name FROM ticket, concert
+        WHERE ticket.concert_id=concert.id and user_id = "{user_id}" and expired = 0;
         ''',
         None
     )
@@ -938,8 +938,8 @@ def remove_ticket_fromTable(dbm: DBM, user_id, concert_title):
     try:
         x= dbm.db_execute_read_query(
             f'''
-            SELECT t.concert_id FROM ticket t, concert c
-            WHERE t.concert_id=c.id and c.name = "{concert_title}" and t.user_id = "{user_id}";
+            SELECT ticket.concert_id FROM ticket, concert
+            WHERE ticket.concert_id=concert.id and concert.name = "{concert_title}" and ticket.user_id = "{user_id}";
             ''',
             None
         )
@@ -1011,8 +1011,8 @@ def get_user_expired_tickets(dbm: DBM, user_id):
         return None
     result = dbm.db_execute_read_query(
         f'''
-        SELECT c.name FROM ticket t, concert c
-        WHERE t.concert_id=c.id and user_id = "{user_id}" and expired = 1;
+        SELECT concert.name FROM ticket, concert
+        WHERE ticket.concert_id=concert.id and user_id = "{user_id}" and expired = 1;
         ''',
         None
     )
@@ -1138,7 +1138,18 @@ def get_playlist_tracks(dbm: DBM, playlistname):
     return result
 
 def add_ticket_toTable(dbm: DBM, user_id, concert_id):
-    if not dbm or not user_id or not concert_id or get_user_wallet(dbm, user_id) < get_concert_price(dbm, concert_id):
+    if not dbm or not user_id or not concert_id:
+        return False
+    wallet = get_user_wallet(dbm, user_id)
+    price = get_concert_price(dbm, concert_id)
+    if wallet is None or price is None:
+        return False
+    try:
+        w = int(wallet)
+        p = int(price)
+        if w<p:
+            return False
+    except:
         return False
     try:
         # Check if ticket is already bought
@@ -1293,9 +1304,9 @@ def update_ticket_expired(dbm: DBM):
         return None
     result = dbm.db_execute_read_query(
         f'''
-        SELECT t.id, c.date
-        FROM ticket t, concert c
-        WHERE t.concert_id=c.id and expired = 0;
+        SELECT ticket.id, concert.date
+        FROM ticket, concert
+        WHERE ticket.concert_id=concert.id and expired = 0;
         ''',
         None
     )
@@ -1308,9 +1319,9 @@ def update_ticket_expired(dbm: DBM):
         if now.year > int(year) or now.month > int(month) or now.day > int(day) :
             dbm.db_execute_read_query(
                 f'''
-                Update ticket t
+                Update ticket
                 SET expired = 1
-                WHERE t.id= {int(row[0])};
+                WHERE ticket.id= {int(row[0])};
                 ''',
                 None
             )
