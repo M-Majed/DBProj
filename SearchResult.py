@@ -52,7 +52,11 @@ class Ui_SearchResultWindow(object):
         #$ My Part --------------------------------------------
         dbm = DBM()
         dbm.db_connect()
-        msuics_for_list = search_track(dbm, self.appstate["Searchtitle"], self.appstate["Searchartist"], self.appstate["Searchgenre"], self.appstate["Searchage"], self.appstate["SearchArea"])
+        if self.appstate["searchOrother"] == "other":
+            msuics_for_list = get_album_tracks(dbm, self.appstate["AlbumName"])
+        else:
+            msuics_for_list = search_track(dbm, self.appstate["Searchtitle"], self.appstate["Searchartist"], self.appstate["Searchgenre"], self.appstate["Searchage"], self.appstate["SearchArea"])
+
         music_model = QtGui.QStandardItemModel()
         if msuics_for_list == None:
             msuics_for_list = []

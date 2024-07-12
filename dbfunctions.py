@@ -1019,7 +1019,80 @@ def check_expired_tickets(dbm: DBM):
         return True
     except Exception as e:
         return False
+
+def get_album_tracks(dbm: DBM, album_title):
+    if not dbm or not album_title:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT * FROM tracks WHERE id in (select track_id from albums
+                                          where title = "{album_title}");
+        ''',
+        None
+    )
+    return result
     
+
+def get_albums(dbm: DBM):
+    if not dbm:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT * FROM albums";
+        ''',
+        None
+    )
+    return result
+
+def get_followingusername_userid(dbm: DBM, userId=None):
+    if not dbm or not userId or userId == "":
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT username FROM user
+        WHERE id IN (SELECT following_id FROM followorfollowing WHERE follower_id = {userId});
+        ''',
+        None
+    )
+    return result
+
+def get_suggestion(dbm: DBM, user_id):
+    if not dbm or not user_id:
+        return None
+    liked_genres = dbm.db_execute_read_query(
+        f'''
+        SELECT DISTINCT genre
+        FROM tracks
+        WHERE id IN (
+            SELECT track_id
+            FROM likes
+            WHERE user_id = "{user_id}"
+        );
+        ''',
+        None
+    )
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT *
+        FROM tracks
+        WHERE genre IN (
+            SELECT DISTINCT genre
+            FROM tracks
+            WHERE id IN (
+                SELECT track_id
+                FROM likes
+                WHERE user_id = "{user_id}"
+            )
+        )
+        AND id NOT IN (
+            SELECT track_id
+            FROM likes
+            WHERE user_id = "{user_id}"
+        );
+        ''',
+        None
+    )
+    return result
 # def get_current(melli: str):
 #     if not melli:
 #         return None

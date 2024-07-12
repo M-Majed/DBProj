@@ -1,5 +1,6 @@
 import sqlite3
 from PyQt5 import QtCore, QtGui, QtWidgets
+from SearchResult import Ui_SearchResultWindow
 import resources
 from dbfunctions import *
 from DBManagement import DBM
@@ -100,28 +101,29 @@ class Ui_MusicListWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MusicListWindow)
 
         #$ My Part --------------------------------------------
-        self.model = QtGui.QStandardItemModel()
-        self.Music_list.setModel(self.model)
-        connection = sqlite3.connect('my.db')
-        cursor = connection.cursor()
-        cursor.execute("PRAGMA table_info(tracks)") 
-        columns_info = cursor.fetchall()
-        column_names = [info[1] for info in columns_info]
-        print(f'{column_names=}')
-        self.model.setColumnCount(len(column_names))
-        self.model.setHorizontalHeaderLabels(column_names)
-        columns_to_hide = [elem if "id" in elem else None for elem in column_names]
-        for elem in columns_to_hide:
-            if elem:
-                column_index = column_names.index(elem)
-                self.Music_list.setColumnHidden(column_index, True)
-        self.Category_combobox.currentIndexChanged.connect(self.category_changed)
+        dbm = DBM()
+        dbm.db_connect()
+        musics = show_tracks(dbm)
+        music_model = QtGui.QStandardItemModel()
+        if musics == None:
+            musics = []
+        column_headers = get_column_headers(dbm, "tracks")
+        music_model.setHorizontalHeaderLabels(column_headers)
+        for music in musics:
+            music_items = [QtGui.QStandardItem(str(attr)) for attr in music]
+            music_model.appendRow(music_items)
+        self.Music_list.setModel(music_model)
 
+        self.model = music_model
+
+
+
+        self.Category_combobox.currentIndexChanged.connect(self.category_changed)
         self.Back_btn.clicked.connect(self.open_parent_window)
         self.Music_list.doubleClicked.connect(self.item_clicked)
         self.Account_btn.clicked.connect(self.open_account_window)
         self.Search_btn.clicked.connect(self.open_search_window)
-        self.category_changed(0)
+
 
     def retranslateUi(self, MusicListWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -160,7 +162,6 @@ class Ui_MusicListWindow(object):
         row = [self.model.item(index.row(), col).text() for col in range(self.model.columnCount())]
         print(f'{row=}')
         if cat == 0: # Category = "Tracks"
-            # RETURN TEMPLATE FOR "Tracks" ==>>> row=['2', 'Track Title', 'Artist Name', 'Album Name', '00:03:30', 'Genre', 'Ages', 'Lyrics', 'Area', '2021-06-01']
             self.window = QtWidgets.QWidget()
             self.ui = Ui_MusicWindow(self.MusicListWindow,self.appstate,row)
             self.ui.setupUi(self.window)
@@ -168,24 +169,14 @@ class Ui_MusicListWindow(object):
             self.MusicListWindow.close()
             
         elif cat == 1:  # Category = "Albums"
-            album_name = str(row[0])
-            dbm = DBM()
-            dbm.db_connect()
-            tracks = dbm.db_execute_read_query(
-                f'''
-                SELECT distinct title FROM albums WHERE album = '{album_name}'
-                ''', None
-            )
-            if tracks is None:
-                print(f"Error: No tracks found for album '{album_name}'")
-            else:
-                self.model.clear()
-                self.model.setHorizontalHeaderLabels(['album'])
-                for track in tracks:
-                    track_data = [str(item) for item in track]
-                    self.model.appendRow([QtGui.QStandardItem(data) for data in track_data])
-                dbm.db_disconnect()
-            # self.model.clear()
+            self.appstate["AlbumName"] = str(row[1])
+            self.appstate["searchOrother"]= "other"
+            self.window = QtWidgets.QWidget()
+            self.ui = Ui_SearchResultWindow(self.MusicListWindow, self.appstate)
+            self.ui.setupUi(self.window)
+            self.window.show()
+            self.MusicListWindow.close()
+                 
         elif cat == 2: # Category = "Followings"
             qq = self.appstate.get("userid")
             if qq is None:
@@ -239,43 +230,20 @@ class Ui_MusicListWindow(object):
         dbm.db_connect()
         rows = None
         if index == 0: # Tracks
-            rows = dbm.db_execute_read_query(
-                f'''
-                SELECT * FROM tracks
-                ''', None
-            )
+            rows = show_tracks(dbm)
         elif index == 1: # Albums
-            rows = dbm.db_execute_read_query(
-                f'''
-                SELECT * FROM albums
-                ''', None
-            )
+            rows = get_albums(dbm)
         elif index == 2: # Followings
-            qq = self.appstate.get("userid")
-            if qq is None:
+            if self.appstate["userid"] is None:
                 print("Error: User ID not found in appstate.")
                 dbm.db_disconnect()
                 return
-            
-            rows = dbm.db_execute_read_query(
-                f'''
-                SELECT username FROM user
-                WHERE id IN (SELECT following_id FROM followorfollowing WHERE follower_id = {qq});
-                ''', None
-            )
+            rows = get_followingusername_userid(dbm, self.appstate["userid"])
         elif index == 3: # Suggestions
             dbm = DBM()
             dbm.db_connect()
-            qq = self.appstate["userid"]
-            rows = dbm.db_execute_read_query(
-                f'''
-                select title from tracks 
-                where gerne in(
-                SELECT DISTINCT genre FROM tracks
-                JOIN likes ON tracks.id = likes.track_id
-                WHERE likes.user_id = {qq})
-                ''',None
-            )
+            rows = get_suggestion(dbm, self.appstate["userid"])
+            #!!!!!!!!!!!!!!!!!
         elif index == 4: # PlayLists
             rows = dbm.db_execute_read_query(
                 f'''

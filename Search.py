@@ -181,6 +181,7 @@ class Ui_SearchWindow(object):
         self.appstate["Searchartist"] = self.Artist_lineEdit.text()
         self.appstate["Searchage"] = self.age_lineEdit.text()
         self.appstate["SearchArea"] = self.Area_lineEdit.text()
+        self.appstate["searchOrother"]= "search"
 
         self.window = QtWidgets.QWidget()
         self.ui = Ui_SearchResultWindow(self.SearchWindow, self.appstate)
