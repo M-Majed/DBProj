@@ -1,5 +1,6 @@
 import sqlite3
 from PyQt5 import QtCore, QtGui, QtWidgets
+from SearchResult import Ui_SearchResultWindow
 import resources
 from dbfunctions import *
 from DBManagement import DBM
@@ -106,17 +107,17 @@ class Ui_SearchWindow(object):
         self.Age_lbl.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n""color: rgb(255, 255, 255);")
         self.Age_lbl.setObjectName("Age_lbl")
         self.horizontalLayout_3.addWidget(self.Age_lbl)
-        self.Genre_lineEdit_2 = QtWidgets.QLineEdit(SearchWindow)
-        self.Genre_lineEdit_2.setMinimumSize(QtCore.QSize(0, 0))
-        self.Genre_lineEdit_2.setMaximumSize(QtCore.QSize(265, 16777215))
+        self.age_lineEdit = QtWidgets.QLineEdit(SearchWindow)
+        self.age_lineEdit.setMinimumSize(QtCore.QSize(0, 0))
+        self.age_lineEdit.setMaximumSize(QtCore.QSize(265, 16777215))
         font = QtGui.QFont()
         font.setPointSize(10)
         font.setBold(False)
         font.setWeight(50)
-        self.Genre_lineEdit_2.setFont(font)
-        self.Genre_lineEdit_2.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n""")
-        self.Genre_lineEdit_2.setObjectName("Genre_lineEdit_2")
-        self.horizontalLayout_3.addWidget(self.Genre_lineEdit_2)
+        self.age_lineEdit.setFont(font)
+        self.age_lineEdit.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n""")
+        self.age_lineEdit.setObjectName("age_lineEdit")
+        self.horizontalLayout_3.addWidget(self.age_lineEdit)
         self.gridLayout.addLayout(self.horizontalLayout_3, 3, 0, 1, 1)
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
@@ -156,37 +157,9 @@ class Ui_SearchWindow(object):
 
         #$ My Part --------------------------------------------
         self.back_btn.clicked.connect(self.open_parent_window)
-        self.search_btn.clicked.connect(self.search)
-    def search(self):
-        title = self.title_lineEdit.text()
-        genre = self.Genre_lineEdit.text()
-        artist = self.Artist_lineEdit.text()
-        age = self.Genre_lineEdit_2.text()
-        area = self.Area_lineEdit.text()
-        dbm = DBM()
-        dbm.db_connect()
-        result =search(dbm,title,artist,genre,age,area)
-        if result is None or len(result)==0:
-            #show qt message box
-            msg = QtWidgets.QMessageBox()
-            msg.setIcon(QtWidgets.QMessageBox.Warning)
-            msg.setText("No result found")
-            msg.setWindowTitle("Search")
-            msg.exec_()
-            return
-        #show result qt message box
-        msg = QtWidgets.QMessageBox()
-        msg.setIcon(QtWidgets.QMessageBox.Information)
-        msg.setText("Search result")
-        msg.setWindowTitle("Search")
-        msg.setDetailedText(str(result))# later show the result in a better way
-        msg.exec_()
-        
-            
-            
-            
-            
+        self.search_btn.clicked.connect(self.open_search_result_window)
 
+            
     def retranslateUi(self, SearchWindow):
         _translate = QtCore.QCoreApplication.translate
         SearchWindow.setWindowTitle(_translate("SearchWindow", "Search"))
@@ -201,3 +174,18 @@ class Ui_SearchWindow(object):
     def open_parent_window(self):
         self.parent.show()
         self.SearchWindow.close()
+
+    def open_search_result_window(self):
+        self.appstate["Searchtitle"] = self.title_lineEdit.text()
+        self.appstate["Searchgenre"] = self.Genre_lineEdit.text()
+        self.appstate["Searchartist"] = self.Artist_lineEdit.text()
+        self.appstate["Searchage"] = self.age_lineEdit.text()
+        self.appstate["SearchArea"] = self.Area_lineEdit.text()
+
+        self.window = QtWidgets.QWidget()
+        self.ui = Ui_SearchResultWindow(self.SearchWindow, self.appstate)
+        self.ui.setupUi(self.window)
+        self.window.show()
+        self.SearchWindow.close()
+
+

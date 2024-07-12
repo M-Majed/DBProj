@@ -7,13 +7,13 @@ dbm.db_connect()
 #print(check_login(dbm, "negin", "1234"))
 # dbm.db_execute_query("DROP TABLE IF EXISTS user_legacy;", None)
 # create_db_tables(dbm)
-dbm.db_execute_query(
-    '''
-    ALTER TABLE albums
-    DROP COLUMN track_id;
-    ''',
-    None
-)
+# dbm.db_execute_query(
+#     '''
+#     ALTER TABLE albums
+#     DROP COLUMN track_id;
+#     ''',
+#     None
+# )
 
 
 
@@ -153,6 +153,21 @@ dbm.db_execute_query(
 #     ''',
 #     None
 # )
+
+# dbm.db_execute_query(
+#     '''
+#     INSERT INTO concert (name, venue, date, ticket_price, artist_id)
+#     VALUES ("Concert Name", "Concert Venue", "2022-01-01", 100, 2)
+#     ''',
+#     None
+# )
+dbm.db_execute_query(
+    '''
+    INSERT INTO ticket (user_id, concert_id)
+    VALUES (2,4)
+    ''',
+    None
+)
 
 
 dbm.db_disconnect()

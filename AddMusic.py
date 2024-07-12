@@ -142,7 +142,7 @@ class Ui_AddMusicWindow(object):
         if title and duration and age and genre and area and text:
             dbm = DBM()
             dbm.db_connect()
-            add_music(dbm, title, artist, album, duration, genre, age, text, area)
+            add_music(dbm, title, album, duration, genre, age, text, area, artist,playlist_permission)
             self.open_parent_window()
         else:
             self.show_error_message("Please fill all fields")

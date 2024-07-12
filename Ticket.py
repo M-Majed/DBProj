@@ -1,5 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 import resources
+from dbfunctions import *
 
 class Ui_TicketsWindow(object):
     def __init__(self, parent=None , appstate=None):
@@ -70,7 +71,18 @@ class Ui_TicketsWindow(object):
         QtCore.QMetaObject.connectSlotsByName(TicketsWindow)
 
         #$ My Part --------------------------------------------
+        dbm = DBM()
+        dbm.db_connect()
+        tickets_id = get_user_tickets(dbm, self.appstate["userid"])
+        tickets_list = QtCore.QStringListModel()
+        tickets_list.setStringList([str(id[0]) for id in tickets_id])
+        self.Tickets_listView.setModel(tickets_list)
+
+
+
+
         self.back_btn.clicked.connect(self.open_parent_window)
+        self.Tickets_listView.doubleClicked.connect(self.remove_ticket)
 
     def retranslateUi(self, TicketsWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -83,4 +95,12 @@ class Ui_TicketsWindow(object):
         self.parent.show()
         self.TicketsWindow.close()
 
-
+    def remove_ticket(self, index):
+        ticket_id = index.data()
+        dbm = DBM()
+        dbm.db_connect()
+        remove_ticket_fromTable(dbm, self.appstate["userid"], ticket_id)
+        tickets_id = get_user_tickets(dbm, self.appstate["userid"])
+        tickets_list = QtCore.QStringListModel()
+        tickets_list.setStringList([str(id[0]) for id in tickets_id])
+        self.Tickets_listView.setModel(tickets_list)

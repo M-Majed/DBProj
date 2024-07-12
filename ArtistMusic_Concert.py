@@ -32,10 +32,10 @@ class Ui_ArtistMusic_ConcertWindow(object):
         self.list_lbl.setAlignment(QtCore.Qt.AlignCenter)
         self.list_lbl.setObjectName("list_lbl")
         self.gridLayout.addWidget(self.list_lbl, 1, 1, 1, 1)
-        self.list_listView = QtWidgets.QTableView(ArtistMusic_ConcertWindow)
-        self.list_listView.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n""background-color: rgb(255, 255, 255);\n""color: rgb(0, 0, 0);")
-        self.list_listView.setObjectName("list_listView")
-        self.gridLayout.addWidget(self.list_listView, 2, 1, 1, 1)
+        self.list_TableView = QtWidgets.QTableView(ArtistMusic_ConcertWindow)
+        self.list_TableView.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n""background-color: rgb(255, 255, 255);\n""color: rgb(0, 0, 0);")
+        self.list_TableView.setObjectName("list_TableView")
+        self.gridLayout.addWidget(self.list_TableView, 2, 1, 1, 1)
         self.gridLayout_2 = QtWidgets.QGridLayout()
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.Back_btn = QtWidgets.QPushButton(ArtistMusic_ConcertWindow)
@@ -63,9 +63,44 @@ class Ui_ArtistMusic_ConcertWindow(object):
         QtCore.QMetaObject.connectSlotsByName(ArtistMusic_ConcertWindow)
 
         #$ My Part --------------------------------------------
+        if self.appstate["music_or_concert"] == "music":
+            dbm = DBM()
+            dbm.db_connect()
+            artist_musics = get_artist_musics(dbm, self.appstate["userid"])
+            music_model = QtGui.QStandardItemModel()
+            if artist_musics == None:
+                artist_musics = []
+            # Get the column headers from the database
+            column_headers = get_column_headers(dbm, "tracks")
+            music_model.setHorizontalHeaderLabels(column_headers)
+            for music in artist_musics:
+                music_items = [QtGui.QStandardItem(str(attr)) for attr in music]
+                music_model.appendRow(music_items)
+            self.list_TableView.setModel(music_model)
+        elif self.appstate["music_or_concert"] == "concert":
+            dbm = DBM()
+            dbm.db_connect()
+            artist_concerts = get_artist_concerts(dbm, self.appstate["userid"])
+            concert_model = QtGui.QStandardItemModel()
+            if artist_concerts == None:
+                artist_concerts = []
+            column_headers = get_column_headers(dbm, "concert")
+            concert_model.setHorizontalHeaderLabels(column_headers)
+            for concert in artist_concerts:
+                concert_items = [QtGui.QStandardItem(str(attr)) for attr in concert]
+                concert_model.appendRow(concert_items)
+            self.list_TableView.setModel(concert_model)
+
+
+
 
         self.Back_btn.clicked.connect(self.open_parent_window)
         self.Add_btn.clicked.connect(self.open_add_musicConcert_window)
+        if self.appstate["music_or_concert"] == "music":
+            self.list_TableView.doubleClicked.connect(self.delete_track)
+        elif self.appstate["music_or_concert"] == "concert":
+            self.list_TableView.doubleClicked.connect(self.delete_concert)
+
 
     def retranslateUi(self, ArtistMusic_ConcertWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -96,3 +131,33 @@ class Ui_ArtistMusic_ConcertWindow(object):
             self.ui.setupUi(self.window)
             self.window.show()
             self.ArtistMusic_ConcertWindow.close()
+
+    def delete_track(self, index):
+        row = index.row()
+        track_id = self.list_TableView.model().index(row, 0).data()
+        dbm = DBM()
+        dbm.db_connect()
+        delete_from_tracks(dbm, track_id)
+        artist_musics = get_artist_musics(dbm, self.appstate["userid"])
+        music_model = QtGui.QStandardItemModel()
+        column_headers = get_column_headers(dbm, "tracks")
+        music_model.setHorizontalHeaderLabels(column_headers)
+        for music in artist_musics:
+            music_items = [QtGui.QStandardItem(str(attr)) for attr in music]
+            music_model.appendRow(music_items)
+        self.list_TableView.setModel(music_model)
+
+    def delete_concert(self, index):
+        row = index.row()
+        concert_id = self.list_TableView.model().index(row, 0).data()
+        dbm = DBM()
+        dbm.db_connect()
+        delete_from_concerts(dbm, concert_id)
+        artist_concerts = get_artist_concerts(dbm, self.appstate["userid"])
+        concert_model = QtGui.QStandardItemModel()
+        column_headers = get_column_headers(dbm, "concerts")
+        concert_model.setHorizontalHeaderLabels(column_headers)
+        for concert in artist_concerts:
+            concert_items = [QtGui.QStandardItem(str(attr)) for attr in concert]
+            concert_model.appendRow(concert_items)
+        self.list_TableView.setModel(concert_model)

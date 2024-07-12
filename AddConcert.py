@@ -1,5 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+from DBManagement import DBM
 import resources
+from dbfunctions import *
 
 
 class Ui_AddConcertWindow(object):
@@ -75,6 +77,7 @@ class Ui_AddConcertWindow(object):
 
         #$ My Part --------------------------------------------
         self.Back_btn.clicked.connect(self.open_parent_window)
+        self.Add_btn.clicked.connect(self.add_concert)
 
     def retranslateUi(self, AddConcertWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -86,5 +89,17 @@ class Ui_AddConcertWindow(object):
         self.Add_btn.setText(_translate("AddConcertWindow", "Add concert"))
 
     def open_parent_window(self):
+        self.parent.show()
+        self.AddConcertWindow.close()
+
+    def add_concert(self):
+        title = self.Title_lineEdit.text()
+        venue = self.Venue_lineEdit.text()
+        price = self.Price_lineEdit.text()
+        date = self.dateEdit.text()
+        dbm = DBM()
+        dbm.db_connect()
+        add_concert_toTable(dbm, title, self.appstate["userid"], venue, date, price)
+        self.open_parent_window()
         self.parent.show()
         self.AddConcertWindow.close()

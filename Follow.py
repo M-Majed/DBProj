@@ -8,6 +8,7 @@ class Ui_FollowWindow(object):
     def __init__(self, parent=None , appstate=None):
         self.parent = parent
         self.appstate = appstate
+
     def setupUi(self, FollowWindow):
         self.FollowWindow = FollowWindow
         FollowWindow.setObjectName("FollowWindow")
@@ -94,9 +95,11 @@ class Ui_FollowWindow(object):
         self.Following_listView.setModel(model)
 
         
-
+        #$ My Part --------------------------------------------
         self.Sendreq_btn.clicked.connect(lambda: add_follower(dbm, get_userid_by_username(dbm, self.Sendreq_lineEdit.text()), self.appstate["userid"]))
         self.back_btn.clicked.connect(self.open_parent_window)
+        self.Follower_listView.doubleClicked.connect(self.remove_follower)
+        self.Following_listView.doubleClicked.connect(self.remove_following)
     
     def retranslateUi(self, FollowWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -110,3 +113,20 @@ class Ui_FollowWindow(object):
         self.parent.show()
         self.FollowWindow.close()
 
+    def remove_follower(self, index):
+        model = self.Follower_listView.model()
+        item = model.itemFromIndex(index)
+        follower = item.text()
+        dbm = DBM()
+        dbm.db_connect()
+        remove_follower_fromTable(dbm, self.appstate["userid"], get_userid_by_username(dbm, follower))
+        model.removeRow(index.row())
+
+    def remove_following(self, index):
+        model = self.Following_listView.model()
+        item = model.itemFromIndex(index)
+        following = item.text()
+        dbm = DBM()
+        dbm.db_connect()
+        remove_following_fromTable(dbm, self.appstate["userid"], get_userid_by_username(dbm, following))
+        model.removeRow(index.row())
