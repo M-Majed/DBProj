@@ -173,7 +173,7 @@ class Ui_MusicListWindow(object):
             dbm.db_connect()
             tracks = dbm.db_execute_read_query(
                 f'''
-                SELECT distinct title FROM albums WHERE album = '{album_name}'
+                SELECT distinct title FROM albums WHERE title = '{album_name}'
                 ''', None
             )
             if tracks is None:
@@ -228,6 +228,23 @@ class Ui_MusicListWindow(object):
             
             pass
         elif cat == 5: # Category = "Artists"
+            #show all all artists
+            dbm = DBM()
+            dbm.db_connect()
+            rows = dbm.db_execute_read_query(
+                f'''
+                SELECT fname FROM tracks, user WHERE user.id = tracks.artist_id and user.singerornormal = 1
+                ''', None
+            )
+            if rows is None:
+                print(f"Error: No artist found.")
+            else:
+                self.model.clear()
+                self.model.setHorizontalHeaderLabels(['artist'])
+                for artist in rows:
+                    artist_data = [str(item) for item in artist]
+                    self.model.appendRow([QtGui.QStandardItem(data) for data in artist_data])
+                dbm.db_disconnect()
             pass
         elif cat == 6: # Category = "Concerts"
             pass
@@ -247,7 +264,7 @@ class Ui_MusicListWindow(object):
         elif index == 1: # Albums
             rows = dbm.db_execute_read_query(
                 f'''
-                SELECT album FROM albums
+                SELECT title FROM albums
                 ''', None
             )
         elif index == 2: # Followings
@@ -288,13 +305,13 @@ class Ui_MusicListWindow(object):
         elif index == 4: # PlayLists
             rows = dbm.db_execute_read_query(
                 f'''
-                SELECT * FROM playlists
+                SELECT * FROM playlist
                 ''', None
             )
         elif index == 5: # Artists
             rows = dbm.db_execute_read_query(
                 f'''
-                SELECT artists FROM tracks#
+                SELECT username FROM tracks, user WHERE user.id = tracks.artist_id and user.singerornormal = 1
                 ''', None
             )
         elif index == 6: # Concerts

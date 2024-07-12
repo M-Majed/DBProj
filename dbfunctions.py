@@ -17,9 +17,6 @@ def drop_all_tables(dbm: DBM):
 def create_db_tables(dbm: DBM):
     if not dbm:
         return False
-
-    
-    
     dbm.db_execute_query(
     """
     CREATE TABLE IF NOT EXISTS albums (
@@ -31,7 +28,7 @@ def create_db_tables(dbm: DBM):
     """,
     None,
     )
-    
+
     # signup: fname lname email address username password
     dbm.db_execute_query(
         """
@@ -45,26 +42,7 @@ def create_db_tables(dbm: DBM):
         """,
         None,
     )
-   
-   
-    # dbm.db_execute_query(
-    #     """ 
-    #     CREATE TABLE IF NOT EXISTS tracks (
-    #      id INTEGER PRIMARY KEY AUTOINCREMENT,
-    #      title TEXT  NOT NULL,
-    #      artist TEXT NOT NULL,
-    #      duration INTEGER NOT NULL,
-    #      genre TEXT NOT NULL,
-    #      ages TEXT NOT NULL,
-    #      lyric TEXT NOT NULL,
-    #      area TEXT NOT NULL,
-    #      permission BOOLEAN NOT NULL
-    #      );
-    #     """,
-    #     None,
-    # )
-    
-    
+
     dbm.db_execute_query(
         """
         CREATE TABLE IF NOT EXISTS user (
@@ -96,23 +74,23 @@ def create_db_tables(dbm: DBM):
     )
 
 
-    # dbm.db_execute_query(
-    #     """
-    #    CREATE TABLE IF NOT EXISTS tracks (
-    #          id INTEGER PRIMARY KEY AUTOINCREMENT,
-    #          title TEXT  NOT NULL,
-    #          artist_id INTEGER NOT NULL,
-    #          FOREIGN KEY (artist_id) REFERENCES user (id),
-    #          album TEXT NOT NULL,
-    #          duration INTEGER NOT NULL,
-    #          genre TEXT NOT NULL,
-    #          ages TEXT NOT NULL,
-    #          lyric TEXT NOT NULL,
-    #          area TEXT NOT NULL,
-    #      );
-    #     """,
-    #     None,
-    # )
+    dbm.db_execute_query(
+        """
+       CREATE TABLE IF NOT EXISTS tracks (
+             id INTEGER PRIMARY KEY AUTOINCREMENT,
+             title TEXT  NOT NULL,
+             artist_id INTEGER NOT NULL,
+             FOREIGN KEY (artist_id) REFERENCES user (id),
+             album TEXT NOT NULL,
+             duration INTEGER NOT NULL,
+             genre TEXT NOT NULL,
+             ages TEXT NOT NULL,
+             lyric TEXT NOT NULL,
+             area TEXT NOT NULL,
+         );
+        """,
+        None,
+    )
     
     
     dbm.db_execute_query(
@@ -208,23 +186,23 @@ def create_db_tables(dbm: DBM):
     )
     
     dbm.db_execute_query(
-        """
-          CREATE TABLE IF NOT EXISTS followorfollowing (
-             id INTEGER PRIMARY KEY AUTOINCREMENT,
-             follower_id INTEGER NOT NULL,
-             following_id INTEGER NOT NULL,
-             FOREIGN KEY (follower_id) REFERENCES user (id),
-             FOREIGN KEY (following_id) REFERENCES user (id)
-         );
-        """,
-        None,
-    )
+    """
+    CREATE TABLE IF NOT EXISTS followorfollowing (
+        follower_id INTEGER NOT NULL,
+        following_id INTEGER NOT NULL,
+        PRIMARY KEY (follower_id, following_id),
+        FOREIGN KEY (follower_id) REFERENCES user (id),
+        FOREIGN KEY (following_id) REFERENCES user (id)
+    );
+    """,
+    None,
+)
     dbm.db_execute_query(
         """
           CREATE TABLE IF NOT EXISTS friend (
-             id INTEGER PRIMARY KEY AUTOINCREMENT,
              user_id INTEGER NOT NULL,
              friend_id INTEGER NOT NULL,
+             PRIMARY KEY (user_id, friend_id),
              FOREIGN KEY (user_id) REFERENCES user (id),
              FOREIGN KEY (friend_id) REFERENCES user (id)
          );
@@ -235,9 +213,9 @@ def create_db_tables(dbm: DBM):
     dbm.db_execute_query(
         """
           CREATE TABLE IF NOT EXISTS like_album (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER NOT NULL,
                 album_id INTEGER NOT NULL,
+                PRIMARY KEY (user_id, album_id),
                 FOREIGN KEY (user_id) REFERENCES user (id),
                 FOREIGN KEY (album_id) REFERENCES albums (id)
          );
