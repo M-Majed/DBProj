@@ -294,7 +294,7 @@ class Ui_MusicListWindow(object):
         elif index == 5: # Artists
             rows = dbm.db_execute_read_query(
                 f'''
-                SELECT artists FROM tracks#
+                SELECT username FROM user where singerornormal
                 ''', None
             )
         elif index == 6: # Concerts
