@@ -6,6 +6,7 @@ from Ticket import Ui_TicketsWindow
 from ArtistMusic_Concert import Ui_ArtistMusic_ConcertWindow
 from Follow import Ui_FollowWindow
 from Friends import Ui_FriendsWindow
+from playlist import Ui_PlayListsWindow
 
 
 class Ui_AccountWindow(object):
@@ -109,8 +110,13 @@ class Ui_AccountWindow(object):
         self.Friends_btn.setStyleSheet("color: rgb(255, 255, 255);\n""background-color: rgb(0, 0, 0);")
         self.Friends_btn.setObjectName("Friends_btn")
         self.gridLayout_2.addWidget(self.Friends_btn, 3, 1, 1, 1)
+        self.playlist_btn = QtWidgets.QPushButton(AccountWindow)
         font = QtGui.QFont()
         font.setPointSize(10)
+        self.playlist_btn.setFont(font)
+        self.playlist_btn.setStyleSheet("color: rgb(255, 255, 255);\n""background-color: rgb(0, 0, 0);")
+        self.playlist_btn.setObjectName("playlist_btn")
+        self.gridLayout_2.addWidget(self.playlist_btn, 4, 1, 1, 1)
         self.follow_btn = QtWidgets.QPushButton(AccountWindow)
         font = QtGui.QFont()
         font.setPointSize(10)
@@ -139,6 +145,7 @@ class Ui_AccountWindow(object):
         self.follow_btn.clicked.connect(self.open_follow_window)
         self.Friends_btn.clicked.connect(self.open_friends_window)
         self.tickets_btn.clicked.connect(self.open_tickets_window)
+        self.playlist_btn.clicked.connect(self.open_playlist_window)
         # self.Subscription_checkBox.clicked.connect(self.changeSubscription)
         self.Subscription_checkBox.stateChanged.connect(self.subscription_change_handler)
         self.deposit_btn.clicked.connect(self.add_balance)
@@ -160,6 +167,7 @@ class Ui_AccountWindow(object):
         self.follow_btn.setText(_translate("AccountWindow", "follow"))
         self.Subscription_checkBox.setText(_translate("AccountWindow", "subscription"))
         self.balance_lbl.setText(_translate("AccountWindow", f"Balance: Not applicabale!"))
+        self.playlist_btn.setText(_translate("AccountWindow", "playlists"))
 
         #$ My Part --------------------------------------------
         self.init_subscription_state()
@@ -232,6 +240,15 @@ class Ui_AccountWindow(object):
         self.appstate["music_or_concert"] = "concert"
         self.window = QtWidgets.QWidget()
         self.ui = Ui_ArtistMusic_ConcertWindow(
+            self.AccountWindow,
+            self.appstate
+        )
+        self.ui.setupUi(self.window)
+        self.window.show()
+        self.AccountWindow.close()
+    def open_playlist_window(self):
+        self.window = QtWidgets.QWidget()
+        self.ui = Ui_PlayListsWindow(
             self.AccountWindow,
             self.appstate
         )

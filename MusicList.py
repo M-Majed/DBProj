@@ -223,18 +223,25 @@ class Ui_MusicListWindow(object):
         dbm.db_connect()
         rows = None
         if index == 0: # Tracks
+            column_headers = get_column_headers(dbm, "tracks")
             rows = show_tracks(dbm)
         elif index == 1: # Albums
+            column_headers = get_column_headers(dbm, "albums")
             rows = get_albums(dbm)
         elif index == 2: # Followings
+            column_headers = ["username"]
             rows = get_followingusername_userid(dbm, self.appstate["userid"])
         elif index == 3: # Suggestions
+            column_headers = get_column_headers(dbm, "tracks")
             rows = get_suggestion(dbm, self.appstate["userid"])
         elif index == 4: # PlayLists
+            column_headers = get_column_headers(dbm, "playlist")
             rows = get_playlists(dbm)
         elif index == 5: # Artists
+            column_headers = get_column_headers(dbm, "user")
             rows = get_artists(dbm)
         elif index == 6: # Concerts
+            column_headers = get_column_headers(dbm, "concert")
             rows = get_concerts(dbm)
 
         if rows:  
@@ -243,6 +250,8 @@ class Ui_MusicListWindow(object):
                 for elem in items:
                     elem.setEditable(False)                            
                 self.model.appendRow(items)
+            self.model.setHorizontalHeaderLabels(column_headers)
+
         else:
             print(f'No row fetched.')
         dbm.db_disconnect()

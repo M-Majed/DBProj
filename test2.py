@@ -166,13 +166,13 @@ dbm.db_connect()
 
 # current_date = "2022-01-01"
 
-dbm.db_execute_query(
-    f'''
-    UPDATE ticket
-    SET expired = 0
-    ''',
-    None
-)
+# dbm.db_execute_query(
+#     f'''
+#     UPDATE ticket
+#     SET expired = 0
+#     ''',
+#     None
+# )
 # xxx=dbm.db_execute_read_query(
 #     f'''
 #     SELECT * FROM albums";
@@ -180,6 +180,28 @@ dbm.db_execute_query(
 #     None
 # )
 # print(xxx)
+
+def expire_ticket(dbm: DBM, user_id, concert_id):
+    if not dbm or not user_id or not concert_id:
+        return False
+    qq= dbm.db_execute_read_query(
+        f'''
+        SELECT date FROM concert WHERE id = "{concert_id}";
+        ''',
+        None
+    )
+    today = datetime.date.today()
+    if qq < today:
+        dbm.db_execute_query(
+            f"""
+            UPDATE ticket
+            SET expired = 1
+            where user_id = "{user_id}" and concert_id = "{concert_id}";
+            """,
+            None,
+        )
+
+
 
 
 dbm.db_disconnect()

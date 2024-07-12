@@ -70,7 +70,6 @@ class Ui_ArtistMusic_ConcertWindow(object):
             music_model = QtGui.QStandardItemModel()
             if artist_musics == None:
                 artist_musics = []
-            # Get the column headers from the database
             column_headers = get_column_headers(dbm, "tracks")
             music_model.setHorizontalHeaderLabels(column_headers)
             for music in artist_musics:
