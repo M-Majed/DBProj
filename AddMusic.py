@@ -107,7 +107,7 @@ class Ui_AddMusicWindow(object):
 
         #$ My Part --------------------------------------------
         self.Back_btn.clicked.connect(self.open_parent_window)
-        self.Add_btn.clicked.connect(self.add_music_to_db)
+        self.Add_btn.clicked.connect(self.add_music)
 
     def retranslateUi(self, AddMusicWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -127,22 +127,23 @@ class Ui_AddMusicWindow(object):
         self.parent.show()
         self.AddMusicWindow.close()
 
-    def add_music_to_db(self):
+    def add_music(self):
         title = self.Title_lineEdit.text()
         album = self.Album_lineEdit.text()
-        if album == "":
-            album = None
         duration = self.Duration_lineEdit.text()
         age = self.Age_lineEdit.text()
         genre = self.Genre_lineEdit.text()
         area = self.Area_lineEdit.text()
         text = self.Text_textEdit.toPlainText()
-        playlist_permission = self.PlayListPermisiion_checkBox.isChecked()
-        artist = self.appstate["userid"]
+        permission = self.PlayListPermisiion_checkBox.isChecked()
         if title and duration and age and genre and area and text:
             dbm = DBM()
             dbm.db_connect()
-            add_music(dbm, title, album, duration, genre, age, text, area, artist,playlist_permission)
+            add_music_toTable(dbm, title, self.appstate["userid"], album, duration, genre, age, text, area, permission)
             self.open_parent_window()
         else:
-            self.show_error_message("Please fill all fields")
+            error_widget = QtWidgets.QMessageBox()
+            error_widget.setIcon(QtWidgets.QMessageBox.Warning)
+            error_widget.setWindowTitle("Error")
+            error_widget.setText("Please fill in all the required fields.")
+            error_widget.exec_()

@@ -1,5 +1,6 @@
 import DBManagement
 from dbfunctions import *
+import datetime
 
 dbm = DBManagement.DBM()
 dbm.db_connect()
@@ -7,13 +8,13 @@ dbm.db_connect()
 #print(check_login(dbm, "negin", "1234"))
 # dbm.db_execute_query("DROP TABLE IF EXISTS user_legacy;", None)
 # create_db_tables(dbm)
-dbm.db_execute_query(
-    '''
-    ALTER TABLE tracks
-    DROP COLUMN album;
-    ''',
-    None
-)
+# dbm.db_execute_query(
+#     '''
+#     ALTER TABLE tracks
+#     DROP COLUMN album;
+#     ''',
+#     None
+# )
 
 
 
@@ -161,13 +162,20 @@ dbm.db_execute_query(
 #     ''',
 #     None
 # )
-dbm.db_execute_query(
-    '''
-    INSERT INTO ticket (user_id, concert_id)
-    VALUES (2,4)
-    ''',
-    None
-)
+
+
+# current_date = "2022-01-01"
+
+# dbm.db_execute_query(
+#     f'''
+#     UPDATE ticket
+#     SET expired = 0
+#     WHERE concert_id IN (
+#         SELECT id FROM concert WHERE date < "{current_date}"
+#     );
+#     ''',
+#     None
+# )
 
 
 dbm.db_disconnect()

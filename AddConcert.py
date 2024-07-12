@@ -97,6 +97,13 @@ class Ui_AddConcertWindow(object):
         venue = self.Venue_lineEdit.text()
         price = self.Price_lineEdit.text()
         date = self.dateEdit.text()
+        if title == "" or venue == "" or price == "" or date == "":
+            error_widget = QtWidgets.QMessageBox()
+            error_widget.setIcon(QtWidgets.QMessageBox.Warning)
+            error_widget.setWindowTitle("Error")
+            error_widget.setText("Please fill in all the required fields.")
+            error_widget.exec_()
+            return
         dbm = DBM()
         dbm.db_connect()
         add_concert_toTable(dbm, title, self.appstate["userid"], venue, date, price)

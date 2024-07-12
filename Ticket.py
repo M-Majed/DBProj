@@ -73,12 +73,17 @@ class Ui_TicketsWindow(object):
         #$ My Part --------------------------------------------
         dbm = DBM()
         dbm.db_connect()
+        check_expired_tickets(dbm)
+
         tickets_id = get_user_tickets(dbm, self.appstate["userid"])
         tickets_list = QtCore.QStringListModel()
         tickets_list.setStringList([str(id[0]) for id in tickets_id])
         self.Tickets_listView.setModel(tickets_list)
 
-
+        expired_id = get_user_expired_tickets(dbm, self.appstate["userid"])
+        expired_list = QtCore.QStringListModel()
+        expired_list.setStringList([str(id[0]) for id in expired_id])
+        self.Expired_listView.setModel(expired_list)
 
 
         self.back_btn.clicked.connect(self.open_parent_window)
