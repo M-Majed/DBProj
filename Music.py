@@ -134,7 +134,7 @@ class Ui_MusicWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MusicWindow.setWindowTitle(_translate("MusicWindow", "Form"))
         self.Text_lbl.setText(_translate("MusicWindow", f"Lyrics"))
-        self.Text_browser.setText(self.music_row[7])
+        self.Text_browser.setText(self.music_row[6])
         self.like_checkBox.setText(_translate("MusicWindow", f"Like"))
         self.comments_btn.setText(_translate("MusicWindow", f"Comments"))
         self.sendComment_btn.setText(_translate("MusicWindow", f"Comment"))

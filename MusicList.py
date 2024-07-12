@@ -104,11 +104,17 @@ class Ui_MusicListWindow(object):
         self.Music_list.setModel(self.model)
         connection = sqlite3.connect('my.db')
         cursor = connection.cursor()
-        cursor.execute("PRAGMA table_info(user)")
+        cursor.execute("PRAGMA table_info(tracks)") 
         columns_info = cursor.fetchall()
         column_names = [info[1] for info in columns_info]
+        print(f'{column_names=}')
         self.model.setColumnCount(len(column_names))
         self.model.setHorizontalHeaderLabels(column_names)
+        columns_to_hide = [elem if "id" in elem else None for elem in column_names]
+        for elem in columns_to_hide:
+            if elem:
+                column_index = column_names.index(elem)
+                self.Music_list.setColumnHidden(column_index, True)
         self.Category_combobox.currentIndexChanged.connect(self.category_changed)
 
         self.Back_btn.clicked.connect(self.open_parent_window)
@@ -258,12 +264,25 @@ class Ui_MusicListWindow(object):
                 ''', None
             )
         elif index == 3: # Suggestions
-            dbm=  DBM()
+            dbm = DBM()
             dbm.db_connect()
-            qq=self.appstate["userid"]
+            qq = self.appstate["userid"]
             rows = dbm.db_execute_read_query(
                 f'''
-                SELECT title FROM tracks,likes WHERE user_id = {qq} and  likes.user_id = tracks.id
+                with recursive
+                mytable(g , c ) as ( 
+                    SELECT genre , count(*) as c FROM tracks, likes
+                    WHERE likes.user_id = {qq} AND likes.track_id = tracks.id
+                    GROUP BY genre
+                    HAVING COUNT(*) > 0
+                    ORDER BY COUNT(*) DESC
+                    LIMIT 2)
+                SELECT * FROM tracks
+                WHERE 
+                genre IN (
+                    SELECT genre FROM mytable
+                )
+                
                 ''', None
             )
         elif index == 4: # PlayLists

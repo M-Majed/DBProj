@@ -108,7 +108,7 @@ if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
     LoginSignupWindow = QtWidgets.QMainWindow()
-    ui = Ui_LoginSignupWindow()
+    ui = Ui_LoginSignupWindow() 
     ui.setupUi(LoginSignupWindow)
     LoginSignupWindow.show()
     sys.exit(app.exec_())

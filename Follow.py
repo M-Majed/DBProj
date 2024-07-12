@@ -103,7 +103,7 @@ class Ui_FollowWindow(object):
         FollowWindow.setWindowTitle(_translate("FollowWindow", "Follow"))
         self.Sendreq_btn.setText(_translate("FollowWindow", "Send request"))
         self.Following_label.setText(_translate("FollowWindow", "Following"))
-        self.Follower_lbl.setText(_translate("FollowWindow", "Follower"))
+        self.Follower_lbl.setText(_translate("FollowWindow", "Followers"))
         self.back_btn.setText(_translate("FollowWindow", "Back"))
         
     def open_parent_window(self):

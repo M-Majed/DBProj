@@ -156,7 +156,36 @@ class Ui_SearchWindow(object):
 
         #$ My Part --------------------------------------------
         self.back_btn.clicked.connect(self.open_parent_window)
-
+        self.search_btn.clicked.connect(self.search)
+    def search(self):
+        title = self.title_lineEdit.text()
+        genre = self.Genre_lineEdit.text()
+        artist = self.Artist_lineEdit.text()
+        age = self.Genre_lineEdit_2.text()
+        area = self.Area_lineEdit.text()
+        dbm = DBM()
+        dbm.db_connect()
+        result =search(dbm,title,artist,genre,age,area)
+        if result is None or len(result)==0:
+            #show qt message box
+            msg = QtWidgets.QMessageBox()
+            msg.setIcon(QtWidgets.QMessageBox.Warning)
+            msg.setText("No result found")
+            msg.setWindowTitle("Search")
+            msg.exec_()
+            return
+        #show result qt message box
+        msg = QtWidgets.QMessageBox()
+        msg.setIcon(QtWidgets.QMessageBox.Information)
+        msg.setText("Search result")
+        msg.setWindowTitle("Search")
+        msg.setDetailedText(str(result))# later show the result in a better way
+        msg.exec_()
+        
+            
+            
+            
+            
 
     def retranslateUi(self, SearchWindow):
         _translate = QtCore.QCoreApplication.translate

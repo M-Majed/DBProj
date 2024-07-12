@@ -25,9 +25,7 @@ def create_db_tables(dbm: DBM):
     CREATE TABLE IF NOT EXISTS albums (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT NOT NULL,
-        track_id INTEGER NOT NULL,
         artist_id INTEGER NOT NULL,
-        FOREIGN KEY (track_id) REFERENCES tracks (id)
         FOREIGN KEY (artist_id) REFERENCES user (id)
     );
     """,
@@ -77,7 +75,7 @@ def create_db_tables(dbm: DBM):
             address TEXT NOT NULL,
             username TEXT NOT NULL unique,
             password TEXT NOT NULL,
-            subscription Boolean,
+            subscription Boolean default 0,
             singerornormal Boolean,
             wallet INTEGER
         );
@@ -739,6 +737,21 @@ def get_messages(dbm: DBM, receiverId=None):
         None,
     )
     return result
+
+def search(dbm: DBM, title=None, artist=None, genre=None, ages=None, area=None):
+    if  dbm is None or title is None or artist is None or genre is None or ages is None or area is None:
+        return None
+    
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT * 
+        FROM tracks INNER JOIN user ON tracks.artist_id = user.id
+        WHERE title like "%{title}%" AND user.fname || " " || user.lname like "%{artist}%" AND genre like "%{genre}%" AND ages like "%{ages}%" AND area like "%{area}%";
+        ''',
+        None,
+    )
+    return result
+
 
 # def get_current(melli: str):
 #     if not melli:
