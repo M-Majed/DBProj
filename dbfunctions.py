@@ -1,7 +1,7 @@
 from DBManagement import DBM
 # dbm = DBManagement.DBM()
 # dbm.db_connect()
-
+import datetime
 
 # WARNING! Deletes all tables and their descriptions!
 def drop_all_tables(dbm: DBM):
@@ -269,6 +269,7 @@ def check_login(dbm: DBM, username: str, password: str):
         """,
         None,
     )
+    
     print(f"{result=}\t{result[0][0]}")
     # countFromDB = len(result)
     countFromDB = result[0][0]
@@ -1138,6 +1139,7 @@ def add_ticket_toTable(dbm: DBM, user_id, concert_id):
     except Exception as e:
         return False
 
+    
 # def get_current(melli: str):
 #     if not melli:
 #         return None

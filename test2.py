@@ -167,9 +167,12 @@ dbm.db_connect()
 # current_date = "2022-01-01"
 
 dbm.db_execute_query(
-    f'''
-    UPDATE ticket
-    SET expired = 0
+    '''
+    INSERT INTO tracks ( id, title, duration, genre, ages, lyric, area, artist_id, permission)
+    VALUES ( 17,"Track Title",  180, "Ruck", "All Ages", "Lyrics", "Area", 1, 1),
+              ( 14,"Track Title9",  180, "Ruck", "All Ages", "Lyrics", "Area", 1, 1),
+              ( 16,"Track Title7",  180, "Ruck", "All Ages", "Lyrics", "Area", 1, 1)
+            
     ''',
     None
 )
@@ -181,5 +184,6 @@ dbm.db_execute_query(
 # )
 # print(xxx)
 
+    
 
 dbm.db_disconnect()

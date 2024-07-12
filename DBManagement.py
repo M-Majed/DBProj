@@ -9,6 +9,7 @@ class DBM:
     def db_create_connection(self, path=db_path):
         connection = None
         try:
+            # connection = sqlite3.connect(path, detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
             connection = sqlite3.connect(path)
             print("\nConnection to SQLite DB successful.")
         except Error as e:

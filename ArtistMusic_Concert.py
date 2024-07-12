@@ -100,8 +100,6 @@ class Ui_ArtistMusic_ConcertWindow(object):
             self.list_TableView.doubleClicked.connect(self.delete_track)
         elif self.appstate["music_or_concert"] == "concert":
             self.list_TableView.doubleClicked.connect(self.delete_concert)
-
-
     def retranslateUi(self, ArtistMusic_ConcertWindow):
         _translate = QtCore.QCoreApplication.translate
         ArtistMusic_ConcertWindow.setWindowTitle(_translate("ArtistMusic_ConcertWindow", "List"))
