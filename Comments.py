@@ -2,11 +2,12 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import resources
 from dbfunctions import *
 from DBManagement import DBM
+
+
 class Ui_CommentsWindow(object):
     def __init__(self, parent=None, appstate=None, music_row=None):
         self.parent = parent
         self.appstate = appstate
-        # RETURN TEMPLATE FOR "Tracks" ==>>> row=['2', 'Track Title', 'Artist Name', 'Album Name', '00:03:30', 'Genre', 'Ages', 'Lyrics', 'Area', '2021-06-01']
         self.music_row = music_row
     def setupUi(self, CommentsWindow):
         self.CommentsWindow = CommentsWindow
@@ -30,13 +31,13 @@ class Ui_CommentsWindow(object):
         self.Comments_label.setAlignment(QtCore.Qt.AlignCenter)
         self.Comments_label.setObjectName("Comments_label")
         self.verticalLayout.addWidget(self.Comments_label)
-        self.Comments_listView = QtWidgets.QListView(CommentsWindow)
+        self.Comments_TableView = QtWidgets.QTableView(CommentsWindow)
         font = QtGui.QFont()
         font.setPointSize(10)
-        self.Comments_listView.setFont(font)
-        self.Comments_listView.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n""background-color: rgb(255, 255, 255);")
-        self.Comments_listView.setObjectName("Comments_listView")
-        self.verticalLayout.addWidget(self.Comments_listView)
+        self.Comments_TableView.setFont(font)
+        self.Comments_TableView.setStyleSheet("background-image: url(:/Background/background/transparent.png);\n""background-color: rgb(255, 255, 255);")
+        self.Comments_TableView.setObjectName("Comments_TableView")
+        self.verticalLayout.addWidget(self.Comments_TableView)
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.back_btn = QtWidgets.QPushButton(CommentsWindow)
@@ -55,6 +56,20 @@ class Ui_CommentsWindow(object):
         QtCore.QMetaObject.connectSlotsByName(CommentsWindow)
 
         #$ My Part --------------------------------------------
+        dbm = DBM()
+        dbm.db_connect()
+        comments_data = get_track_comments(dbm, self.music_row[0])
+        comments_model = QtGui.QStandardItemModel()
+        if comments_data == None:
+            comments_data = []
+        for comment in comments_data:
+            user_item = QtGui.QStandardItem(get_username_by_userid(dbm, comment[2]))
+            comment_item = QtGui.QStandardItem(comment[3])
+            comments_model.appendRow([user_item, comment_item])
+        self.Comments_TableView.setModel(comments_model)
+
+
+
         self.back_btn.clicked.connect(self.open_parent_window)
 
     def retranslateUi(self, CommentsWindow):
@@ -67,20 +82,4 @@ class Ui_CommentsWindow(object):
         self.parent.show()
         self.CommentsWindow.close()
         
-    def get_all_comments(self):
-        dbm = DBM()
-        dbm.db_connect()
-        friendIds = get_friendIds(dbm, self.appstate["userid"])
-        if not friendIds:
-            friendIds = []
-        result = get_comments(dbm, self.music_row[0], friendIds, self.music_row[0])
-        if not result:
-            return
-        # Later: add ui for comments. first comment is result[0]. and its first columns is result[0][0]. ...
-        dbm.db_disconnect()
-    def show(self):
-        self.get_all_comments()
-        self.CommentsWindow.show()
-        self.CommentsWindow.raise_()
-        self.CommentsWindow.activateWindow()
         
