@@ -1003,23 +1003,6 @@ def get_user_expired_tickets(dbm: DBM, user_id):
     )
     return result
 
-
-def check_expired_tickets(dbm: DBM):
-    if not dbm:
-        return None
-    try:
-        dbm.db_execute_query(
-            '''
-            UPDATE ticket
-            SET expired = 1
-            WHERE concert_id in (SELECT id FROM concert WHERE date < date('now'));
-            ''',
-            None
-        )
-        return True
-    except Exception as e:
-        return False
-
 def get_album_tracks(dbm: DBM, album_title):
     if not dbm or not album_title:
         return None
@@ -1038,7 +1021,7 @@ def get_albums(dbm: DBM):
         return None
     result = dbm.db_execute_read_query(
         f'''
-        SELECT * FROM albums";
+        SELECT * FROM albums;
         ''',
         None
     )
@@ -1093,6 +1076,68 @@ def get_suggestion(dbm: DBM, user_id):
         None
     )
     return result
+
+def get_playlists(dbm: DBM):
+    if not dbm:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT * FROM playlist";
+        ''',
+        None
+    )
+    return result
+
+def get_artists(dbm: DBM):
+    if not dbm:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT * FROM user WHERE singerornormal = 1;
+        ''',
+        None
+    )
+    return result
+
+def get_concerts(dbm: DBM):
+    if not dbm:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT * FROM concert;
+        ''',
+        None
+    )
+    return result
+
+def get_playlist_tracks(dbm: DBM, playlistname):
+    if not dbm or not playlistname:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT * FROM tracks WHERE id in (select track_id from playlist_music
+                                          where playlist_id in (select id from playlist where name = "{playlistname}"));
+        ''',
+        None
+    )
+    return result
+
+def add_ticket_toTable(dbm: DBM, user_id, concert_id):
+    if not dbm or not user_id or not concert_id:
+        return False
+    try:
+        return dbm.db_execute_query(
+            f"""
+            INSERT INTO
+                ticket (user_id,concert_id)
+                VALUES
+                ("{user_id}","{concert_id}");
+            """,
+            None,
+        )
+    except Exception as e:
+        return False
+
 # def get_current(melli: str):
 #     if not melli:
 #         return None

@@ -73,7 +73,6 @@ class Ui_TicketsWindow(object):
         #$ My Part --------------------------------------------
         dbm = DBM()
         dbm.db_connect()
-        check_expired_tickets(dbm)
 
         tickets_id = get_user_tickets(dbm, self.appstate["userid"])
         tickets_list = QtCore.QStringListModel()

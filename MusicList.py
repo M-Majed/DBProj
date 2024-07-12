@@ -170,7 +170,7 @@ class Ui_MusicListWindow(object):
             
         elif cat == 1:  # Category = "Albums"
             self.appstate["AlbumName"] = str(row[1])
-            self.appstate["searchOrother"]= "other"
+            self.appstate["searchOrother"]= "Albums"
             self.window = QtWidgets.QWidget()
             self.ui = Ui_SearchResultWindow(self.MusicListWindow, self.appstate)
             self.ui.setupUi(self.window)
@@ -178,50 +178,43 @@ class Ui_MusicListWindow(object):
             self.MusicListWindow.close()
                  
         elif cat == 2: # Category = "Followings"
-            qq = self.appstate.get("userid")
-            if qq is None:
-                print("Error: User ID not found in appstate.")
-                return None
-            
-            result = dbm.db_execute_read_query(
-                f'''
-                select username from user
-                where id in (SELECT following_id FROM followorfollowing WHERE follower_id = {qq});
-                ''',
-                None,
-            )
-            if result is None:
-                return None
-            return [row[0] for row in result]
+            self.appstate["followingidshow"] = row[0]
+            self.appstate["searchOrother"]= "following"
+            self.window = QtWidgets.QWidget()
+            self.ui = Ui_SearchResultWindow(self.MusicListWindow, self.appstate)
+            self.ui.setupUi(self.window)
+            self.window.show()
+            self.MusicListWindow.close()
+
         elif cat == 3: # Category = "Suggestions"
-            #suggest that genre likes user likes the tracks
+            self.window = QtWidgets.QWidget()
+            self.ui = Ui_MusicWindow(self.MusicListWindow,self.appstate,row)
+            self.ui.setupUi(self.window)
+            self.window.show()
+            self.MusicListWindow.close()
+  
+        elif cat == 4: # Category = "PlayLists"
+            self.appstate["playlistName"] = row[0]
+            self.appstate["searchOrother"]= "playlist"
+            self.window = QtWidgets.QWidget()
+            self.ui = Ui_SearchResultWindow(self.MusicListWindow, self.appstate)
+            self.ui.setupUi(self.window)
+            self.window.show()
+            self.MusicListWindow.close()
+            
+        elif cat == 5: # Category = "Artists"
+            self.appstate["Artist_id_to_show"] = row[0]
+            self.appstate["searchOrother"]= "showaristsong"
+            self.window = QtWidgets.QWidget()
+            self.ui = Ui_SearchResultWindow(self.MusicListWindow, self.appstate)
+            self.ui.setupUi(self.window)
+            self.window.show()
+            self.MusicListWindow.close()
+
+        elif cat == 6: # Category = "Concerts"
             dbm = DBM()
             dbm.db_connect()
-            qq=self.appstate["userid"]
-            rows = dbm.db_execute_read_query(
-                f'''
-                SELECT title FROM tracks,likes WHERE user_id = {qq} &&  likes.user_id = tracks.id
-                ''', None
-            )
-            if rows is None:
-                print(f"Error: No genre found for user '{qq}'")
-            else:
-                self.model.setHorizontalHeaderLabels(['genre'])
-                for genre in rows:
-                    genre_data = [str(item) for item in genre]
-                    self.model.appendRow([QtGui.QStandardItem(data) for data in genre_data])
-                dbm.db_disconnect()
-                
-            
-            
-            pass
-        elif cat == 4: # Category = "PlayLists"
-            
-            pass
-        elif cat == 5: # Category = "Artists"
-            pass
-        elif cat == 6: # Category = "Concerts"
-            pass
+            add_ticket_toTable(dbm, self.appstate["userid"], row[0])
 
     def category_changed(self, index):
         self.model.clear()
@@ -234,41 +227,21 @@ class Ui_MusicListWindow(object):
         elif index == 1: # Albums
             rows = get_albums(dbm)
         elif index == 2: # Followings
-            if self.appstate["userid"] is None:
-                print("Error: User ID not found in appstate.")
-                dbm.db_disconnect()
-                return
             rows = get_followingusername_userid(dbm, self.appstate["userid"])
         elif index == 3: # Suggestions
-            dbm = DBM()
-            dbm.db_connect()
             rows = get_suggestion(dbm, self.appstate["userid"])
-            #!!!!!!!!!!!!!!!!!
         elif index == 4: # PlayLists
-            rows = dbm.db_execute_read_query(
-                f'''
-                SELECT * FROM playlist
-                ''', None
-            )
+            rows = get_playlists(dbm)
         elif index == 5: # Artists
-            rows = dbm.db_execute_read_query(
-                f'''
-                SELECT username FROM user where singerornormal
-                ''', None
-            )
+            rows = get_artists(dbm)
         elif index == 6: # Concerts
-            rows = dbm.db_execute_read_query(
-                f'''
-                SELECT * FROM concert
-                ''', None
-            ) 
+            rows = get_concerts(dbm)
+
         if rows:  
             for row in rows:
                 items = [QtGui.QStandardItem(str(field)) for field in row]
                 for elem in items:
-                    elem.setEditable(False)
-                
-                                                
+                    elem.setEditable(False)                            
                 self.model.appendRow(items)
         else:
             print(f'No row fetched.')

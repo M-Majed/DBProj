@@ -4,6 +4,7 @@ import resources
 from dbfunctions import *
 from DBManagement import DBM
 from datatype import *
+from Music import Ui_MusicWindow
 
 
 class Ui_SearchResultWindow(object):
@@ -52,10 +53,16 @@ class Ui_SearchResultWindow(object):
         #$ My Part --------------------------------------------
         dbm = DBM()
         dbm.db_connect()
-        if self.appstate["searchOrother"] == "other":
+        if self.appstate["searchOrother"] == "Albums":
             msuics_for_list = get_album_tracks(dbm, self.appstate["AlbumName"])
-        else:
+        elif self.appstate["searchOrother"] == "search":
             msuics_for_list = search_track(dbm, self.appstate["Searchtitle"], self.appstate["Searchartist"], self.appstate["Searchgenre"], self.appstate["Searchage"], self.appstate["SearchArea"])
+        elif self.appstate["searchOrother"] == "following":
+            msuics_for_list = get_artist_musics(dbm, get_userid_by_username(dbm, self.appstate["followingidshow"]))
+        elif self.appstate["searchOrother"] == "playlist":
+            msuics_for_list = get_playlist_tracks(dbm, self.appstate["playlistname"])
+        elif self.appstate["searchOrother"] == "showaristsong":
+            msuics_for_list = get_artist_musics(dbm, self.appstate["Artist_id_to_show"])
 
         music_model = QtGui.QStandardItemModel()
         if msuics_for_list == None:
@@ -67,13 +74,14 @@ class Ui_SearchResultWindow(object):
             music_model.appendRow(music_items)
         self.Music_tableView.setModel(music_model)
 
-
+        self.model = music_model
 
 
 
 
 
         self.Back_btn.clicked.connect(self.open_parent_window)
+        self.Music_tableView.doubleClicked.connect(self.open_music_window)
 
 
 
@@ -84,4 +92,12 @@ class Ui_SearchResultWindow(object):
 
     def open_parent_window(self):
         self.parent.show()
+        self.SearchResultWindow.close()
+
+    def open_music_window(self, index):
+        row = [self.model.item(index.row(), col).text() for col in range(self.model.columnCount())]
+        self.window = QtWidgets.QWidget()
+        self.ui = Ui_MusicWindow(self.SearchResultWindow,self.appstate,row)
+        self.ui.setupUi(self.window)
+        self.window.show()
         self.SearchResultWindow.close()

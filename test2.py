@@ -166,16 +166,20 @@ dbm.db_connect()
 
 # current_date = "2022-01-01"
 
-# dbm.db_execute_query(
+dbm.db_execute_query(
+    f'''
+    UPDATE ticket
+    SET expired = 0
+    ''',
+    None
+)
+# xxx=dbm.db_execute_read_query(
 #     f'''
-#     UPDATE ticket
-#     SET expired = 0
-#     WHERE concert_id IN (
-#         SELECT id FROM concert WHERE date < "{current_date}"
-#     );
+#     SELECT * FROM albums";
 #     ''',
 #     None
 # )
+# print(xxx)
 
 
 dbm.db_disconnect()
