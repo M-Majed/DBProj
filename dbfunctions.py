@@ -917,7 +917,9 @@ def add_concert_toTable(dbm: DBM, name, artist_id, venue, date, ticket_price):
         )
     except Exception as e:
         return False
-    
+ 
+
+
 def get_user_tickets(dbm: DBM, user_id):
     if not dbm or not user_id:
         return None
@@ -1286,21 +1288,31 @@ def get_playlistid_by_name(dbm: DBM, playlistname):
         None
     )
     return result[0][0] if result else None
-
+def update_ticket_expired(dbm: DBM):
+    if not dbm:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT t.id, c.date
+        FROM ticket t, concert c
+        WHERE t.concert_id=c.id and expired = 0;
+        ''',
+        None
+    )
+    if not result or len(result) == 0:
+        return False
     
-# def get_current(melli: str):
-#     if not melli:
-#         return None
-#     result = db_execute_read_query(
-#         f'''
-#         SELECT secret FROM personsecret WHERE melli = {melli};
-#         ''', None
-#     )
-#     secret = result[0][0]
-#     global totp_interval
-#     p = pyotp.TOTP(s=secret, interval=totp_interval, digits=totp_length)
-#     return p.now()
-
-
-# dbm.db_disconnect()
-
+    now = datetime.datetime.today()
+    for row in result:
+        month, day, year = row[1].split("/")
+        if now.year > int(year) or now.month > int(month) or now.day > int(day) :
+            dbm.db_execute_read_query(
+                f'''
+                Update ticket t
+                SET expired = 1
+                WHERE t.id= {int(row[0])};
+                ''',
+                None
+            )
+    return True
+    
