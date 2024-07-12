@@ -11,6 +11,7 @@ class Ui_MusicWindow(object):
         self.parent = parent
         self.appstate = appstate
         self.music_row = music_row
+        print(f"asdasdasdasdasdasdasdasd{music_row}")
     def setupUi(self, MusicWindow):
         self.MusicWindow = MusicWindow
         MusicWindow.setObjectName("MusicWindow")
@@ -123,6 +124,7 @@ class Ui_MusicWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MusicWindow)
 
         #$ My Part --------------------------------------------
+
         self.Return_btn.clicked.connect(self.open_parent_window)
         self.comments_btn.clicked.connect(self.open_comments_window)
         self.sendComment_btn.clicked.connect(self.send_comment_handler)
@@ -153,7 +155,7 @@ class Ui_MusicWindow(object):
         self.MusicWindow.close()
     def open_comments_window(self):
         self.window = QtWidgets.QWidget()
-        self.ui = Ui_CommentsWindow(self.MusicWindow,self.appstate)
+        self.ui = Ui_CommentsWindow(self.MusicWindow,self.appstate,self.music_row)
         self.ui.setupUi(self.window)
         self.window.show()
         self.MusicWindow.close()

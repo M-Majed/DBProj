@@ -930,6 +930,17 @@ def remove_ticket_fromTable(dbm: DBM, user_id, concert_title):
     except Exception as e:
         return False
     
+def get_username_by_userid(dbm: DBM, user_id):
+    if not dbm or not user_id:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT username FROM user WHERE id = "{user_id}";
+        ''',
+        None
+    )
+    return result[0][0] if result else None
+
 
     
 # def get_current(melli: str):
