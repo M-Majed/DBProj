@@ -44,7 +44,26 @@ def create_db_tables(dbm: DBM):
         );
         """,
         None,
-    ) 
+    )
+   
+   
+    # dbm.db_execute_query(
+    #     """ 
+    #     CREATE TABLE IF NOT EXISTS tracks (
+    #      id INTEGER PRIMARY KEY AUTOINCREMENT,
+    #      title TEXT  NOT NULL,
+    #      artist TEXT NOT NULL,
+    #      duration INTEGER NOT NULL,
+    #      genre TEXT NOT NULL,
+    #      ages TEXT NOT NULL,
+    #      lyric TEXT NOT NULL,
+    #      area TEXT NOT NULL,
+    #      permission BOOLEAN NOT NULL
+    #      );
+    #     """,
+    #     None,
+    # )
+    
     
     dbm.db_execute_query(
         """
@@ -77,23 +96,23 @@ def create_db_tables(dbm: DBM):
     )
 
 
-    dbm.db_execute_query(
-        """
-       CREATE TABLE IF NOT EXISTS tracks (
-             id INTEGER PRIMARY KEY AUTOINCREMENT,
-             title TEXT  NOT NULL,
-             artist_id INTEGER NOT NULL,
-             duration INTEGER NOT NULL,
-             genre TEXT NOT NULL,
-             ages TEXT NOT NULL,
-             lyric TEXT NOT NULL,
-             area TEXT NOT NULL,
-            FOREIGN KEY (artist_id) REFERENCES user (id)
-
-         );
-        """,
-        None,
-    )
+    # dbm.db_execute_query(
+    #     """
+    #    CREATE TABLE IF NOT EXISTS tracks (
+    #          id INTEGER PRIMARY KEY AUTOINCREMENT,
+    #          title TEXT  NOT NULL,
+    #          artist_id INTEGER NOT NULL,
+    #          FOREIGN KEY (artist_id) REFERENCES user (id),
+    #          album TEXT NOT NULL,
+    #          duration INTEGER NOT NULL,
+    #          genre TEXT NOT NULL,
+    #          ages TEXT NOT NULL,
+    #          lyric TEXT NOT NULL,
+    #          area TEXT NOT NULL,
+    #      );
+    #     """,
+    #     None,
+    # )
     
     
     dbm.db_execute_query(
@@ -242,8 +261,7 @@ def create_db_tables(dbm: DBM):
 
 def check_login(dbm: DBM, username: str, password: str):
     if not dbm or not username or username == "" or not password or password == "":
-        return False, False
-    
+        return False
     result = dbm.db_execute_read_query(
         f"""
         SELECT Count(*) FROM user
@@ -251,7 +269,6 @@ def check_login(dbm: DBM, username: str, password: str):
         """,
         None,
     )
-    
     print(f"{result=}\t{result[0][0]}")
     # countFromDB = len(result)
     countFromDB = result[0][0]
