@@ -125,7 +125,7 @@ class Ui_LoginWindow(object):
 
         #$ My Part --------------------------------------------
         self.back_Btn.clicked.connect(self.open_parent_window)
-        self.Login_Btn.clicked.connect(self.check_login)
+        self.Login_Btn.clicked.connect(self.check_login2)
 
     def retranslateUi(self, LoginWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -141,7 +141,7 @@ class Ui_LoginWindow(object):
         self.parent.show()
         self.LoginWindow.close()
 
-    def check_login(self):
+    def check_login2(self):
         username = self.Username_input.text()
         password = self.Password_input.text()
         dbm = DBM()
