@@ -1095,7 +1095,7 @@ def get_playlists(dbm: DBM):
         return None
     result = dbm.db_execute_read_query(
         f'''
-        SELECT * FROM playlist;
+        SELECT * FROM playlist where public_private = 0;
         ''',
         None
     )
@@ -1218,6 +1218,74 @@ def get_user_playlists(dbm: DBM, user_id):
         None
     )
     return result
+def make_playlist_public(dbm: DBM, playlistname):
+    if not dbm or not playlistname:
+        return False
+    try:
+        dbm.db_execute_query(
+            f"""
+            update playlist
+            set public_private = 0
+            where name = "{playlistname}";
+            """,
+            None,
+        )
+        return True
+    except Exception as e:
+        return False
+
+def make_playlist_private(dbm: DBM, playlistname):
+    if not dbm or not playlistname:
+        return False
+    try:
+        dbm.db_execute_query(
+            f"""
+            update playlist
+            set public_private = 1
+            where name = "{playlistname}";
+            """,
+            None,
+        )
+        return True
+    except Exception as e:
+        return False
+    
+def like_playlistTable(dbm: DBM, user_id, playlist_id):
+    if not dbm or not user_id or not playlist_id:
+        return False
+    try:
+        result = dbm.db_execute_read_query(
+            f'''
+            SELECT * FROM like_playlist WHERE user_id = "{user_id}" AND playlist_id = "{playlist_id}";
+            ''',
+            None
+        )
+        if result:
+            return False
+        
+        dbm.db_execute_query(
+            f"""
+            INSERT INTO
+                like_playlist (user_id,playlist_id)
+                VALUES
+                ("{user_id}","{playlist_id}");
+            """,
+            None,
+        )
+        return True
+    except Exception as e:
+        return False
+    
+def get_playlistid_by_name(dbm: DBM, playlistname):
+    if not dbm or not playlistname:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT id FROM playlist WHERE name = "{playlistname}";
+        ''',
+        None
+    )
+    return result[0][0] if result else None
 
     
 # def get_current(melli: str):
