@@ -1299,9 +1299,6 @@ def get_playlistid_by_name(dbm: DBM, playlistname):
         None
     )
     return result[0][0] if result else None
-<<<<<<< Updated upstream
-def update_ticket_expired(dbm: DBM):
-=======
 
 def get_user_albums(dbm: DBM, user_id):
     if not dbm or not user_id:
@@ -1315,36 +1312,10 @@ def get_user_albums(dbm: DBM, user_id):
     return result
 
 def get_albums(dbm: DBM):
->>>>>>> Stashed changes
     if not dbm:
         return None
     result = dbm.db_execute_read_query(
         f'''
-<<<<<<< Updated upstream
-        SELECT ticket.id, concert.date
-        FROM ticket, concert
-        WHERE ticket.concert_id=concert.id and expired = 0;
-        ''',
-        None
-    )
-    if not result or len(result) == 0:
-        return False
-    
-    now = datetime.datetime.today()
-    for row in result:
-        month, day, year = row[1].split("/")
-        if now.year > int(year) or now.month > int(month) or now.day > int(day) :
-            dbm.db_execute_read_query(
-                f'''
-                Update ticket
-                SET expired = 1
-                WHERE ticket.id= {int(row[0])};
-                ''',
-                None
-            )
-    return True
-    
-=======
         SELECT * FROM albums;
         ''',
         None
@@ -1388,4 +1359,31 @@ def get_albumid_by_name(dbm: DBM, albumname):
     )
     return result[0][0] if result else None
 
->>>>>>> Stashed changes
+def update_ticket_expired(dbm: DBM):
+    if not dbm:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT ticket.id, concert.date
+        FROM ticket, concert
+        WHERE ticket.concert_id=concert.id and expired = 0;
+        ''',
+        None
+    )
+    if not result or len(result) == 0:
+        return False
+    
+    now = datetime.datetime.today()
+    for row in result:
+        month, day, year = row[1].split("/")
+        if now.year > int(year) or now.month > int(month) or now.day > int(day) :
+            dbm.db_execute_read_query(
+                f'''
+                Update ticket
+                SET expired = 1
+                WHERE ticket.id= {int(row[0])};
+                ''',
+                None
+            )
+    return True
+    
