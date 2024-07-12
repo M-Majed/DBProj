@@ -161,6 +161,7 @@ def create_db_tables(dbm: DBM):
              id INTEGER PRIMARY KEY AUTOINCREMENT,
              user_id INTEGER NOT NULL,
              concert_id INTEGER NOT NULL,
+             expired BOOLEAN defult 0,
              FOREIGN KEY (user_id) REFERENCES user (id),
              FOREIGN KEY (concert_id) REFERENCES concert (id)
          );
@@ -849,21 +850,32 @@ def get_artist_concerts(dbm: DBM, artist_id):
     )
     return result
 
+def get_concert_price(dbm: DBM, concert_id):
+    if not dbm or not concert_id:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT ticket_price FROM concert WHERE id = "{concert_id}";
+        ''',
+        None
+    )
+    return result[0][0] if result else None
+
 def delete_from_concerts (dbm: DBM, concert_id):
     if not dbm or not concert_id:
         return False
     try:
         dbm.db_execute_query(
             f'''
-            DELETE FROM concert WHERE id = "{concert_id}";
+            UPDATE user
+            SET wallet = wallet + {get_concert_price(dbm, concert_id)}
+            WHERE id IN (SELECT user_id FROM ticket WHERE concert_id = {concert_id});
             ''',
             None
         )
         dbm.db_execute_query(
             f'''
-            update user
-            set wallet = wallet + (select ticket_price from concert where id = "{concert_id}")
-            where id in (select user_id from ticket where concert_id = "{concert_id}");
+            DELETE FROM concert WHERE id = "{concert_id}";
             ''',
             None
         )
@@ -1083,7 +1095,7 @@ def get_playlists(dbm: DBM):
         return None
     result = dbm.db_execute_read_query(
         f'''
-        SELECT * FROM playlist";
+        SELECT * FROM playlist;
         ''',
         None
     )
@@ -1124,10 +1136,20 @@ def get_playlist_tracks(dbm: DBM, playlistname):
     return result
 
 def add_ticket_toTable(dbm: DBM, user_id, concert_id):
-    if not dbm or not user_id or not concert_id:
+    if not dbm or not user_id or not concert_id or get_user_wallet(dbm, user_id) < get_concert_price(dbm, concert_id):
         return False
     try:
-        return dbm.db_execute_query(
+        # Check if ticket is already bought
+        result = dbm.db_execute_read_query(
+            f'''
+            SELECT * FROM ticket WHERE user_id = "{user_id}" AND concert_id = "{concert_id}";
+            ''',
+            None
+        )
+        if result:
+            return False
+        
+        dbm.db_execute_query(
             f"""
             INSERT INTO
                 ticket (user_id,concert_id)
@@ -1136,8 +1158,66 @@ def add_ticket_toTable(dbm: DBM, user_id, concert_id):
             """,
             None,
         )
+        dbm.db_execute_query(
+            f"""
+            update user
+            set wallet = wallet - {get_concert_price(dbm, concert_id)}
+            where id = "{user_id}";
+            """,
+            None,
+        )
+        return True
     except Exception as e:
         return False
+    
+def get_user_wallet(dbm: DBM, user_id):
+    if not dbm or not user_id:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT wallet FROM user WHERE id = "{user_id}";
+        ''',
+        None
+    )
+    return result[0][0] if result else None
+
+def add_to_playlist_table(dbm: DBM, playlistname, track_id, user_id):
+    if not dbm or not playlistname or not track_id or not user_id:
+        return False
+    try:
+        dbm.db_execute_query(
+            f"""
+            INSERT INTO
+                playlist (name,user_id,public_private)
+                VALUES
+                ("{playlistname}","{user_id}",0);
+            """,
+            None,
+        )
+        dbm.db_execute_query(
+            f"""
+            INSERT INTO
+                playlist_music (playlist_id,track_id)
+                VALUES
+                ((select id from playlist where name = "{playlistname}"),"{track_id}");
+
+            """,
+            None,
+        )
+        return True
+    except Exception as e:
+        return False
+    
+def get_user_playlists(dbm: DBM, user_id):
+    if not dbm or not user_id:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT name FROM playlist WHERE user_id = "{user_id}";
+        ''',
+        None
+    )
+    return result
 
     
 # def get_current(melli: str):
