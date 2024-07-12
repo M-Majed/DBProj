@@ -262,6 +262,7 @@ def create_db_tables(dbm: DBM):
 def check_login(dbm: DBM, username: str, password: str):
     if not dbm or not username or username == "" or not password or password == "":
         return False, False
+    
     result = dbm.db_execute_read_query(
         f"""
         SELECT Count(*) FROM user
@@ -269,6 +270,7 @@ def check_login(dbm: DBM, username: str, password: str):
         """,
         None,
     )
+    
     print(f"{result=}\t{result[0][0]}")
     # countFromDB = len(result)
     countFromDB = result[0][0]
