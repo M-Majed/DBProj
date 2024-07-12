@@ -7,13 +7,13 @@ dbm.db_connect()
 #print(check_login(dbm, "negin", "1234"))
 # dbm.db_execute_query("DROP TABLE IF EXISTS user_legacy;", None)
 # create_db_tables(dbm)
-# dbm.db_execute_query(
-#     '''
-#     ALTER TABLE albums
-#     DROP COLUMN track_id;
-#     ''',
-#     None
-# )
+dbm.db_execute_query(
+    '''
+    ALTER TABLE tracks
+    DROP COLUMN album;
+    ''',
+    None
+)
 
 
 
