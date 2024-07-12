@@ -136,19 +136,22 @@ class Ui_MusicWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MusicWindow.setWindowTitle(_translate("MusicWindow", "Form"))
         self.Text_lbl.setText(_translate("MusicWindow", f"Lyrics"))
-        self.Text_browser.setText(self.music_row[6])
+        self.Text_browser.setText(self.music_row[5])
         self.like_checkBox.setText(_translate("MusicWindow", f"Like"))
         self.comments_btn.setText(_translate("MusicWindow", f"Comments"))
         self.sendComment_btn.setText(_translate("MusicWindow", f"Comment"))
         self.Return_btn.setText(_translate("MusicWindow", f"Return"))
         self.Playlist_comboBox.setItemText(0, _translate("MusicWindow", f"Add to Playlist")) 
-
+        dbm=DBM()
+        dbm.db_connect()
         #$ My Part --------------------------------------------
         self.Title_lbl.setText(_translate("MusicWindow", f"Title: {self.music_row[1]}"))
-        self.Artist_lbl.setText(_translate("MusicWindow", f"Artist: {self.music_row[2]}"))
-        self.Genre_lbl.setText(_translate("MusicWindow", f"Genre: {self.music_row[5]}"))
-        self.Area_lbl.setText(_translate("MusicWindow", f"Area: {self.music_row[8]}"))
-        self.Age_lbl.setText(_translate("MusicWindow", f"Age: {self.music_row[6]}"))
+        result = get_username_by_userid( dbm, self.music_row[7])
+        
+        self.Artist_lbl.setText(_translate("MusicWindow", f"Artist: {result}"))
+        self.Genre_lbl.setText(_translate("MusicWindow", f"Genre: {self.music_row[3]}"))
+        self.Area_lbl.setText(_translate("MusicWindow", f"Area: {self.music_row[6]}"))
+        self.Age_lbl.setText(_translate("MusicWindow", f"Age: {self.music_row[4]}"))
 
     def open_parent_window(self):
         self.parent.show()

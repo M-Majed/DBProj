@@ -247,7 +247,7 @@ class Ui_MusicListWindow(object):
         elif index == 1: # Albums
             rows = dbm.db_execute_read_query(
                 f'''
-                SELECT album FROM albums
+                SELECT * FROM albums
                 ''', None
             )
         elif index == 2: # Followings
@@ -269,32 +269,23 @@ class Ui_MusicListWindow(object):
             qq = self.appstate["userid"]
             rows = dbm.db_execute_read_query(
                 f'''
-                with recursive
-                mytable(g , c ) as ( 
-                    SELECT genre , count(*) as c FROM tracks, likes
-                    WHERE likes.user_id = {qq} AND likes.track_id = tracks.id
-                    GROUP BY genre
-                    HAVING COUNT(*) > 0
-                    ORDER BY COUNT(*) DESC
-                    LIMIT 2)
-                SELECT * FROM tracks
-                WHERE 
-                genre IN (
-                    SELECT genre FROM mytable
-                )
-                
-                ''', None
+                select title from tracks 
+                where gerne in(
+                SELECT DISTINCT genre FROM tracks
+                JOIN likes ON tracks.id = likes.track_id
+                WHERE likes.user_id = {qq})
+                ''',None
             )
         elif index == 4: # PlayLists
             rows = dbm.db_execute_read_query(
                 f'''
-                SELECT * FROM playlists
+                SELECT * FROM playlist
                 ''', None
             )
         elif index == 5: # Artists
             rows = dbm.db_execute_read_query(
                 f'''
-                SELECT artists FROM tracks#
+                SELECT username FROM user where singerornormal
                 ''', None
             )
         elif index == 6: # Concerts
