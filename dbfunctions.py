@@ -1299,11 +1299,28 @@ def get_playlistid_by_name(dbm: DBM, playlistname):
         None
     )
     return result[0][0] if result else None
+<<<<<<< Updated upstream
 def update_ticket_expired(dbm: DBM):
+=======
+
+def get_user_albums(dbm: DBM, user_id):
+    if not dbm or not user_id:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT * FROM albums WHERE artist_id = "{user_id}";
+        ''',
+        None
+    )
+    return result
+
+def get_albums(dbm: DBM):
+>>>>>>> Stashed changes
     if not dbm:
         return None
     result = dbm.db_execute_read_query(
         f'''
+<<<<<<< Updated upstream
         SELECT ticket.id, concert.date
         FROM ticket, concert
         WHERE ticket.concert_id=concert.id and expired = 0;
@@ -1327,3 +1344,48 @@ def update_ticket_expired(dbm: DBM):
             )
     return True
     
+=======
+        SELECT * FROM albums;
+        ''',
+        None
+    )
+    return result
+
+def like_albumTable(dbm: DBM, user_id, album_id):
+    if not dbm or not user_id or not album_id:
+        return False
+    try:
+        result = dbm.db_execute_read_query(
+            f'''
+            SELECT * FROM like_album WHERE user_id = "{user_id}" AND album_id = "{album_id}";
+            ''',
+            None
+        )
+        if result:
+            return False
+        
+        dbm.db_execute_query(
+            f"""
+            INSERT INTO
+                like_album (user_id,album_id)
+                VALUES
+                ("{user_id}","{album_id}");
+            """,
+            None,
+        )
+        return True
+    except Exception as e:
+        return False
+
+def get_albumid_by_name(dbm: DBM, albumname):
+    if not dbm or not albumname:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT id FROM albums WHERE title = "{albumname}";
+        ''',
+        None
+    )
+    return result[0][0] if result else None
+
+>>>>>>> Stashed changes
