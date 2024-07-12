@@ -247,7 +247,7 @@ class Ui_MusicListWindow(object):
         elif index == 1: # Albums
             rows = dbm.db_execute_read_query(
                 f'''
-                SELECT album FROM albums
+                SELECT * FROM albums
                 ''', None
             )
         elif index == 2: # Followings
@@ -279,7 +279,7 @@ class Ui_MusicListWindow(object):
         elif index == 4: # PlayLists
             rows = dbm.db_execute_read_query(
                 f'''
-                SELECT * FROM playlists
+                SELECT * FROM playlist
                 ''', None
             )
         elif index == 5: # Artists
