@@ -519,12 +519,11 @@ def get_followings(dbm: DBM, userId=None):
     if result is None:
         return None
     return [row[0] for row in result]
-# define function to search for a track by title and artist and genre and ages and area 
 
 def search_track(dbm: DBM, title=None, artist=None, genre=None, ages=None, area=None):
     if not dbm:
         return None
-    
+
     conditions = []
     if title:
         conditions.append(f"title LIKE '%{title}%'")
@@ -536,14 +535,24 @@ def search_track(dbm: DBM, title=None, artist=None, genre=None, ages=None, area=
         conditions.append(f"ages LIKE '%{ages}%'")
     if area:
         conditions.append(f"area LIKE '%{area}%'")
-    
     if not conditions:
         return None
-    
     query = "SELECT * FROM tracks WHERE " + " OR ".join(conditions)
-    
     result = dbm.db_execute_read_query(query, None)
     return result
+
+
+def get_album_id(dbm: DBM, album_name=None):
+    if not dbm or not album_name:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT id FROM album WHERE name = "{album_name}";
+        ''',
+        None,
+    )
+    return result[0][0] if result else None
+
 
 def add_follower(dbm: DBM, userId=None, followerId=None):
     if not dbm or not userId or userId == "" or not followerId or followerId == "" or userId == followerId:
@@ -1386,4 +1395,16 @@ def update_ticket_expired(dbm: DBM):
                 None
             )
     return True
+
+def get_liked_tracks(dbm: DBM, user_id):
+    if not dbm or not user_id:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT * FROM tracks WHERE id in (select track_id from likes
+                                          where user_id = "{user_id}");
+        ''',
+        None
+    )
+    return result
     
