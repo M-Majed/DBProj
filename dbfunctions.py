@@ -1422,7 +1422,6 @@ def check_if_expired(date_to_check: str):
     d = datetime.datetime.strptime(date_to_check, r"%m/%d/%Y")
     now = datetime.datetime.today()
     return now > d
-
 def update_ticket_expired(dbm: DBM):
     if not dbm:
         return None
@@ -1434,6 +1433,57 @@ def update_ticket_expired(dbm: DBM):
         ''',
         None
     )
+    
+    if not result or len(result) == 0:
+        return False
+    
+    print(f'{result=}')
+    
+    # now = datetime.datetime.today()
+    for row in result:
+        # concert_date = datetime.datetime.strptime(row[1], r"%m/%d/%Y")
+        # print(f'{now=}, {concert_date=}')
+        
+        # print(f''' oooooooooo=>>>>>>
+        #         UPDATE ticket
+        #         SET expired = 1
+        #         WHERE ticket.id = {row[0]};
+        #         ''')
+        if check_if_expired(row[1]):
+            print("exping")
+            res = dbm.db_execute_read_query(
+                f'''
+                UPDATE ticket
+                SET expired = 1
+                WHERE ticket.id = {row[0]};
+                ''',
+                None
+            )
+            print(f'{res=}')
+        else:
+            print("not exping")
+            res = dbm.db_execute_read_query(
+                f'''
+                UPDATE ticket
+                SET expired = 0
+                WHERE ticket.id = {row[0]};
+                ''',
+                None
+            )
+            print(f'{res=}')   
+    return True
+
+# def update_ticket_expired2222(dbm: DBM):
+#     if not dbm:
+#         return None
+#     result = dbm.db_execute_read_query(
+#         '''
+#         SELECT ticket.id, concert.date
+#         FROM ticket, concert
+#         WHERE ticket.concert_id=concert.id;
+#         ''',
+#         None
+#     )
     
     if not result or len(result) == 0:
         return False
