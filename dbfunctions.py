@@ -945,6 +945,14 @@ def remove_ticket_fromTable(dbm: DBM, user_id, concert_title):
     if not dbm or not user_id or not concert_title:
         return False
     try:
+        dbm.db_execute_query(
+            f'''
+            UPDATE user
+            SET wallet = wallet + {get_concert_price(dbm, get_concertid_by_title(dbm, concert_title))}
+            WHERE id IN (SELECT user_id FROM ticket WHERE concert_id = {get_concertid_by_title(dbm, concert_title)});
+            ''',
+            None
+        )
         x= dbm.db_execute_read_query(
             f'''
             SELECT ticket.concert_id FROM ticket, concert
@@ -952,14 +960,26 @@ def remove_ticket_fromTable(dbm: DBM, user_id, concert_title):
             ''',
             None
         )
-        return dbm.db_execute_query(
+        dbm.db_execute_query(
             f'''
             DELETE FROM ticket WHERE user_id = "{user_id}" AND concert_id="{x[0][0]}";
             ''',
             None
         )
+        return True
     except Exception as e:
         return False
+    
+def get_concertid_by_title(dbm: DBM, concert_title):
+    if not dbm or not concert_title:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT id FROM concert WHERE name = "{concert_title}";
+        ''',
+        None
+    )
+    return result[0][0] if result else None
     
 def get_username_by_userid(dbm: DBM, user_id):
     if not dbm or not user_id:
