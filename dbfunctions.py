@@ -1388,6 +1388,9 @@ def get_albumid_by_name(dbm: DBM, albumname):
     )
     return result[0][0] if result else None
 
+
+
+
 def check_if_expired(date_to_check: str):
     d = datetime.datetime.strptime(date_to_check, r"%m/%d/%Y")
     now = datetime.datetime.today()
@@ -1443,6 +1446,7 @@ def update_ticket_expired(dbm: DBM):
             )
             print(f'{res=}')   
     return True
+
 
 def get_liked_tracks(dbm: DBM, user_id):
     if not dbm or not user_id:
