@@ -523,7 +523,6 @@ def get_followings(dbm: DBM, userId=None):
 def search_track(dbm: DBM, title=None, artist=None, genre=None, ages=None, area=None):
     if not dbm:
         return None
-
     conditions = []
     if title:
         conditions.append(f"title LIKE '%{title}%'")
@@ -1388,9 +1387,6 @@ def get_albumid_by_name(dbm: DBM, albumname):
     )
     return result[0][0] if result else None
 
-
-
-
 def check_if_expired(date_to_check: str):
     d = datetime.datetime.strptime(date_to_check, r"%m/%d/%Y")
     now = datetime.datetime.today()
@@ -1410,43 +1406,6 @@ def update_ticket_expired(dbm: DBM):
     
     if not result or len(result) == 0:
         return False
-    
-    print(f'{result=}')
-    
-    # now = datetime.datetime.today()
-    for row in result:
-        # concert_date = datetime.datetime.strptime(row[1], r"%m/%d/%Y")
-        # print(f'{now=}, {concert_date=}')
-        
-        # print(f''' oooooooooo=>>>>>>
-        #         UPDATE ticket
-        #         SET expired = 1
-        #         WHERE ticket.id = {row[0]};
-        #         ''')
-        if check_if_expired(row[1]):
-            print("exping")
-            res = dbm.db_execute_read_query(
-                f'''
-                UPDATE ticket
-                SET expired = 1
-                WHERE ticket.id = {row[0]};
-                ''',
-                None
-            )
-            print(f'{res=}')
-        else:
-            print("not exping")
-            res = dbm.db_execute_read_query(
-                f'''
-                UPDATE ticket
-                SET expired = 0
-                WHERE ticket.id = {row[0]};
-                ''',
-                None
-            )
-            print(f'{res=}')   
-    return True
-
 
 def get_liked_tracks(dbm: DBM, user_id):
     if not dbm or not user_id:
