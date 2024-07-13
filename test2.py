@@ -148,12 +148,14 @@ dbm.db_connect()
 #     ''',
 #     None
 # )
-# dbm.db_execute_query(
-#     '''
-#     DELETE FROM followorfollowing;
-#     ''',
-#     None
-# )
+dbm.db_execute_query(
+    '''
+    UPDATE concert
+    SET ticket_price = 19
+    WHERE concert.id = 6;
+    ''',
+    None
+)
 
 # dbm.db_execute_query(
 #     '''
@@ -166,16 +168,16 @@ dbm.db_connect()
 
 # current_date = "2022-01-01"
 
-dbm.db_execute_query(
-    '''
-    INSERT INTO tracks ( id, title, duration, genre, ages, lyric, area, artist_id, permission)
-    VALUES ( 17,"Track Title",  180, "Ruck", "All Ages", "Lyrics", "Area", 1, 1),
-              ( 14,"Track Title9",  180, "Ruck", "All Ages", "Lyrics", "Area", 1, 1),
-              ( 16,"Track Title7",  180, "Ruck", "All Ages", "Lyrics", "Area", 1, 1)
+# dbm.db_execute_query(
+#     '''
+#     INSERT INTO tracks ( id, title, duration, genre, ages, lyric, area, artist_id, permission)
+#     VALUES ( 17,"Track Title",  180, "Ruck", "All Ages", "Lyrics", "Area", 1, 1),
+#               ( 14,"Track Title9",  180, "Ruck", "All Ages", "Lyrics", "Area", 1, 1),
+#               ( 16,"Track Title7",  180, "Ruck", "All Ages", "Lyrics", "Area", 1, 1)
             
-    ''',
-    None
-)
+#     ''',
+#     None
+# )
 # xxx=dbm.db_execute_read_query(
 #     f'''
 #     SELECT * FROM albums";

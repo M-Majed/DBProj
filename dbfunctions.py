@@ -1299,31 +1299,60 @@ def get_playlistid_by_name(dbm: DBM, playlistname):
         None
     )
     return result[0][0] if result else None
+
+def check_if_expired(date_to_check: str):
+    d = datetime.datetime.strptime(date_to_check, r"%m/%d/%Y")
+    now = datetime.datetime.today()
+    return now > d
+
 def update_ticket_expired(dbm: DBM):
     if not dbm:
         return None
     result = dbm.db_execute_read_query(
-        f'''
+        '''
         SELECT ticket.id, concert.date
         FROM ticket, concert
-        WHERE ticket.concert_id=concert.id and expired = 0;
+        WHERE ticket.concert_id=concert.id;
         ''',
         None
     )
+    
     if not result or len(result) == 0:
         return False
     
-    now = datetime.datetime.today()
+    print(f'{result=}')
+    
+    # now = datetime.datetime.today()
     for row in result:
-        month, day, year = row[1].split("/")
-        if now.year > int(year) or now.month > int(month) or now.day > int(day) :
-            dbm.db_execute_read_query(
+        # concert_date = datetime.datetime.strptime(row[1], r"%m/%d/%Y")
+        # print(f'{now=}, {concert_date=}')
+        
+        # print(f''' oooooooooo=>>>>>>
+        #         UPDATE ticket
+        #         SET expired = 1
+        #         WHERE ticket.id = {row[0]};
+        #         ''')
+        if check_if_expired(row[1]):
+            print("exping")
+            res = dbm.db_execute_read_query(
                 f'''
-                Update ticket
+                UPDATE ticket
                 SET expired = 1
-                WHERE ticket.id= {int(row[0])};
+                WHERE ticket.id = {row[0]};
                 ''',
                 None
             )
+            print(f'{res=}')
+        else:
+            print("not exping")
+            res = dbm.db_execute_read_query(
+                f'''
+                UPDATE ticket
+                SET expired = 0
+                WHERE ticket.id = {row[0]};
+                ''',
+                None
+            )
+            print(f'{res=}')   
     return True
     

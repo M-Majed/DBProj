@@ -88,6 +88,8 @@ class Ui_TicketsWindow(object):
 
         self.back_btn.clicked.connect(self.open_parent_window)
         self.Tickets_listView.doubleClicked.connect(self.remove_ticket)
+        
+        dbm.db_disconnect()
 
     def retranslateUi(self, TicketsWindow):
         _translate = QtCore.QCoreApplication.translate
