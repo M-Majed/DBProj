@@ -18,6 +18,20 @@ def create_db_tables(dbm: DBM):
     if not dbm:
         return False
 
+    
+    
+    dbm.db_execute_query(
+    """
+    CREATE TABLE IF NOT EXISTS albums (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        artist_id INTEGER NOT NULL,
+        FOREIGN KEY (artist_id) REFERENCES user (id)
+    );
+    """,
+    None,
+    )
+    
     # signup: fname lname email address username password
     dbm.db_execute_query(
         """
@@ -32,22 +46,25 @@ def create_db_tables(dbm: DBM):
         None,
     )
    
+   
     # dbm.db_execute_query(
     #     """ 
     #     CREATE TABLE IF NOT EXISTS tracks (
     #      id INTEGER PRIMARY KEY AUTOINCREMENT,
     #      title TEXT  NOT NULL,
     #      artist TEXT NOT NULL,
-    #      album TEXT NOT NULL,
     #      duration INTEGER NOT NULL,
     #      genre TEXT NOT NULL,
     #      ages TEXT NOT NULL,
     #      lyric TEXT NOT NULL,
-    #      area TEXT NOT NULL
+    #      area TEXT NOT NULL,
+    #      permission BOOLEAN NOT NULL
     #      );
     #     """,
     #     None,
     # )
+    
+    
     dbm.db_execute_query(
         """
         CREATE TABLE IF NOT EXISTS user (
@@ -58,7 +75,7 @@ def create_db_tables(dbm: DBM):
             address TEXT NOT NULL,
             username TEXT NOT NULL unique,
             password TEXT NOT NULL,
-            subscription Boolean,
+            subscription Boolean default 0,
             singerornormal Boolean,
             wallet INTEGER
         );
@@ -79,30 +96,32 @@ def create_db_tables(dbm: DBM):
     )
 
 
-    dbm.db_execute_query(
-        """
-       CREATE TABLE IF NOT EXISTS tracks (
-             id INTEGER PRIMARY KEY AUTOINCREMENT,
-             title TEXT  NOT NULL,
-             id_artist INTEGER NOT NULL,
-             FOREIGN KEY (artist) REFERENCES user (id),
-             album TEXT NOT NULL,
-             duration INTEGER NOT NULL,
-             genre TEXT NOT NULL,
-             ages TEXT NOT NULL,
-             lyric TEXT NOT NULL,
-             area TEXT NOT NULL
-         );
-        """,
-        None,
-    )
+    # dbm.db_execute_query(
+    #     """
+    #    CREATE TABLE IF NOT EXISTS tracks (
+    #          id INTEGER PRIMARY KEY AUTOINCREMENT,
+    #          title TEXT  NOT NULL,
+    #          artist_id INTEGER NOT NULL,
+    #          FOREIGN KEY (artist_id) REFERENCES user (id),
+    #          album TEXT NOT NULL,
+    #          duration INTEGER NOT NULL,
+    #          genre TEXT NOT NULL,
+    #          ages TEXT NOT NULL,
+    #          lyric TEXT NOT NULL,
+    #          area TEXT NOT NULL,
+    #      );
+    #     """,
+    #     None,
+    # )
+    
+    
     dbm.db_execute_query(
         """
           CREATE TABLE IF NOT EXISTS concert (
              id INTEGER PRIMARY KEY AUTOINCREMENT,
              name TEXT NOT NULL,
-             id_artist INTEGER  NOT NULL,
-             FOREIGN KEY (artist) REFERENCES user (id),
+             artist_id INTEGER  NOT NULL,
+             FOREIGN KEY (artist_id) REFERENCES user (id),
              venue TEXT NOT NULL,
              date DATE NOT NULL,
              ticket_price INTEGER NOT NULL,
@@ -142,6 +161,7 @@ def create_db_tables(dbm: DBM):
              id INTEGER PRIMARY KEY AUTOINCREMENT,
              user_id INTEGER NOT NULL,
              concert_id INTEGER NOT NULL,
+             expired BOOLEAN defult 0,
              FOREIGN KEY (user_id) REFERENCES user (id),
              FOREIGN KEY (concert_id) REFERENCES concert (id)
          );
@@ -154,6 +174,7 @@ def create_db_tables(dbm: DBM):
              id INTEGER PRIMARY KEY AUTOINCREMENT,
              name TEXT NOT NULL,
              user_id INTEGER NOT NULL,
+             public_private BOOLEAN NOT NULL,
              FOREIGN KEY (user_id) REFERENCES user (id)
          );
         """,
@@ -211,13 +232,37 @@ def create_db_tables(dbm: DBM):
         """,
         None,
     )
-
+    
+    dbm.db_execute_query(
+        """
+          CREATE TABLE IF NOT EXISTS like_album (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                album_id INTEGER NOT NULL,
+                FOREIGN KEY (user_id) REFERENCES user (id),
+                FOREIGN KEY (album_id) REFERENCES albums (id)
+         );
+        """,
+        None,
+    )
+    dbm.db_execute_query(
+        """
+          CREATE TABLE IF NOT EXISTS like_playlist (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                playlist_id INTEGER NOT NULL,
+                FOREIGN KEY (user_id) REFERENCES user (id),
+                FOREIGN KEY (playlist_id) REFERENCES playlist (id)
+         );
+        """,
+        None,
+    )
     return True
 
 
 def check_login(dbm: DBM, username: str, password: str):
     if not dbm or not username or username == "" or not password or password == "":
-        return False, False
+        return False
     result = dbm.db_execute_read_query(
         f"""
         SELECT Count(*) FROM user
@@ -254,9 +299,9 @@ def insert_one_user(dbm: DBM, fname, lname, email, address, username, password):
         return dbm.db_execute_query(
             f"""
             INSERT INTO
-                user (fname,lname,email,address,username,password)
+                user (fname,lname,email,address,username,password, subscription, singerornormal)
                 VALUES
-                ("{fname}","{lname}","{email}","{address}","{username}","{password}");
+                ("{fname}","{lname}","{email}","{address}","{username}","{password}", 0, 0);
             """,
             None,
         )
@@ -476,18 +521,31 @@ def get_followings(dbm: DBM, userId=None):
 # define function to search for a track by title and artist and genre and ages and area 
 
 def search_track(dbm: DBM, title=None, artist=None, genre=None, ages=None, area=None):
-    if not dbm or not title or title == "" or not artist or artist == "" or not genre or genre == "" or not ages or ages == "" or not area or area == "":
+    if not dbm:
         return None
-    result = dbm.db_execute_read_query(
-        f'''
-        SELECT * FROM tracks WHERE title = "{title}" OR artist = "{artist}" OR genre = "{genre}" OR ages = "{ages}" OR area = "{area}";
-        ''',
-        None,
-    )
+    
+    conditions = []
+    if title:
+        conditions.append(f"title LIKE '%{title}%'")
+    if artist:
+        conditions.append(f"artist LIKE '%{artist}%'")
+    if genre:
+        conditions.append(f"genre LIKE '%{genre}%'")
+    if ages:
+        conditions.append(f"ages LIKE '%{ages}%'")
+    if area:
+        conditions.append(f"area LIKE '%{area}%'")
+    
+    if not conditions:
+        return None
+    
+    query = "SELECT * FROM tracks WHERE " + " OR ".join(conditions)
+    
+    result = dbm.db_execute_read_query(query, None)
     return result
 
 def add_follower(dbm: DBM, userId=None, followerId=None):
-    if not dbm or not userId or userId == "" or not followerId or followerId == "":
+    if not dbm or not userId or userId == "" or not followerId or followerId == "" or userId == followerId:
         return False
     try:
         return dbm.db_execute_query(
@@ -513,23 +571,6 @@ def fetch_artist_tracks(dbm: DBM, artist=None):
         None,
     )
     return result
-
-def add_music(dbm: DBM, title=None, artist=None, album=None, duration=None, genre=None, ages=None, lyric=None, area=None):
-    if not dbm or not title or title == "" or not artist or artist == "" or not duration or duration == "" or not genre or genre == "" or not ages or ages == "" or not lyric or lyric == "" or not area or area == "":
-        return False
-    try:
-        return dbm.db_execute_query(
-            f"""
-            INSERT INTO
-                tracks (title,artist,album,duration,genre,ages,lyric,area)
-                VALUES
-                ("{title}","{artist}","{album}","{duration}","{genre}","{ages}","{lyric}","{area}");
-            """,
-            None,
-        )
-    except Exception as e:
-        return False
-    
 
 def send_friend_request(dbm: DBM, userId=None, friendId=None):
     if not dbm or not userId or userId == "" or not friendId or friendId == "" or userId == friendId:
@@ -661,7 +702,6 @@ def get_rejects(dbm: DBM, userId=None):
     )
     return result
 
-
 def add_msg_toTable(dbm: DBM, senderId=None, receiverId=None, msgText=None):
     if not dbm or not senderId or senderId == "" or not receiverId or receiverId == "" or not msgText or msgText == "":
         return False
@@ -695,21 +735,613 @@ def get_messages(dbm: DBM, receiverId=None):
     )
     return result
 
+def search(dbm: DBM, title=None, artist=None, genre=None, ages=None, area=None):
+    if  dbm is None or title is None or artist is None or genre is None or ages is None or area is None:
+        return None
+    
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT * 
+        FROM tracks INNER JOIN user ON tracks.artist_id = user.id
+        WHERE title like "%{title}%" AND user.fname || " " || user.lname like "%{artist}%" AND genre like "%{genre}%" AND ages like "%{ages}%" AND area like "%{area}%";
+        ''',
+        None,
+    )
+    return result
 
+def remove_follower_fromTable(dbm: DBM, userId=None, followerId=None):
+    if not dbm or not userId or userId == "" or not followerId or followerId == "":
+        return False
+    try:
+        return dbm.db_execute_query(
+            f"""
+            DELETE FROM followorfollowing
+            WHERE follower_id = "{followerId}" AND following_id = "{userId}";
+            """,
+            None,
+        )
+    except Exception as e:
+        return False
+    
+def remove_following_fromTable(dbm: DBM, userId=None, followingId=None):
+    if not dbm or not userId or userId == "" or not followingId or followingId == "":
+        return False
+    try:
+        return dbm.db_execute_query(
+            f"""
+            DELETE FROM followorfollowing
+            WHERE follower_id = "{userId}" AND following_id = "{followingId}";
+            """,
+            None,
+        )
+    except Exception as e:
+        return False
 
-# def get_current(melli: str):
-#     if not melli:
-#         return None
-#     result = db_execute_read_query(
-#         f'''
-#         SELECT secret FROM personsecret WHERE melli = {melli};
-#         ''', None
-#     )
-#     secret = result[0][0]
-#     global totp_interval
-#     p = pyotp.TOTP(s=secret, interval=totp_interval, digits=totp_length)
-#     return p.now()
+    
+def get_artist_musics(dbm: DBM, artist_id):
+    if not dbm or not artist_id:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT * FROM tracks WHERE artist_id = "{artist_id}";
+        ''',
+        None
+    )
+    return result
 
+def get_column_headers(dbm: DBM, table_name):
+    if not dbm or not table_name:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        PRAGMA table_info({table_name});
+        ''',
+        None
+    )
+    return [row[1] for row in result]
 
-# dbm.db_disconnect()
+def delete_from_tracks(dbm: DBM, track_id):
+    if not dbm or not track_id:
+        return False
+    try:
+        dbm.db_execute_query(
+            f'''
+            DELETE FROM tracks WHERE id = "{track_id}";
+            ''',
+            None
+        )
+        dbm.db_execute_query(
+            f'''
+            DELETE FROM albums WHERE track_id = "{track_id}";
+            ''',
+            None
+        )
+        dbm.db_execute_query(
+            f'''
+            DELETE FROM comment WHERE track_id = "{track_id}";
+            ''',
+            None
+        )
+        dbm.db_execute_query(
+            f'''
+            DELETE FROM likes WHERE track_id = "{track_id}";
+            ''',
+            None
+        )
+        dbm.db_execute_query(
+            f'''
+            DELETE FROM playlist_music WHERE track_id = "{track_id}";
+            ''',
+            None
+        )
+        return True
+    except Exception as e:
+        return False
+    
+def get_artist_concerts(dbm: DBM, artist_id):
+    if not dbm or not artist_id:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT * FROM concert WHERE artist_id = "{artist_id}";
+        ''',
+        None
+    )
+    return result
+
+def get_concert_price(dbm: DBM, concert_id):
+    if not dbm or not concert_id:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT ticket_price FROM concert WHERE id = "{concert_id}";
+        ''',
+        None
+    )
+    return result[0][0] if result else None
+
+def delete_from_concerts (dbm: DBM, concert_id):
+    if not dbm or not concert_id:
+        return False
+    try:
+        dbm.db_execute_query(
+            f'''
+            UPDATE user
+            SET wallet = wallet + {get_concert_price(dbm, concert_id)}
+            WHERE id IN (SELECT user_id FROM ticket WHERE concert_id = {concert_id});
+            ''',
+            None
+        )
+        dbm.db_execute_query(
+            f'''
+            DELETE FROM concert WHERE id = "{concert_id}";
+            ''',
+            None
+        )
+        dbm.db_execute_query(
+            f'''
+            DELETE FROM ticket WHERE concert_id = "{concert_id}";
+            ''',
+            None
+        )
+        return True
+    except Exception as e:
+        return False
+
+def add_concert_toTable(dbm: DBM, name, artist_id, venue, date, ticket_price):
+    if not dbm:
+        return False
+    if (
+        not name
+        or not artist_id
+        or not venue
+        or not date
+        or not ticket_price
+        or name == ""
+        or artist_id == ""
+        or venue == ""
+        or date == ""
+        or ticket_price == ""
+    ):
+        return False
+    try:
+        return dbm.db_execute_query(
+            f"""
+            INSERT INTO
+                concert (name,artist_id,venue,date,ticket_price)
+                VALUES
+                ("{name}","{artist_id}","{venue}","{date}","{ticket_price}");
+            """,
+            None,
+        )
+    except Exception as e:
+        return False
+    
+def get_user_tickets(dbm: DBM, user_id):
+    if not dbm or not user_id:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT c.name FROM ticket t, concert c
+        WHERE t.concert_id=c.id and user_id = "{user_id}" and expired = 0;
+        ''',
+        None
+    )
+    return result
+
+def remove_ticket_fromTable(dbm: DBM, user_id, concert_title):
+    if not dbm or not user_id or not concert_title:
+        return False
+    try:
+        x= dbm.db_execute_read_query(
+            f'''
+            SELECT t.concert_id FROM ticket t, concert c
+            WHERE t.concert_id=c.id and c.name = "{concert_title}" and t.user_id = "{user_id}";
+            ''',
+            None
+        )
+        return dbm.db_execute_query(
+            f'''
+            DELETE FROM ticket WHERE user_id = "{user_id}" AND concert_id="{x[0][0]}";
+            ''',
+            None
+        )
+    except Exception as e:
+        return False
+    
+def get_username_by_userid(dbm: DBM, user_id):
+    if not dbm or not user_id:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT username FROM user WHERE id = "{user_id}";
+        ''',
+        None
+    )
+    return result[0][0] if result else None
+
+def add_music_toTable(dbm: DBM, title, artist_id, album, duration, genre, ages, lyric, area, permission):
+    if not dbm:
+        return False
+    if (
+        not title
+        or not artist_id
+        or not duration
+        or not genre
+        or not ages
+        or not lyric
+        or not area
+        or title == ""
+        or artist_id == ""
+        or duration == ""
+        or genre == ""
+        or ages == ""
+        or lyric == ""
+        or area == ""
+        or permission == ""
+    ):
+        return False
+    try:
+        dbm.db_execute_query(
+            f"""
+            INSERT INTO
+            tracks (title,duration,genre,ages,lyric,area,artist_id,permission)
+            VALUES
+            ("{title}","{duration}","{genre}","{ages}","{lyric}","{area}","{artist_id}","{permission}");
+            """,
+            None,
+        )
+        if album != '' and album is not None:
+            dbm.db_execute_query(
+                f"""
+                insert into albums (title,track_id,artist_id)
+                  values ("{album}",(select id from tracks where (title,duration,genre,ages,lyric,area,artist_id,permission) = ("{title}","{duration}","{genre}","{ages}","{lyric}","{area}","{artist_id}","{permission}")),"{artist_id}");
+                """,
+                None,
+            )
+        return True
+    except Exception as e:
+        return False
+
+def get_user_expired_tickets(dbm: DBM, user_id):
+    if not dbm or not user_id:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT c.name FROM ticket t, concert c
+        WHERE t.concert_id=c.id and user_id = "{user_id}" and expired = 1;
+        ''',
+        None
+    )
+    return result
+
+def get_album_tracks(dbm: DBM, album_title):
+    if not dbm or not album_title:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT * FROM tracks WHERE id in (select track_id from albums
+                                          where title = "{album_title}");
+        ''',
+        None
+    )
+    return result
+    
+
+def get_albums(dbm: DBM):
+    if not dbm:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT * FROM albums;
+        ''',
+        None
+    )
+    return result
+
+def get_followingusername_userid(dbm: DBM, userId=None):
+    if not dbm or not userId or userId == "":
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT username FROM user
+        WHERE id IN (SELECT following_id FROM followorfollowing WHERE follower_id = {userId});
+        ''',
+        None
+    )
+    return result
+
+def get_suggestion(dbm: DBM, user_id):
+    if not dbm or not user_id:
+        return None
+    liked_genres = dbm.db_execute_read_query(
+        f'''
+        SELECT DISTINCT genre
+        FROM tracks
+        WHERE id IN (
+            SELECT track_id
+            FROM likes
+            WHERE user_id = "{user_id}"
+        );
+        ''',
+        None
+    )
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT *
+        FROM tracks
+        WHERE genre IN (
+            SELECT DISTINCT genre
+            FROM tracks
+            WHERE id IN (
+                SELECT track_id
+                FROM likes
+                WHERE user_id = "{user_id}"
+            )
+        )
+        AND id NOT IN (
+            SELECT track_id
+            FROM likes
+            WHERE user_id = "{user_id}"
+        );
+        ''',
+        None
+    )
+    return result
+
+def get_playlists(dbm: DBM):
+    if not dbm:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT * FROM playlist where public_private = 0;
+        ''',
+        None
+    )
+    return result
+
+def get_artists(dbm: DBM):
+    if not dbm:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT * FROM user WHERE singerornormal = 1;
+        ''',
+        None
+    )
+    return result
+
+def get_concerts(dbm: DBM):
+    if not dbm:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT * FROM concert;
+        ''',
+        None
+    )
+    return result
+
+def get_playlist_tracks(dbm: DBM, playlistname):
+    if not dbm or not playlistname:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT * FROM tracks WHERE id in (select track_id from playlist_music
+                                          where playlist_id in (select id from playlist where name = "{playlistname}"));
+        ''',
+        None
+    )
+    return result
+
+def add_ticket_toTable(dbm: DBM, user_id, concert_id):
+    if not dbm or not user_id or not concert_id or get_user_wallet(dbm, user_id) < get_concert_price(dbm, concert_id):
+        return False
+    try:
+        # Check if ticket is already bought
+        result = dbm.db_execute_read_query(
+            f'''
+            SELECT * FROM ticket WHERE user_id = "{user_id}" AND concert_id = "{concert_id}";
+            ''',
+            None
+        )
+        if result:
+            return False
+        
+        dbm.db_execute_query(
+            f"""
+            INSERT INTO
+                ticket (user_id,concert_id)
+                VALUES
+                ("{user_id}","{concert_id}");
+            """,
+            None,
+        )
+        dbm.db_execute_query(
+            f"""
+            update user
+            set wallet = wallet - {get_concert_price(dbm, concert_id)}
+            where id = "{user_id}";
+            """,
+            None,
+        )
+        return True
+    except Exception as e:
+        return False
+    
+def get_user_wallet(dbm: DBM, user_id):
+    if not dbm or not user_id:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT wallet FROM user WHERE id = "{user_id}";
+        ''',
+        None
+    )
+    return result[0][0] if result else None
+
+def add_to_playlist_table(dbm: DBM, playlistname, track_id, user_id):
+    if not dbm or not playlistname or not track_id or not user_id:
+        return False
+    try:
+        dbm.db_execute_query(
+            f"""
+            INSERT INTO
+                playlist (name,user_id,public_private)
+                VALUES
+                ("{playlistname}","{user_id}",0);
+            """,
+            None,
+        )
+        dbm.db_execute_query(
+            f"""
+            INSERT INTO
+                playlist_music (playlist_id,track_id)
+                VALUES
+                ((select id from playlist where name = "{playlistname}"),"{track_id}");
+
+            """,
+            None,
+        )
+        return True
+    except Exception as e:
+        return False
+    
+def get_user_playlists(dbm: DBM, user_id):
+    if not dbm or not user_id:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT name FROM playlist WHERE user_id = "{user_id}";
+        ''',
+        None
+    )
+    return result
+def make_playlist_public(dbm: DBM, playlistname):
+    if not dbm or not playlistname:
+        return False
+    try:
+        dbm.db_execute_query(
+            f"""
+            update playlist
+            set public_private = 0
+            where name = "{playlistname}";
+            """,
+            None,
+        )
+        return True
+    except Exception as e:
+        return False
+
+def make_playlist_private(dbm: DBM, playlistname):
+    if not dbm or not playlistname:
+        return False
+    try:
+        dbm.db_execute_query(
+            f"""
+            update playlist
+            set public_private = 1
+            where name = "{playlistname}";
+            """,
+            None,
+        )
+        return True
+    except Exception as e:
+        return False
+    
+def like_playlistTable(dbm: DBM, user_id, playlist_id):
+    if not dbm or not user_id or not playlist_id:
+        return False
+    try:
+        result = dbm.db_execute_read_query(
+            f'''
+            SELECT * FROM like_playlist WHERE user_id = "{user_id}" AND playlist_id = "{playlist_id}";
+            ''',
+            None
+        )
+        if result:
+            return False
+        
+        dbm.db_execute_query(
+            f"""
+            INSERT INTO
+                like_playlist (user_id,playlist_id)
+                VALUES
+                ("{user_id}","{playlist_id}");
+            """,
+            None,
+        )
+        return True
+    except Exception as e:
+        return False
+    
+def get_playlistid_by_name(dbm: DBM, playlistname):
+    if not dbm or not playlistname:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT id FROM playlist WHERE name = "{playlistname}";
+        ''',
+        None
+    )
+    return result[0][0] if result else None
+
+def get_user_albums(dbm: DBM, user_id):
+    if not dbm or not user_id:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT * FROM albums WHERE artist_id = "{user_id}";
+        ''',
+        None
+    )
+    return result
+
+def get_albums(dbm: DBM):
+    if not dbm:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT * FROM albums;
+        ''',
+        None
+    )
+    return result
+
+def like_albumTable(dbm: DBM, user_id, album_id):
+    if not dbm or not user_id or not album_id:
+        return False
+    try:
+        result = dbm.db_execute_read_query(
+            f'''
+            SELECT * FROM like_album WHERE user_id = "{user_id}" AND album_id = "{album_id}";
+            ''',
+            None
+        )
+        if result:
+            return False
+        
+        dbm.db_execute_query(
+            f"""
+            INSERT INTO
+                like_album (user_id,album_id)
+                VALUES
+                ("{user_id}","{album_id}");
+            """,
+            None,
+        )
+        return True
+    except Exception as e:
+        return False
+
+def get_albumid_by_name(dbm: DBM, albumname):
+    if not dbm or not albumname:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT id FROM albums WHERE title = "{albumname}";
+        ''',
+        None
+    )
+    return result[0][0] if result else None
 

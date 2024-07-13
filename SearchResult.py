@@ -61,7 +61,7 @@ class Ui_SearchResultWindow(object):
             msuics_for_list = get_artist_musics(dbm, get_userid_by_username(dbm, self.appstate["followingidshow"]))
         elif self.appstate["searchOrother"] == "playlist":
             msuics_for_list = get_playlist_tracks(dbm, self.appstate["playlistname"])
-        elif self.appstate["searchOrother"] == "showaristsong":
+        elif self.appstate["searchOrother"] == "showartistsong":
             msuics_for_list = get_artist_musics(dbm, self.appstate["Artist_id_to_show"])
 
         music_model = QtGui.QStandardItemModel()
@@ -75,9 +75,6 @@ class Ui_SearchResultWindow(object):
         self.Music_tableView.setModel(music_model)
 
         self.model = music_model
-
-
-
 
 
         self.Back_btn.clicked.connect(self.open_parent_window)

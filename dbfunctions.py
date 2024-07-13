@@ -519,12 +519,11 @@ def get_followings(dbm: DBM, userId=None):
     if result is None:
         return None
     return [row[0] for row in result]
-# define function to search for a track by title and artist and genre and ages and area 
 
 def search_track(dbm: DBM, title=None, artist=None, genre=None, ages=None, area=None):
     if not dbm:
         return None
-    
+
     conditions = []
     if title:
         conditions.append(f"title LIKE '%{title}%'")
@@ -536,14 +535,24 @@ def search_track(dbm: DBM, title=None, artist=None, genre=None, ages=None, area=
         conditions.append(f"ages LIKE '%{ages}%'")
     if area:
         conditions.append(f"area LIKE '%{area}%'")
-    
     if not conditions:
         return None
-    
     query = "SELECT * FROM tracks WHERE " + " OR ".join(conditions)
-    
     result = dbm.db_execute_read_query(query, None)
     return result
+
+
+def get_album_id(dbm: DBM, album_name=None):
+    if not dbm or not album_name:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT id FROM album WHERE name = "{album_name}";
+        ''',
+        None,
+    )
+    return result[0][0] if result else None
+
 
 def add_follower(dbm: DBM, userId=None, followerId=None):
     if not dbm or not userId or userId == "" or not followerId or followerId == "" or userId == followerId:
@@ -936,6 +945,14 @@ def remove_ticket_fromTable(dbm: DBM, user_id, concert_title):
     if not dbm or not user_id or not concert_title:
         return False
     try:
+        dbm.db_execute_query(
+            f'''
+            UPDATE user
+            SET wallet = wallet + {get_concert_price(dbm, get_concertid_by_title(dbm, concert_title))}
+            WHERE id IN (SELECT user_id FROM ticket WHERE concert_id = {get_concertid_by_title(dbm, concert_title)});
+            ''',
+            None
+        )
         x= dbm.db_execute_read_query(
             f'''
             SELECT ticket.concert_id FROM ticket, concert
@@ -943,14 +960,26 @@ def remove_ticket_fromTable(dbm: DBM, user_id, concert_title):
             ''',
             None
         )
-        return dbm.db_execute_query(
+        dbm.db_execute_query(
             f'''
             DELETE FROM ticket WHERE user_id = "{user_id}" AND concert_id="{x[0][0]}";
             ''',
             None
         )
+        return True
     except Exception as e:
         return False
+    
+def get_concertid_by_title(dbm: DBM, concert_title):
+    if not dbm or not concert_title:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT id FROM concert WHERE name = "{concert_title}";
+        ''',
+        None
+    )
+    return result[0][0] if result else None
     
 def get_username_by_userid(dbm: DBM, user_id):
     if not dbm or not user_id:
@@ -1300,6 +1329,65 @@ def get_playlistid_by_name(dbm: DBM, playlistname):
     )
     return result[0][0] if result else None
 
+def get_user_albums(dbm: DBM, user_id):
+    if not dbm or not user_id:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT * FROM albums WHERE artist_id = "{user_id}";
+        ''',
+        None
+    )
+    return result
+
+def get_albums(dbm: DBM):
+    if not dbm:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT * FROM albums;
+        ''',
+        None
+    )
+    return result
+
+def like_albumTable(dbm: DBM, user_id, album_id):
+    if not dbm or not user_id or not album_id:
+        return False
+    try:
+        result = dbm.db_execute_read_query(
+            f'''
+            SELECT * FROM like_album WHERE user_id = "{user_id}" AND album_id = "{album_id}";
+            ''',
+            None
+        )
+        if result:
+            return False
+        
+        dbm.db_execute_query(
+            f"""
+            INSERT INTO
+                like_album (user_id,album_id)
+                VALUES
+                ("{user_id}","{album_id}");
+            """,
+            None,
+        )
+        return True
+    except Exception as e:
+        return False
+
+def get_albumid_by_name(dbm: DBM, albumname):
+    if not dbm or not albumname:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT id FROM albums WHERE title = "{albumname}";
+        ''',
+        None
+    )
+    return result[0][0] if result else None
+
 def check_if_expired(date_to_check: str):
     d = datetime.datetime.strptime(date_to_check, r"%m/%d/%Y")
     now = datetime.datetime.today()
@@ -1355,4 +1443,16 @@ def update_ticket_expired(dbm: DBM):
             )
             print(f'{res=}')   
     return True
+
+def get_liked_tracks(dbm: DBM, user_id):
+    if not dbm or not user_id:
+        return None
+    result = dbm.db_execute_read_query(
+        f'''
+        SELECT * FROM tracks WHERE id in (select track_id from likes
+                                          where user_id = "{user_id}");
+        ''',
+        None
+    )
+    return result
     

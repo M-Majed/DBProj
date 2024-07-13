@@ -7,6 +7,7 @@ from ArtistMusic_Concert import Ui_ArtistMusic_ConcertWindow
 from Follow import Ui_FollowWindow
 from Friends import Ui_FriendsWindow
 from playlist import Ui_PlayListsWindow
+from albums import Ui_AlbumWindow
 
 
 class Ui_AccountWindow(object):
@@ -23,8 +24,7 @@ class Ui_AccountWindow(object):
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/Icons/Icons/spotify.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         AccountWindow.setWindowIcon(icon)
-        AccountWindow.setStyleSheet("background-image: url(:/Background/background/darkgreen.png);\n"
-"")
+        AccountWindow.setStyleSheet("background-image: url(:/Background/background/darkgreen.png);\n""")
         self.gridLayout_2 = QtWidgets.QGridLayout(AccountWindow)
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.concertList_btn = QtWidgets.QPushButton(AccountWindow)
@@ -160,6 +160,7 @@ class Ui_AccountWindow(object):
         self.artist_checkBox.clicked.connect(self.artist_change_handler)
         self.MusicList_btn.clicked.connect(self.open_musicList_window)
         self.concertList_btn.clicked.connect(self.open_concertList_window)
+        self.albums_btn.clicked.connect(self.open_albumList_window)
 
     def retranslateUi(self, AccountWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -305,3 +306,13 @@ class Ui_AccountWindow(object):
             self.MusicList_btn.hide()
             self.concertList_btn.hide()
         dbm.db_disconnect()
+
+    def open_albumList_window(self):
+        self.window = QtWidgets.QWidget()
+        self.ui = Ui_AlbumWindow(
+            self.AccountWindow,
+            self.appstate
+        )
+        self.ui.setupUi(self.window)
+        self.window.show()
+        self.AccountWindow.close()

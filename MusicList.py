@@ -83,6 +83,7 @@ class Ui_MusicListWindow(object):
         self.Category_combobox.addItem("")
         self.Category_combobox.addItem("")
         self.Category_combobox.addItem("")
+        self.Category_combobox.addItem("")
         self.verticalLayout.addWidget(self.Category_combobox)
         self.horizontalLayout_3.addLayout(self.verticalLayout)
         self.Music_list = QtWidgets.QTableView(MusicListWindow)
@@ -139,6 +140,7 @@ class Ui_MusicListWindow(object):
         self.Category_combobox.setItemText(4, _translate("MusicListWindow", "PlayLists"))
         self.Category_combobox.setItemText(5, _translate("MusicListWindow", "Artists"))
         self.Category_combobox.setItemText(6, _translate("MusicListWindow", "Concerts"))
+        self.Category_combobox.setItemText(7, _translate("MusicListWindow", "Liked"))
 
     def open_account_window(self):
         self.window = QtWidgets.QWidget()
@@ -204,7 +206,7 @@ class Ui_MusicListWindow(object):
             
         elif cat == 5: # Category = "Artists"
             self.appstate["Artist_id_to_show"] = row[0]
-            self.appstate["searchOrother"]= "showaristsong"
+            self.appstate["searchOrother"]= "showartistsong"
             self.window = QtWidgets.QWidget()
             self.ui = Ui_SearchResultWindow(self.MusicListWindow, self.appstate)
             self.ui.setupUi(self.window)
@@ -215,6 +217,13 @@ class Ui_MusicListWindow(object):
             dbm = DBM()
             dbm.db_connect()
             add_ticket_toTable(dbm, self.appstate["userid"], row[0])
+        
+        elif cat == 7: # Category = "Liked"
+            self.window = QtWidgets.QWidget()
+            self.ui = Ui_MusicWindow(self.MusicListWindow,self.appstate,row)
+            self.ui.setupUi(self.window)
+            self.window.show()
+            self.MusicListWindow.close()
 
     def category_changed(self, index):
         self.model.clear()
@@ -243,6 +252,9 @@ class Ui_MusicListWindow(object):
         elif index == 6: # Concerts
             column_headers = get_column_headers(dbm, "concert")
             rows = get_concerts(dbm)
+        elif index == 7: # Liked
+            column_headers = get_column_headers(dbm, "tracks")
+            rows = get_liked_tracks(dbm, self.appstate["userid"])
 
         if rows:  
             for row in rows:
