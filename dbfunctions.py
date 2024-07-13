@@ -519,25 +519,69 @@ def get_followings(dbm: DBM, userId=None):
     if result is None:
         return None
     return [row[0] for row in result]
+def search(dbm: DBM, title=None, artist=None, genre=None, ages=None, area=None, album=None):
+    if  dbm is None or title is None or artist is None or genre is None or ages is None or area is None or album is None:
+        return None
+    # q = f'''
+    #     SELECT * 
+    #     FROM tracks INNER JOIN albums ON albums.track_id = tracks.id INNER JOIN user ON tracks.artist_id=user.id
+    #     WHERE
+    #     tracks.title like "%{title}%" AND
+    #     user.fname || " " || user.lname like "%{artist}%" AND
+    #     tracks.genre like "%{genre}%" AND
+    #     tracks.ages like "%{ages}%" AND
+    #     tracks.area like "%{area}%" AND
+    #     albums.title LIKE "%{album}%"
+    #     ;
+    #     ''';
+    # q.replace("\n","")
+    q = f'SELECT * FROM tracks INNER JOIN albums ON albums.track_id = tracks.id INNER JOIN user ON tracks.artist_id=user.id WHERE tracks.title like "%{title}%" AND user.user like "%{artist}%" AND tracks.genre like "%{genre}%" AND tracks.ages like "%{ages}%" AND tracks.area like "%{area}%" AND albums.title LIKE "%{album}%";';
+    print(f'{q=}')
+    result = dbm.db_execute_read_query(
+        q,
+        None,
+    )
+        # WHERE title like "%{title}%" AND user.fname || " " || user.lname like "%{artist}%" AND genre like "%{genre}%" AND ages like "%{ages}%" AND area like "%{area}%";
+    
+    return result
 
-def search_track(dbm: DBM, title=None, artist=None, genre=None, ages=None, area=None):
+def search_track(dbm: DBM, title=None, artist=None, genre=None, ages=None, area=None, album=None):
     if not dbm:
         return None
     conditions = []
+    # # if title:
+    # conditions.append(f"tracks.title LIKE '%{title}%'")
+    # # if artist:
+    # # conditions.append(f"user.fname || ' ' || user.lname LIKE '%{artist}%'")
+    # conditions.append(f"user.username LIKE '%{artist}%'")
+    # # if genre:
+    # conditions.append(f"tracks.genre LIKE '%{genre}%'")
+    # # if ages:
+    # conditions.append(f"tracks.ages LIKE '%{ages}%'")
+    # # if area:
+    # conditions.append(f"tracks.area LIKE '%{area}%'")
+    # # if album:
+    # conditions.append(f"albums.title LIKE '%{album}%'")
     if title:
-        conditions.append(f"title LIKE '%{title}%'")
+        conditions.append(f"tracks.title LIKE '%{title}%'")
     if artist:
-        conditions.append(f"artist LIKE '%{artist}%'")
+        # conditions.append(f"user.fname || ' ' || user.lname LIKE '%{artist}%'")
+        conditions.append(f"user.username LIKE '%{artist}%'")
     if genre:
-        conditions.append(f"genre LIKE '%{genre}%'")
+        conditions.append(f"tracks.genre LIKE '%{genre}%'")
     if ages:
-        conditions.append(f"ages LIKE '%{ages}%'")
+        conditions.append(f"tracks.ages LIKE '%{ages}%'")
     if area:
-        conditions.append(f"area LIKE '%{area}%'")
+        conditions.append(f"tracks.area LIKE '%{area}%'")
+    # if album:
+    #     conditions.append(f"albums.title LIKE '%{album}%'")
     if not conditions:
         return None
-    query = "SELECT * FROM tracks WHERE " + " OR ".join(conditions)
+    # query = "SELECT tracks.id, tracks.title, tracks.duration, tracks.genre, tracks.ages, tracks.lyric, tracks.area, tracks.artist_id, tracks.permission FROM tracks INNER JOIN albums ON albums.track_id = tracks.id INNER JOIN user ON tracks.artist_id=user.id WHERE " + " AND ".join(conditions)
+    query = "SELECT tracks.id, tracks.title, tracks.duration, tracks.genre, tracks.ages, tracks.lyric, tracks.area, tracks.artist_id, tracks.permission FROM tracks INNER JOIN user ON tracks.artist_id=user.id WHERE " + " AND ".join(conditions)
+    print(f'===eee===>>>> {query}')
     result = dbm.db_execute_read_query(query, None)
+    print(f'\t{result=}')
     return result
 
 
@@ -744,19 +788,6 @@ def get_messages(dbm: DBM, receiverId=None):
     )
     return result
 
-def search(dbm: DBM, title=None, artist=None, genre=None, ages=None, area=None):
-    if  dbm is None or title is None or artist is None or genre is None or ages is None or area is None:
-        return None
-    
-    result = dbm.db_execute_read_query(
-        f'''
-        SELECT * 
-        FROM tracks INNER JOIN user ON tracks.artist_id = user.id
-        WHERE title like "%{title}%" AND user.fname || " " || user.lname like "%{artist}%" AND genre like "%{genre}%" AND ages like "%{ages}%" AND area like "%{area}%";
-        ''',
-        None,
-    )
-    return result
 
 def remove_follower_fromTable(dbm: DBM, userId=None, followerId=None):
     if not dbm or not userId or userId == "" or not followerId or followerId == "":
