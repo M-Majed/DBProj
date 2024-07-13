@@ -57,7 +57,7 @@ class Ui_AlbumWindow(object):
         dbm.db_connect()
         playlist_names = get_user_albums(dbm, self.appstate["userid"])
         playlist_list = QtCore.QStringListModel()
-        playlist_list.setStringList([str(id[0]) for id in playlist_names])
+        playlist_list.setStringList([str(id[1]) for id in playlist_names])
         self.Myalbums_view.setModel(playlist_list)
 
         allplaylist_names = get_albums(dbm)

@@ -1088,18 +1088,6 @@ def get_album_tracks(dbm: DBM, album_title):
         None
     )
     return result
-    
-
-def get_albums(dbm: DBM):
-    if not dbm:
-        return None
-    result = dbm.db_execute_read_query(
-        f'''
-        SELECT * FROM albums;
-        ''',
-        None
-    )
-    return result
 
 def get_followingusername_userid(dbm: DBM, userId=None):
     if not dbm or not userId or userId == "":
